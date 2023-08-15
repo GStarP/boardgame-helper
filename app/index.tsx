@@ -1,43 +1,34 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { mockUnzip } from "@/modules/plugin/mock";
+import { StyleSheet, View } from "react-native";
+import { useState } from "react";
+import PluginItem from "@/components/PluginItem";
 
 export default function HomeScreen() {
-  const router = useRouter();
-
-  useEffect(() => {
-    mockUnzip();
-  }, []);
+  const [plugins, _] = useState([
+    {
+      id: "chwazi",
+      name: "Chwazi",
+    },
+  ]);
 
   return (
-    <View style={styles.container}>
-      <Text
-        style={styles.title}
-        onPress={() => {
-          router.push("/plugin");
-        }}
-      >
-        Chwazi
-      </Text>
-      <View style={styles.separator} />
+    <View style={styles.pluginList}>
+      {plugins.map((plugin) => (
+        <PluginItem
+          key={plugin.id}
+          id={plugin.id}
+          name={plugin.name}
+        ></PluginItem>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  pluginList: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    paddingHorizontal: "6%",
+    paddingVertical: "8%",
   },
 });
