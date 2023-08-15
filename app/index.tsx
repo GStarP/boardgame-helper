@@ -1,8 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { mockUnzip } from "@/modules/plugin/mock";
 
 export default function HomeScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    mockUnzip();
+  }, []);
 
   return (
     <View style={styles.container}>

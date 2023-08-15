@@ -1,6 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
+import { testMockUnzip } from "@/modules/plugin/mock";
+import { useEffect } from "react";
 
 export default function PluginScreen() {
+  useEffect(() => {
+    testMockUnzip();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Plugin</Text>
