@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
-import { getPluginUri } from "@/modules/plugin";
+import { getPluginEntry } from "@/modules/plugin";
 import WebView from "react-native-webview";
 import {
   WebViewMessageEvent,
@@ -15,7 +15,7 @@ export default function PluginScreen() {
   // https://github.com/react-native-webview/react-native-webview/issues/656#issuecomment-551312436
   const [uri, setUri] = useState("");
   useEffect(() => {
-    setUri(getPluginUri(id));
+    setUri(getPluginEntry(id));
   }, [id]);
 
   /**
