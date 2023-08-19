@@ -7,6 +7,8 @@ import {
   WebViewMessageEvent,
   WebViewProgressEvent,
 } from "react-native-webview/lib/WebViewTypes";
+import { logger } from "@/modules/logger";
+import { WebViewErrorEvent } from "react-native-webview/lib/RNCWebViewNativeComponent";
 
 export default function PluginScreen() {
   const id = useLocalSearchParams().id as string;
@@ -15,7 +17,9 @@ export default function PluginScreen() {
   // https://github.com/react-native-webview/react-native-webview/issues/656#issuecomment-551312436
   const [uri, setUri] = useState("");
   useEffect(() => {
-    setUri(getPluginEntry(id));
+    const pluginEntry = getPluginEntry(id);
+    setUri(pluginEntry);
+    logger.info(`setUri: ${pluginEntry}`);
   }, [id]);
 
   /**
@@ -24,29 +28,45 @@ export default function PluginScreen() {
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
   const pluginLoadStart = () => {
-    console.log("plugin load start");
+    logger.debug("plugin load: start ===>");
   };
   const pluginLoadProgress = (e: WebViewProgressEvent) => {
     const progress = e.nativeEvent.progress;
+    logger.debug(`plugin load: progress=${progress}`);
     setProgress(progress);
   };
   const pluginLoadEnd = () => {
-    console.log("plugin load end");
+    logger.debug("plugin load: end <=====");
     pluginLoaded();
   };
-  // @FIX make sure `100%` show for at least 1s
+  // make sure `100%` show for at least 1s
   const pluginLoaded = () => {
     setTimeout(() => setReady(true), 1000);
   };
 
-  // view logs inside webview
-  const logPreload = `const J_LOG=(level,msg)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:'Console',data:{level,msg}}));
+  /**
+   * log trace
+   */
+  const onError = (e: WebViewErrorEvent): void => {
+    logger.error(
+      `[Webview Error] url=${e.url} code=${e.code} loading=${e.loading} title=${e.title} lockId=${e.lockIdentifier}`
+    );
+  };
+  // proxy Webview's console
+  const preloadJS = `const J_LOG=(level,msg)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:'Console',data:{level,msg}}));
     console={log:(log)=>J_LOG('log', log),debug:(log) =>J_LOG('debug', log),info:(log) =>J_LOG('info', log),warn:(log) =>J_LOG('warn', log),error:(log) =>J_LOG('error', log),};`;
   const onMessage = (event: WebViewMessageEvent) => {
     try {
       const dataPayload = JSON.parse(event.nativeEvent.data);
       if (dataPayload?.type === "Console") {
-        console.debug(`[Webview] ${JSON.stringify(dataPayload.data)}`);
+        const {
+          level,
+          msg,
+        }: {
+          level: "debug" | "log" | "warn" | "error";
+          msg: string;
+        } = dataPayload.data;
+        logger[level](`[Webview] ${msg}`);
       }
     } catch (e) {}
   };
@@ -76,11 +96,12 @@ export default function PluginScreen() {
         source={{ uri }}
         originWhitelist={["*"]}
         allowFileAccess={true}
-        onError={(e) => console.error("webview error:", e.nativeEvent)}
+        // @ts-ignore @FIX weird type error
+        onError={onError}
         onLoadStart={pluginLoadStart}
         onLoad={pluginLoadEnd}
         onLoadProgress={pluginLoadProgress}
-        injectedJavaScript={logPreload}
+        injectedJavaScript={preloadJS}
         onMessage={onMessage}
       />
     </View>

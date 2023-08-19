@@ -1,6 +1,7 @@
 import { PluginInfo } from "@/store/index/types";
 import { PLUGIN_DIR } from "./const";
 import * as FileSystem from "expo-file-system";
+import { logger } from "../logger";
 
 export { PLUGIN_DIR } from "./const";
 
@@ -38,7 +39,7 @@ export async function readPlugins(): Promise<PluginInfo[]> {
       });
     } catch (e) {
       // skip invalid plugin info
-      console.warn("read plugin info error:", pluginId);
+      logger.warn(`invalid plugin: pluginId=${pluginId}`);
       continue;
     }
   }

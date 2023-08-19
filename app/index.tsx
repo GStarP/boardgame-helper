@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { j_plugins } from "@/store/index/index";
 import { useEffect } from "react";
 import { readPlugins } from "@/modules/plugin";
+import { logger } from "@/modules/logger";
 
 export default function HomeScreen() {
   // plugins
@@ -14,7 +15,7 @@ export default function HomeScreen() {
         setPlugins(newPlugins);
       });
     } catch (e) {
-      console.error("readPlugins error:", e);
+      logger.error(`readPlugins: err=${e}`);
     }
   }, []);
 
