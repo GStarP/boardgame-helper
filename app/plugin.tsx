@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { getPluginEntry } from "@/modules/plugin";
@@ -9,12 +9,27 @@ import {
 } from "react-native-webview/lib/WebViewTypes";
 import { logger } from "@/modules/logger";
 import { WebViewErrorEvent } from "react-native-webview/lib/RNCWebViewNativeComponent";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function PluginScreen() {
-  const id = useLocalSearchParams().id as string;
+  const searchParams = useLocalSearchParams();
+
+  // set title
+  const nav = useNavigation();
+  const name = searchParams.name.toString();
+  useEffect(() => {
+    nav.setOptions({
+      title: name,
+    });
+  }, [name]);
 
   // must set uri in `onMounted`, otherwise will get `ERR_ACCESS_DENIED`
   // https://github.com/react-native-webview/react-native-webview/issues/656#issuecomment-551312436
+  const id = searchParams.id.toString();
   const [uri, setUri] = useState("");
   useEffect(() => {
     const pluginEntry = getPluginEntry(id);
@@ -26,7 +41,14 @@ export default function PluginScreen() {
    * progress
    */
   const [progress, setProgress] = useState(0);
-  const [ready, setReady] = useState(false);
+  const a_progressWidth = useSharedValue(0);
+  function setAnimatedProgressWidth(progress: number) {
+    a_progressWidth.value = withTiming(Math.floor(progress * 100));
+  }
+  const a_progressStyle = useAnimatedStyle(() => ({
+    width: `${a_progressWidth.value}%`,
+  }));
+
   const pluginLoadStart = () => {
     logger.debug("plugin load: start ===>");
   };
@@ -34,14 +56,17 @@ export default function PluginScreen() {
     const progress = e.nativeEvent.progress;
     logger.debug(`plugin load: progress=${progress}`);
     setProgress(progress);
+    setAnimatedProgressWidth(progress);
   };
   const pluginLoadEnd = () => {
     logger.debug("plugin load: end <=====");
     pluginLoaded();
   };
-  // make sure `100%` show for at least 1s
+
+  const [ready, setReady] = useState(false);
+  // make sure `100%` show for at least 1.2s
   const pluginLoaded = () => {
-    setTimeout(() => setReady(true), 1000);
+    setTimeout(() => setReady(true), 1200);
   };
 
   /**
@@ -77,17 +102,14 @@ export default function PluginScreen() {
         /* loading progress */
         ready ? null : (
           <View style={styles.loading}>
+            <Text style={styles.loadingText}>
+              Loading: {(progress * 100).toFixed(2)}%
+            </Text>
             <View style={styles.progressBar}>
-              <View
-                style={[
-                  styles.progress,
-                  {
-                    width: `${Math.ceil(progress * 100)}%`,
-                  },
-                ]}
-              ></View>
+              <Animated.View
+                style={[styles.progress, a_progressStyle]}
+              ></Animated.View>
             </View>
-            <Text>Loading: {(progress * 100).toFixed(2)}%</Text>
           </View>
         )
       }
@@ -118,6 +140,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFF",
+  },
+  loadingText: {
+    fontSize: 16,
+    marginBottom: 4,
+    marginTop: "-10%",
   },
   progressBar: {
     backgroundColor: "#CCC",

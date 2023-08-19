@@ -19,6 +19,7 @@ export default function PluginItem(props: PluginItemProps) {
       pathname: "/plugin",
       params: {
         id,
+        name,
       },
     });
   };
