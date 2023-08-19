@@ -1,23 +1,28 @@
 import { PluginInfo } from "@/store/index/types";
-import { PLUGIN_DIR } from "./const";
 import * as FileSystem from "expo-file-system";
-import { logger } from "../logger";
+import { logger } from "@/modules/logger";
+import { createDirIfNeed } from "@/modules/common/fs";
 
-export { PLUGIN_DIR } from "./const";
+/**
+ * consts
+ */
+export const PLUGIN_ROOT = FileSystem.documentDirectory + "plugins";
 
+/**
+ * utils
+ */
 export function getPluginDir(pluginId: string): string {
-  return PLUGIN_DIR + `/${pluginId}`;
+  return PLUGIN_ROOT + `/${pluginId}`;
 }
 
 export function getPluginEntry(pluginId: string): string {
-  return PLUGIN_DIR + `/${pluginId}/index.html`;
+  return PLUGIN_ROOT + `/${pluginId}/index.html`;
 }
 
-/**
- * @throws FileSystem.readDirectoryAsync
- */
 export async function readPlugins(): Promise<PluginInfo[]> {
-  const pluginIds = await FileSystem.readDirectoryAsync(PLUGIN_DIR);
+  await createDirIfNeed(PLUGIN_ROOT)
+
+  const pluginIds = await FileSystem.readDirectoryAsync(PLUGIN_ROOT);
   const plugins: PluginInfo[] = [];
   for (const pluginId of pluginIds) {
     try {

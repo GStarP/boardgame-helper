@@ -1,10 +1,11 @@
-import { StyleSheet, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import PluginItem from "@/components/PluginItem";
 import { useAtom } from "jotai";
 import { j_plugins } from "@/store/index/index";
 import { useEffect } from "react";
 import { readPlugins } from "@/modules/plugin";
 import { logger } from "@/modules/logger";
+import { loadPlugin } from "@/modules/plugin/download";
 
 export default function HomeScreen() {
   // plugins
@@ -19,6 +20,16 @@ export default function HomeScreen() {
     }
   }, []);
 
+  // @TEST
+  function loadPluginChwazi() {
+    const task = loadPlugin("chwazi");
+    task.on("unzip:finish", () => {
+      readPlugins().then((newPlugins) => {
+        setPlugins(newPlugins);
+      });
+    });
+  }
+
   return (
     <View style={styles.pluginList}>
       {plugins.map((plugin) => (
@@ -29,6 +40,7 @@ export default function HomeScreen() {
           icon={plugin.pluginIcon}
         ></PluginItem>
       ))}
+      <Button title="Download" onPress={loadPluginChwazi}></Button>
     </View>
   );
 }
