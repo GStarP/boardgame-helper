@@ -1,46 +1,41 @@
-import { Button, StyleSheet, View } from "react-native";
-import PluginItem from "@/components/PluginItem";
-import { useAtom } from "jotai";
-import { j_plugins } from "@/store/index/index";
+import { StyleSheet, View } from "react-native";
+import PluginItem from "@/components/index/PluginItem";
+import { usePlugins } from "@/store/index/index";
 import { useEffect } from "react";
-import { readPlugins } from "@/modules/plugin";
-import { logger } from "@/modules/logger";
-import { loadPlugin } from "@/modules/plugin/download";
+import { useNavigation, useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   // plugins
-  const [plugins, setPlugins] = useAtom(j_plugins);
+  const [plugins, updatePlugins] = usePlugins();
   useEffect(() => {
-    try {
-      readPlugins().then((newPlugins) => {
-        setPlugins(newPlugins);
-      });
-    } catch (e) {
-      logger.error(`readPlugins: err=${e}`);
-    }
+    updatePlugins();
   }, []);
 
-  // @TEST
-  function loadPluginChwazi() {
-    const task = loadPlugin("chwazi");
-    task.on("unzip:finish", () => {
-      readPlugins().then((newPlugins) => {
-        setPlugins(newPlugins);
-      });
+  // header button
+  const nav = useNavigation();
+  const router = useRouter();
+  const toRegistryPage = () => {
+    router.push({
+      pathname: "/registry",
     });
-  }
+  };
+  useEffect(() => {
+    nav.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={toRegistryPage}>
+          <MaterialIcons name="add-to-drive" size={28} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [nav]);
 
   return (
     <View style={styles.pluginList}>
       {plugins.map((plugin) => (
-        <PluginItem
-          key={"plugin" + plugin.pluginId}
-          id={plugin.pluginId}
-          name={plugin.pluginName}
-          icon={plugin.pluginIcon}
-        ></PluginItem>
+        <PluginItem key={"plugin@" + plugin.pluginId} {...plugin}></PluginItem>
       ))}
-      <Button title="Download" onPress={loadPluginChwazi}></Button>
     </View>
   );
 }

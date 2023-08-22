@@ -2,24 +2,19 @@ import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
+import { PluginInfo } from "@/store/index/types";
 
-interface PluginItemProps {
-  id: string;
-  name: string;
-  icon: string;
-}
-
-export default function PluginItem(props: PluginItemProps) {
+export default function PluginItem(props: PluginInfo) {
   const router = useRouter();
 
-  const { id, name, icon } = props;
+  const { pluginId, pluginName, pluginIcon } = props;
 
   const toPluginPage = () => {
     router.push({
       pathname: "/plugin",
       params: {
-        id,
-        name,
+        id: pluginId,
+        name: pluginName,
       },
     });
   };
@@ -27,8 +22,8 @@ export default function PluginItem(props: PluginItemProps) {
     // TODO change to Pressable
     <View style={styles.pluginItem}>
       <TouchableOpacity onPress={toPluginPage}>
-        <Image source={icon} style={styles.pluginIcon}></Image>
-        <Text style={styles.pluginName}>{name}</Text>
+        <Image source={pluginIcon} style={styles.pluginIcon}></Image>
+        <Text style={styles.pluginName}>{pluginName}</Text>
       </TouchableOpacity>
     </View>
   );

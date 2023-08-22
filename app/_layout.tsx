@@ -48,6 +48,12 @@ function RootLayoutView() {
         }}
       />
       <Stack.Screen name="plugin" />
+      <Stack.Screen
+        name="registry"
+        options={{
+          title: "可用插件",
+        }}
+      />
     </Stack>
   );
 }

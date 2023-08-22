@@ -5,7 +5,7 @@ import { unzip } from "react-native-zip-archive";
 import { getPluginDir } from ".";
 import { EventEmitter } from "@/modules/common/event";
 import { LoadPluginTaskEventMap } from "./types";
-import { createDirIfNeed } from "../common/fs";
+import { createDirIfNeed } from "@/modules/common/fs";
 
 /**
  * consts
@@ -45,7 +45,7 @@ async function unzipPlugin(pluginId: string): Promise<void> {
   await unzip(pluginArchiveUri, pluginDir)
 }
 
-export class LoadPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
+export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
   pluginId: string
   donwloadResumable: FileSystem.DownloadResumable
 
@@ -72,7 +72,7 @@ export class LoadPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
     }
   }
 
-  run(): LoadPluginTask {
+  run(): InstallPluginTask {
     // cannot download until dir created
     createDirIfNeed(PLUGIN_DOWNLOAD_ROOT).then(() => {
       this.emit('downalod:start', this.donwloadResumable.savable())
@@ -106,6 +106,6 @@ export class LoadPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
 
 }
 
-export function loadPlugin(pluginId: string): LoadPluginTask {
-  return new LoadPluginTask(pluginId).run()
+export function installPlugin(pluginId: string): InstallPluginTask {
+  return new InstallPluginTask(pluginId).run()
 }
