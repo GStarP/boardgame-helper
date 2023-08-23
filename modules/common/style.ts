@@ -1,0 +1,1 @@
+export const COLOR_FONT_SECONDARY = 'rgba(0, 0, 0, 0.6)'

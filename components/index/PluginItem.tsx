@@ -22,7 +22,7 @@ export default function PluginItem(props: PluginInfo) {
 
   const uninstallPlugin = useUninstallPlugin();
   const uninstall = () => {
-    uninstallPlugin(pluginId);
+    // uninstallPlugin(pluginId);
   };
 
   return (
