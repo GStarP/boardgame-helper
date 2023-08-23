@@ -2,7 +2,8 @@ import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import { PluginInfo } from "@/store/index/types";
+import type { PluginInfo } from "@/store/index/types";
+import { useUninstallPlugin } from "@/modules/plugin/hooks";
 
 export default function PluginItem(props: PluginInfo) {
   const router = useRouter();
@@ -18,10 +19,16 @@ export default function PluginItem(props: PluginInfo) {
       },
     });
   };
+
+  const uninstallPlugin = useUninstallPlugin();
+  const uninstall = () => {
+    uninstallPlugin(pluginId);
+  };
+
   return (
     // TODO change to Pressable
     <View style={styles.pluginItem}>
-      <TouchableOpacity onPress={toPluginPage}>
+      <TouchableOpacity onPress={toPluginPage} onLongPress={uninstall}>
         <Image source={pluginIcon} style={styles.pluginIcon}></Image>
         <Text style={styles.pluginName}>{pluginName}</Text>
       </TouchableOpacity>

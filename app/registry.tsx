@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useEffect } from "react";
 
 export default function Registry() {
-  const [plugins, loading, updatePlugins] = useAvailablePlugins();
+  const [plugins, updatePlugins] = useAvailablePlugins();
   useEffect(() => {
     updatePlugins();
   }, []);

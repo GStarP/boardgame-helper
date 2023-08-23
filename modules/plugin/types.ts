@@ -1,4 +1,4 @@
-import { DownloadPauseState, DownloadProgressData, FileSystemDownloadResult } from 'expo-file-system'
+import type { DownloadPauseState, DownloadProgressData, FileSystemDownloadResult } from 'expo-file-system'
 
 export type LoadPluginTaskEventMap = {
   'downalod:start': DownloadPauseState
@@ -7,5 +7,6 @@ export type LoadPluginTaskEventMap = {
   'download:pause': DownloadPauseState
   'unzip:start': undefined
   'unzip:finish': undefined
-  'error': Error
+  'success': undefined
+  'error': Error | unknown
 }

@@ -1,11 +1,11 @@
-
 import * as FileSystem from "expo-file-system";
 import { logger } from "@/modules/logger";
 import { unzip } from "react-native-zip-archive";
-import { getPluginDir } from ".";
+import { PLUGIN_ROOT, getPluginDir } from ".";
 import { EventEmitter } from "@/modules/common/event";
-import { LoadPluginTaskEventMap } from "./types";
+import type { LoadPluginTaskEventMap } from "./types";
 import { createDirIfNeed } from "@/modules/common/fs";
+import { insertPlugin } from "./database";
 
 /**
  * consts
@@ -20,7 +20,7 @@ export function getPluginArchiveUri(pluginId: string): string {
 }
 
 function createPluginDownloadResumable(pluginId: string, handler: (data: LoadPluginTaskEventMap['download:progress']) => void): FileSystem.DownloadResumable {
-  // @TEST
+  // @TODO mock
   const baseUrl = 'http://localhost:8000/plugins'
 
   const downloadUrl = `${baseUrl}/${pluginId}.zip`
@@ -45,6 +45,25 @@ async function unzipPlugin(pluginId: string): Promise<void> {
   await unzip(pluginArchiveUri, pluginDir)
 }
 
+async function registerPlugin(pluginId: string): Promise<void> {
+  const pluginDir = getPluginDir(pluginId)
+  // get name from manifest.json
+  const manifestStr = await FileSystem.readAsStringAsync(
+    `${pluginDir}/manifest.json`
+  );
+  const pluginName: string = JSON.parse(manifestStr).name;
+  // ge icon uri from icon.png
+  const pluginIcon = (
+    await FileSystem.getInfoAsync(`${pluginDir}/icon.png`)
+  ).uri;
+
+  await insertPlugin({
+    pluginId,
+    pluginName,
+    pluginIcon,
+  });
+}
+
 export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
   pluginId: string
   donwloadResumable: FileSystem.DownloadResumable
@@ -53,11 +72,13 @@ export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
     super()
     this.pluginId = pluginId
     // register self callbacks
-    this.on('downalod:start', (data) => logger.debug('downalod:start', data))
-    this.on('download:pause', (data) => logger.debug('downalod:pause', data))
-    this.on('download:finish', (data) => logger.debug('downalod:finish', data))
-    this.on('unzip:start', () => logger.debug('unzip:start'))
-    this.on('unzip:finish', () => logger.debug('unzip:finish'))
+    const debugLog = (...args: any) => logger.debug(`[${this.pluginId}]`, ...args)
+    this.on('downalod:start', (data) => debugLog('downalod:start', data))
+    this.on('download:pause', (data) => debugLog('downalod:pause', data))
+    this.on('download:finish', (data) => debugLog('downalod:finish', data))
+    this.on('unzip:start', () => debugLog('unzip:start'))
+    this.on('unzip:finish', () => debugLog('unzip:finish'))
+    this.on('success', () => debugLog('success'))
     this.on('error', (e) => logger.error(e))
     // create DownloadResumable
     const onProgress = (data: LoadPluginTaskEventMap['download:progress']) => {
@@ -72,40 +93,32 @@ export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
     }
   }
 
-  run(): InstallPluginTask {
-    // cannot download until dir created
-    createDirIfNeed(PLUGIN_DOWNLOAD_ROOT).then(() => {
+  async run(): Promise<void> {
+    try {
+      // ensure plugin_download_root exists before download
+      await createDirIfNeed(PLUGIN_DOWNLOAD_ROOT)
       this.emit('downalod:start', this.donwloadResumable.savable())
-      this.donwloadResumable.downloadAsync()
-        .then((res) => {
-          this.emit('download:finish', res)
-        })
-        .then(async () => {
-          this.emit('unzip:start')
-          await unzipPlugin(this.pluginId)
-          this.emit('unzip:finish')
-        })
-        .catch(e => this.emit("error", e))
-    })
+      const res = await this.donwloadResumable.downloadAsync()
+      this.emit('download:finish', res)
 
-    return this
+      // ensure plugin_root exists before unzip
+      await createDirIfNeed(PLUGIN_ROOT)
+      this.emit('unzip:start')
+      await unzipPlugin(this.pluginId)
+      this.emit('unzip:finish')
+
+      await registerPlugin(this.pluginId)
+
+      this.emit('success')
+    } catch (e) {
+      this.emit("error", e)
+    }
   }
 
-  pause(): Promise<FileSystem.DownloadPauseState> {
-    const promise = this.donwloadResumable.pauseAsync()
-
-    promise.then(state => {
-      this.emit('download:pause', state)
-      return state
-    })
-
-    promise.catch(e => this.emit('error', e))
-
-    return promise
+  async pause(): Promise<FileSystem.DownloadPauseState> {
+    const state = await this.donwloadResumable.pauseAsync()
+    this.emit('download:pause', state)
+    return state
   }
 
-}
-
-export function installPlugin(pluginId: string): InstallPluginTask {
-  return new InstallPluginTask(pluginId).run()
 }
