@@ -64,7 +64,7 @@ async function registerPlugin(pluginId: string): Promise<void> {
   });
 }
 
-export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
+export class InstallTask extends EventEmitter<LoadPluginTaskEventMap> {
   pluginId: string
   donwloadResumable: FileSystem.DownloadResumable
 
@@ -73,7 +73,7 @@ export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
     this.pluginId = pluginId
     // register self callbacks
     const debugLog = (...args: any) => logger.debug(`[${this.pluginId}]`, ...args)
-    this.on('downalod:start', (data) => debugLog('downalod:start', data))
+    this.on('download:start', (data) => debugLog('download:start', data))
     this.on('download:pause', (data) => debugLog('downalod:pause', data))
     this.on('download:finish', (data) => debugLog('downalod:finish', data))
     this.on('unzip:start', () => debugLog('unzip:start'))
@@ -97,7 +97,7 @@ export class InstallPluginTask extends EventEmitter<LoadPluginTaskEventMap> {
     try {
       // ensure plugin_download_root exists before download
       await createDirIfNeed(PLUGIN_DOWNLOAD_ROOT)
-      this.emit('downalod:start', this.donwloadResumable.savable())
+      this.emit('download:start', this.donwloadResumable.savable())
       const res = await this.donwloadResumable.downloadAsync()
       this.emit('download:finish', res)
 

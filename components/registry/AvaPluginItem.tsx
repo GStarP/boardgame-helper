@@ -1,10 +1,11 @@
 import { useInstallPlugin } from "@/modules/plugin/hooks";
 import type { PluginDetail } from "@/store/registry/types";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { imgBlurHash } from "@/modules/common/const";
 import { COLOR_FONT_SECONDARY } from "@/modules/common/style";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function AvaPluginItem(props: PluginDetail) {
   const { pluginId, pluginName, pluginIcon, pluginDesc } = props;
@@ -26,9 +27,9 @@ export default function AvaPluginItem(props: PluginDetail) {
           {pluginDesc}
         </Text>
       </View>
-      <Pressable style={styles.installBtn} onPress={install}>
-        <MaterialIcons name="file-download" size={32} />
-      </Pressable>
+      <TouchableOpacity style={styles.installBtn} onPress={install}>
+        <MaterialCommunityIcons name="cloud-download" size={32} />
+      </TouchableOpacity>
       <View style={styles.hr}></View>
     </View>
   );
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     left: 20,
-    height: 1,
+    height: 0.5,
     width: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.3)",
   },

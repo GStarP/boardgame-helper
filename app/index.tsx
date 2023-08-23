@@ -4,7 +4,7 @@ import { usePlugins } from "@/store/index/index";
 import { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   // plugins
@@ -21,12 +21,22 @@ export default function HomeScreen() {
       pathname: "/registry",
     });
   };
+  const toProgressPage = () => {
+    router.push({
+      pathname: "/progress",
+    });
+  };
   useEffect(() => {
     nav.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={toRegistryPage}>
-          <MaterialIcons name="add-to-drive" size={28} />
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={toRegistryPage}>
+            <MaterialCommunityIcons name="toolbox" size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toProgressPage} style={styles.progressBtn}>
+            <MaterialCommunityIcons name="progress-download" size={28} />
+          </TouchableOpacity>
+        </View>
       ),
     });
   }, [nav]);
@@ -47,5 +57,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     paddingHorizontal: "6%",
     paddingVertical: "8%",
+  },
+  buttons: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+  },
+  progressBtn: {
+    marginRight: 12,
   },
 });

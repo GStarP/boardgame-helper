@@ -14,7 +14,7 @@ export function useAvailablePlugins(): [PluginDetail[], () => Promise<void>] {
         pluginIcon: '',
         pluginDesc: 'a random startup chosing plugin'
       }])
-    }, 2000)
+    }, 1000)
   }
   return [availablePlugins, updateAvailablePlugins]
 }

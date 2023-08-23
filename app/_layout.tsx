@@ -54,6 +54,12 @@ function RootLayoutView() {
           title: "可用插件",
         }}
       />
+      <Stack.Screen
+        name="progress"
+        options={{
+          title: "安装进度",
+        }}
+      />
     </Stack>
   );
 }

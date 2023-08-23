@@ -42,6 +42,11 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
   if (info.exists && !info.isDirectory) {
     rawContent = await FileSystem.readAsStringAsync(DB_FILE)
   }
+  // if same id exists, return
+  const pluginLines = rawContent.split(LINE_BREAK)
+  if (pluginLines.find(line => line.startsWith(plugin.pluginId + ID_BREAK)) !== undefined) {
+    return
+  }
   const content = rawContent + plugin.pluginId + ID_BREAK +
     plugin.pluginName + INFO_BREAK + plugin.pluginIcon + LINE_BREAK
   FileSystem.writeAsStringAsync(DB_FILE, content)

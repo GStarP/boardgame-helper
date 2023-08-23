@@ -1,16 +1,22 @@
 import * as FileSystem from "expo-file-system";
 import { logger } from "@/modules/logger"
 import { deletePlugin } from "./database"
-import { InstallPluginTask } from "./download"
+import { InstallTask } from "./download"
 import { getPluginDir } from ".";
 import { useUpdatePlugins } from "@/store/index/index";
+import { useInstallTasks } from "@/store/progress";
 
-export function useInstallPlugin(): (pluginId: string) => InstallPluginTask {
+export function useInstallPlugin(): (pluginId: string) => InstallTask {
   const updatePlugins = useUpdatePlugins()
+  const [_, addTask, removeTask] = useInstallTasks()
   const installPlugin = (pluginId: string) => {
-    const task = new InstallPluginTask(pluginId)
-    task.on('success', updatePlugins)
-    task.run()
+    const task = new InstallTask(pluginId)
+    addTask(task)
+    task.on('success', () => {
+      removeTask(task.pluginId)
+      updatePlugins()
+    })
+    // task.run()
     return task
   }
   return installPlugin
