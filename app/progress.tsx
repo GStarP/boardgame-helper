@@ -7,7 +7,7 @@ export default function ProgressScreen() {
   return (
     <View>
       {tasks.map((task) => (
-        <InstallTaskItem key={"task@" + task.pluginId} task={task} />
+        <InstallTaskItem key={"task@" + task.plugin.pluginId} task={task} />
       ))}
     </View>
   );

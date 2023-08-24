@@ -5,17 +5,22 @@ import { InstallTask } from "./download"
 import { getPluginDir } from ".";
 import { useUpdatePlugins } from "@/store/index/index";
 import { useInstallTasks } from "@/store/progress";
+import { PluginInfo } from "@/store/index/types";
 
-export function useInstallPlugin(): (pluginId: string) => InstallTask {
+export function useInstallPlugin(): (plugin: PluginInfo) => InstallTask {
   const updatePlugins = useUpdatePlugins()
   const [_, addTask, removeTask] = useInstallTasks()
-  const installPlugin = (pluginId: string) => {
-    const task = new InstallTask(pluginId)
+  const installPlugin = (plugin: PluginInfo) => {
+    const task = new InstallTask(plugin)
     addTask(task)
     task.on('success', () => {
-      removeTask(task.pluginId)
+      removeTask(task.plugin.pluginId)
       updatePlugins()
     })
+    task.on('cancel', () => {
+      removeTask(task.plugin.pluginId)
+    })
+    // @TODO dev
     // task.run()
     return task
   }

@@ -35,6 +35,7 @@ export async function getAllPlugins(): Promise<PluginInfo[]> {
   }
 }
 
+// @FIX concurrent issue
 export async function insertPlugin(plugin: PluginInfo): Promise<void> {
   logger.debug('insertPlugin:', plugin)
   const info = await FileSystem.getInfoAsync(DB_FILE)
@@ -44,7 +45,7 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
   }
   // if same id exists, return
   const pluginLines = rawContent.split(LINE_BREAK)
-  if (pluginLines.find(line => line.startsWith(plugin.pluginId + ID_BREAK)) !== undefined) {
+  if (pluginLines.find(line => line.startsWith(plugin.pluginId + ID_BREAK)) !== void 0) {
     return
   }
   const content = rawContent + plugin.pluginId + ID_BREAK +

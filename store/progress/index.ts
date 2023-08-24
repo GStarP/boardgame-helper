@@ -6,6 +6,10 @@ export const j_tasks = atom<InstallTask[]>([])
 export function useInstallTasks(): [InstallTask[], (task: InstallTask) => void, (pluginId: string) => void] {
   const [tasks, setTasks] = useAtom(j_tasks)
   const addTask = (task: InstallTask) => {
+    // if task already exists, just return
+    if (tasks.find(t => t.plugin.pluginId === task.plugin.pluginId)) {
+      return
+    }
     const newTasks = [...tasks]
     newTasks.push(task)
     setTasks(newTasks)
@@ -13,7 +17,7 @@ export function useInstallTasks(): [InstallTask[], (task: InstallTask) => void, 
   const removeTask = (pluginId: string) => {
     const newTasks = []
     for (const task of tasks) {
-      if (task.pluginId !== pluginId) {
+      if (task.plugin.pluginId !== pluginId) {
         newTasks.push(task)
       }
     }

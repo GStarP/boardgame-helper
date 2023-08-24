@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { InstallTask } from "@/modules/plugin/download";
-import { InstallTaskState } from './types';
+import { InstallTaskState } from '@/modules/plugin/types';
 import { DownloadProgressData } from 'expo-file-system';
 
 export function useInstallTaskState(task: InstallTask): [InstallTaskState, number, number] {
@@ -10,10 +10,10 @@ export function useInstallTaskState(task: InstallTask): [InstallTaskState, numbe
   const [totalSize, setTotalSize] = useState(0)
 
   useEffect(() => {
-    const onDownloadStart = () => {
-      setState(InstallTaskState.DOWNLOADING)
+    const onStateChange = (state: InstallTaskState) => {
+      setState(state)
     }
-    task.on('download:start', onDownloadStart)
+    task.on('state:change', onStateChange)
 
     const onProgress = (progress: DownloadProgressData) => {
       setSize(progress.totalBytesWritten)
@@ -21,33 +21,9 @@ export function useInstallTaskState(task: InstallTask): [InstallTaskState, numbe
     }
     task.on('download:progress', onProgress)
 
-    const onPause = () => {
-      setState(InstallTaskState.PAUSED)
-    }
-    task.on('download:pause', onPause)
-
-    const onUnzip = () => {
-      setState(InstallTaskState.UNZIPPING)
-    }
-    task.on('unzip:start', onUnzip)
-
-    const onSuccess = () => {
-      setState(InstallTaskState.SUCCESS)
-    }
-    task.on('success', onSuccess)
-
-    const onError = () => {
-      setState(InstallTaskState.PAUSED)
-    }
-    task.on('error', onError)
-
     return () => {
-      task.removeListener('download:start', onDownloadStart)
+      task.removeListener('state:change', onStateChange)
       task.removeListener('download:progress', onProgress)
-      task.removeListener('download:pause', onPause)
-      task.removeListener('unzip:start', onUnzip)
-      task.removeListener('success', onSuccess)
-      task.removeListener('error', onError)
     }
   }, [])
 

@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
-import { imgBlurHash } from "@/modules/common/const";
+import { IMG_BLUR_HASH } from "@/modules/common/const";
 import {
   COLOR_FONT_FOURTH,
   COLOR_FONT_SECONDARY,
@@ -10,7 +10,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import React from "react";
 import { InstallTask } from "@/modules/plugin/download";
 import { useInstallTaskState } from "@/modules/progress/hook";
-import { InstallTaskState } from "@/modules/progress/types";
+import { InstallTaskState } from "@/modules/plugin/types";
 
 interface Props {
   task: InstallTask;
@@ -21,11 +21,13 @@ function stateText(
   size: number,
   totalSize: number
 ): string {
-  if (state === InstallTaskState.PAUSED) return "已暂停";
+  if (state === InstallTaskState.WAITING) return "等待中";
   else if (state === InstallTaskState.UNZIPPING) return "解压中";
+  else if (state === InstallTaskState.REGISTERING) return "安装中";
   else if (state === InstallTaskState.DOWNLOADING)
     return `${size} / ${totalSize}`;
-  else if (state === InstallTaskState.WAITING) return "等待中";
+  else if (state === InstallTaskState.PAUSED) return "已暂停";
+  else if (state === InstallTaskState.ERROR) return "发生错误";
   return "";
 }
 
@@ -43,20 +45,42 @@ function InstallTaskItem(props: Props) {
   const [state, size, totalSize] = useInstallTaskState(task);
 
   const togglePause = () => {
-    if (state === InstallTaskState.WAITING) {
+    if (
+      state === InstallTaskState.WAITING ||
+      state === InstallTaskState.PAUSED
+    ) {
       task.run();
+    } else if (state === InstallTaskState.DOWNLOADING) {
+      task.pause();
     }
+  };
+
+  const cancel = () => {
+    task.cancel();
   };
 
   return (
     <View style={styles.container}>
-      <Image source={""} style={styles.icon} placeholder={imgBlurHash} />
+      <Image
+        source={task.plugin.pluginIcon}
+        style={styles.icon}
+        placeholder={IMG_BLUR_HASH}
+      />
       <View style={styles.info}>
-        <Text style={styles.name}>{"Chwazi"}</Text>
+        <View style={styles.line1}>
+          <Text style={styles.name}>{task.plugin.pluginName}</Text>
+          <TouchableOpacity style={styles.close} onPress={cancel}>
+            <MaterialCommunityIcons
+              name="close"
+              size={16}
+              color={COLOR_FONT_SECONDARY}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.state}>{stateText(state, size, totalSize)}</Text>
         <View style={styles.progressContainer}></View>
       </View>
-      <TouchableOpacity style={styles.btn} onPress={togglePause}>
+      <TouchableOpacity style={styles.pause} onPress={togglePause}>
         <MaterialCommunityIcons name={stateBtnIcon(state)} size={32} />
       </TouchableOpacity>
       <View style={styles.hr}></View>
@@ -82,6 +106,15 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 4,
   },
+  line1: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  close: {
+    marginRight: 12,
+  },
   info: { display: "flex", marginLeft: 8, flex: 1, height: "100%" },
   name: {
     fontSize: 16,
@@ -94,7 +127,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: COLOR_FONT_FOURTH,
   },
-  btn: {
+  pause: {
+    width: 32,
+    height: 32,
     marginLeft: 8,
   },
   hr: {
