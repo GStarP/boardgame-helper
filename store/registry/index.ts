@@ -1,20 +1,19 @@
-import { atom, useAtom } from "jotai";
+import { atom, getDefaultStore } from "jotai";
 import type { PluginDetail } from "./types";
 
 export const j_ava_plugins = atom<PluginDetail[]>([])
 
 // @TODO mock
-export function useAvailablePlugins(): [PluginDetail[], () => Promise<void>] {
-  const [availablePlugins, setAvailablePlugins] = useAtom(j_ava_plugins)
-  const updateAvailablePlugins = async () => {
+export async function updateAvailablePlugins(): Promise<void> {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      setAvailablePlugins([{
+      getDefaultStore().set(j_ava_plugins, [{
         pluginId: 'chwazi',
         pluginName: 'Chwazi',
         pluginIcon: '',
         pluginDesc: 'a random startup chosing plugin'
       }])
+      resolve()
     }, 1000)
-  }
-  return [availablePlugins, updateAvailablePlugins]
+  })
 }

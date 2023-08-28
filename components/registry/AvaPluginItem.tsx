@@ -32,7 +32,7 @@ export default function AvaPluginItem(props: PluginDetail) {
       <View style={styles.info}>
         <Text style={styles.name}>{pluginName}</Text>
         <Text style={styles.desc} numberOfLines={2}>
-          {pluginDesc} 111 111 111 1111 1111 1 1 11111 1 11 11111 1111 1 1 1
+          {pluginDesc}
         </Text>
       </View>
       {downloading ? (

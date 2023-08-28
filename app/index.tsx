@@ -1,14 +1,16 @@
 import { StyleSheet, View } from "react-native";
 import PluginItem from "@/components/index/PluginItem";
-import { usePlugins } from "@/store/index/index";
+import { j_plugins, updatePlugins } from "@/store/index/index";
 import { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { updateAvailablePlugins } from "@/store/registry";
+import { useAtomValue } from "jotai";
 
 export default function HomeScreen() {
   // plugins
-  const [plugins, updatePlugins] = usePlugins();
+  const plugins = useAtomValue(j_plugins);
   useEffect(() => {
     updatePlugins();
   }, []);
@@ -17,6 +19,7 @@ export default function HomeScreen() {
   const nav = useNavigation();
   const router = useRouter();
   const toRegistryPage = () => {
+    updateAvailablePlugins();
     router.push({
       pathname: "/registry",
     });

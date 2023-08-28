@@ -1,13 +1,10 @@
 import AvaPluginItem from "@/components/registry/AvaPluginItem";
-import { useAvailablePlugins } from "@/store/registry";
+import { j_ava_plugins } from "@/store/registry";
 import { StyleSheet, Text, View } from "react-native";
-import { useEffect } from "react";
+import { useAtomValue } from "jotai";
 
 export default function Registry() {
-  const [plugins, updatePlugins] = useAvailablePlugins();
-  useEffect(() => {
-    updatePlugins();
-  }, []);
+  const plugins = useAtomValue(j_ava_plugins);
 
   return (
     <View>

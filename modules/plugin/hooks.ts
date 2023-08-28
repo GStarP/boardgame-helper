@@ -3,12 +3,11 @@ import { logger } from "@/modules/logger"
 import { deletePlugin } from "./database"
 import { InstallTask } from "./download"
 import { getPluginDir } from ".";
-import { useUpdatePlugins } from "@/store/index/index";
 import { useInstallTasks } from "@/store/progress";
 import { PluginInfo } from "@/store/index/types";
+import { updatePlugins } from "@/store/index/index";
 
 export function useInstallPlugin(): (plugin: PluginInfo) => InstallTask {
-  const updatePlugins = useUpdatePlugins()
   const [_, addTask, removeTask] = useInstallTasks()
   const installPlugin = (plugin: PluginInfo) => {
     const task = new InstallTask(plugin)
@@ -28,7 +27,6 @@ export function useInstallPlugin(): (plugin: PluginInfo) => InstallTask {
 }
 
 export function useUninstallPlugin(): (pluginId: string) => Promise<void> {
-  const updatePlugins = useUpdatePlugins()
   const uninstallPlugin = async (pluginId: string) => {
     logger.debug(`uninstallPlugin: ${pluginId}`)
     const p1 = deletePlugin(pluginId)
