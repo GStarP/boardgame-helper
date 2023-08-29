@@ -1,6 +1,6 @@
 import type { PluginDetail } from "@/store/plugin/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ToastAndroid } from "react-native";
 import { Image } from "expo-image";
 import { IMG_BLUR_HASH } from "@/modules/common/const";
 import { COLOR_FONT_SECONDARY } from "@/modules/common/style";
@@ -9,6 +9,7 @@ import { useAtomValue } from "jotai";
 import { j_task_progress_family } from "@/store/progress";
 import { installPlugin } from "@/modules/plugin";
 import { downloadPercentageText } from "@/modules/progress";
+import { TOAST_INSTALL_START } from "@/i18n";
 
 export default function AvaPluginItem(props: PluginDetail) {
   const { pluginId, pluginName, pluginIcon, pluginDesc } = props;
@@ -24,6 +25,10 @@ export default function AvaPluginItem(props: PluginDetail) {
       pluginName,
       pluginIcon,
     });
+    ToastAndroid.show(
+      `${pluginName} ${TOAST_INSTALL_START}`,
+      ToastAndroid.SHORT
+    );
   };
 
   return (

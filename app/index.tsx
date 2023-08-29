@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
 import { getAllPlugins } from "@/api/plugin/db";
 import { fetchAvailablePlugins } from "@/api/plugin";
+import ProgressPageIcon from "@/components/common/ProgressPageIcon";
 
 export default function HomeScreen() {
   // plugins
@@ -25,11 +26,6 @@ export default function HomeScreen() {
       pathname: "/registry",
     });
   };
-  const toProgressPage = () => {
-    router.push({
-      pathname: "/progress",
-    });
-  };
   useEffect(() => {
     nav.setOptions({
       headerRight: () => (
@@ -37,9 +33,7 @@ export default function HomeScreen() {
           <TouchableOpacity onPress={toRegistryPage}>
             <MaterialCommunityIcons name="toolbox" size={28} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={toProgressPage} style={styles.progressBtn}>
-            <MaterialCommunityIcons name="progress-download" size={28} />
-          </TouchableOpacity>
+          <ProgressPageIcon style={styles.progressBtn} />
         </View>
       ),
     });

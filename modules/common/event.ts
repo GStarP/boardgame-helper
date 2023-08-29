@@ -23,7 +23,6 @@ export class EventEmitter<Events extends Record<EventType, unknown>> {
   }
 
   emit<Key extends keyof Events>(event: Key, payload?: Events[Key]) {
-    // @FIX payload can be undefined
     this.bus.emit(event, payload!);
   }
 }

@@ -1,3 +1,4 @@
+import { TITLE_HOME, TITLE_PROGRESS, TITLE_REGISTRY } from "@/i18n";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
@@ -44,20 +45,20 @@ function RootLayoutView() {
       <Stack.Screen
         name="index"
         options={{
-          title: "主页",
+          title: TITLE_HOME,
         }}
       />
       <Stack.Screen name="plugin" />
       <Stack.Screen
         name="registry"
         options={{
-          title: "可用插件",
+          title: TITLE_REGISTRY,
         }}
       />
       <Stack.Screen
         name="progress"
         options={{
-          title: "下载进度",
+          title: TITLE_PROGRESS,
         }}
       />
     </Stack>
