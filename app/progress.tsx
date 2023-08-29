@@ -1,13 +1,14 @@
 import InstallTaskItem from "@/components/progress/InstallTaskItem";
-import { useInstallTasks } from "@/store/progress";
+import { j_tasks } from "@/store/progress";
+import { useAtomValue } from "jotai";
 import { View } from "react-native";
 
 export default function ProgressScreen() {
-  const [tasks] = useInstallTasks();
+  const pluginIds = useAtomValue(j_tasks);
   return (
     <View>
-      {tasks.map((task) => (
-        <InstallTaskItem key={"task@" + task.plugin.pluginId} task={task} />
+      {pluginIds.map((pluginId) => (
+        <InstallTaskItem key={"task@" + pluginId} pluginId={pluginId} />
       ))}
     </View>
   );

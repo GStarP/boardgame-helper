@@ -1,27 +1,45 @@
-import { atom, useAtom } from "jotai";
-import { InstallTask } from "@/modules/plugin/download";
+import { atom, getDefaultStore } from "jotai";
+import type { InstallTask } from "@/modules/plugin/task";
+import { atomFamily } from "jotai/utils";
+import { InstallTaskProgress } from "./types";
+import { InstallTaskState } from "@/modules/plugin/types";
+import { arrayAfterRemove } from "@/modules/common/array";
 
-export const j_tasks = atom<InstallTask[]>([])
+const store = getDefaultStore();
 
-export function useInstallTasks(): [InstallTask[], (task: InstallTask) => void, (pluginId: string) => void] {
-  const [tasks, setTasks] = useAtom(j_tasks)
-  const addTask = (task: InstallTask) => {
-    // if task already exists, just return
-    if (tasks.find(t => t.plugin.pluginId === task.plugin.pluginId)) {
-      return
-    }
-    const newTasks = [...tasks]
-    newTasks.push(task)
-    setTasks(newTasks)
-  }
-  const removeTask = (pluginId: string) => {
-    const newTasks = []
-    for (const task of tasks) {
-      if (task.plugin.pluginId !== pluginId) {
-        newTasks.push(task)
-      }
-    }
-    setTasks(newTasks)
-  }
-  return [tasks, addTask, removeTask]
+// use pluginId to query task progress atom
+export const j_task_progress_family = atomFamily((pluginId: string) =>
+  atom<InstallTaskProgress>({
+    pluginId,
+    state: InstallTaskState.WAITING,
+    size: 0,
+    targetSize: 0,
+  })
+);
+export function setTaskProgress(
+  pluginId: string,
+  progress: Partial<InstallTaskProgress>
+) {
+  store.set(j_task_progress_family(pluginId), (pre) => ({
+    ...pre,
+    ...progress,
+  }));
+}
+
+// the only store for InstallTask
+export const taskMap = new Map<string, InstallTask>();
+// store task.pluginId
+export const j_tasks = atom<string[]>([]);
+
+export function addTask(task: InstallTask) {
+  const id = task.plugin.pluginId;
+  if (taskMap.has(id)) return;
+  taskMap.set(task.plugin.pluginId, task);
+  store.set(j_tasks, (pre) => [...pre, task.plugin.pluginId]);
+}
+
+export function removeTask(pluginId: string) {
+  if (!taskMap.has(pluginId)) return;
+  taskMap.delete(pluginId);
+  store.set(j_tasks, (pre) => arrayAfterRemove(pre, (id) => id === pluginId));
 }

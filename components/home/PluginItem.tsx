@@ -2,8 +2,8 @@ import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import type { PluginInfo } from "@/store/index/types";
-import { useUninstallPlugin } from "@/modules/plugin/hooks";
+import type { PluginInfo } from "@/store/plugin/types";
+import { uninstallPlugin } from "@/modules/plugin";
 
 export default function PluginItem(props: PluginInfo) {
   const router = useRouter();
@@ -20,7 +20,6 @@ export default function PluginItem(props: PluginInfo) {
     });
   };
 
-  const uninstallPlugin = useUninstallPlugin();
   const uninstall = () => {
     uninstallPlugin(pluginId);
   };

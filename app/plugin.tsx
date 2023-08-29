@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
-import { getPluginEntry } from "@/modules/plugin";
+import { getPluginEntry } from "@/modules/plugin/util";
 import WebView from "react-native-webview";
 import {
   WebViewMessageEvent,

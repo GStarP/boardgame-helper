@@ -1,7 +1,7 @@
 import { Asset } from "expo-asset";
 import { unzip } from "react-native-zip-archive";
 import * as FileSystem from "expo-file-system";
-import { getPluginDir } from "..";
+import { getPluginDir } from "../util";
 
 const TEST_PLUGIN_DIR = getPluginDir("chwazi");
 

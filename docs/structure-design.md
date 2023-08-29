@@ -1,14 +1,12 @@
 # Structure Design
 
-- components
-  - children dir: divided by page
-- modules: main ts logic
+- api: divided by module
+  - index.ts: network request
+  - db.ts: database operation
+  - **should not** rely on any other packages
+- components: divided by page
+- modules: main logic
   - common: shared utils
-  - others: named by function
-    - types.ts: **only** hold types
-    - hooks.ts: contains state, **only** used in components and other hooks
-    - others: name by function
-- store: jotai state
-  - children dir: divided by page
-    - index.ts: **should only** rely inside store
-    - type.ts: **only** hold types
+  - others: divided by module
+- store: divided by module
+  - **should** only rely type.ts or modules/common

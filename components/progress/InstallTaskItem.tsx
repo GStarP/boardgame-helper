@@ -8,12 +8,12 @@ import {
 } from "@/modules/common/style";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import React from "react";
-import { InstallTask } from "@/modules/plugin/download";
-import { useInstallTaskState } from "@/modules/progress/hook";
 import { InstallTaskState } from "@/modules/plugin/types";
+import { useAtomValue } from "jotai";
+import { j_task_progress_family, taskMap } from "@/store/progress";
 
 interface Props {
-  task: InstallTask;
+  pluginId: string;
 }
 
 function stateText(
@@ -40,35 +40,39 @@ function stateBtnIcon(state: InstallTaskState) {
 }
 
 function InstallTaskItem(props: Props) {
-  const { task } = props;
+  const { pluginId } = props;
 
-  const [state, size, totalSize] = useInstallTaskState(task);
+  const { state, size, targetSize } = useAtomValue(
+    j_task_progress_family(pluginId)
+  );
 
   const togglePause = () => {
     if (
       state === InstallTaskState.WAITING ||
       state === InstallTaskState.PAUSED
     ) {
-      task.run();
+      taskMap.get(pluginId)?.run();
     } else if (state === InstallTaskState.DOWNLOADING) {
-      task.pause();
+      taskMap.get(pluginId)?.pause();
     }
   };
 
   const cancel = () => {
-    task.cancel();
+    taskMap.get(pluginId)?.cancel();
   };
 
   return (
     <View style={styles.container}>
       <Image
-        source={task.plugin.pluginIcon}
+        source={taskMap.get(pluginId)?.plugin.pluginIcon ?? ""}
         style={styles.icon}
         placeholder={IMG_BLUR_HASH}
       />
       <View style={styles.info}>
         <View style={styles.line1}>
-          <Text style={styles.name}>{task.plugin.pluginName}</Text>
+          <Text style={styles.name}>
+            {taskMap.get(pluginId)?.plugin.pluginName ?? "未知插件"}
+          </Text>
           <TouchableOpacity style={styles.close} onPress={cancel}>
             <MaterialCommunityIcons
               name="close"
@@ -77,7 +81,7 @@ function InstallTaskItem(props: Props) {
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.state}>{stateText(state, size, totalSize)}</Text>
+        <Text style={styles.state}>{stateText(state, size, targetSize)}</Text>
         <View style={styles.progressContainer}></View>
       </View>
       <TouchableOpacity style={styles.pause} onPress={togglePause}>

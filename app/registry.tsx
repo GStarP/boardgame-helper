@@ -1,5 +1,5 @@
 import AvaPluginItem from "@/components/registry/AvaPluginItem";
-import { j_ava_plugins } from "@/store/registry";
+import { j_ava_plugins } from "@/store/plugin";
 import { StyleSheet, Text, View } from "react-native";
 import { useAtomValue } from "jotai";
 

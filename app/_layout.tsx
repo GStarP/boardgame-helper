@@ -57,7 +57,7 @@ function RootLayoutView() {
       <Stack.Screen
         name="progress"
         options={{
-          title: "安装进度",
+          title: "下载进度",
         }}
       />
     </Stack>

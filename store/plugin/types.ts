@@ -3,3 +3,7 @@ export interface PluginInfo {
   pluginName: string;
   pluginIcon: string;
 }
+
+export interface PluginDetail extends PluginInfo {
+  pluginDesc: string;
+}

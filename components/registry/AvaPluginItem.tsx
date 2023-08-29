@@ -1,25 +1,29 @@
-import { useInstallPlugin } from "@/modules/plugin/hooks";
-import type { PluginDetail } from "@/store/registry/types";
+import type { PluginDetail } from "@/store/plugin/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { IMG_BLUR_HASH } from "@/modules/common/const";
 import { COLOR_FONT_SECONDARY } from "@/modules/common/style";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useInstallTasks } from "@/store/progress";
+import { useAtomValue } from "jotai";
+import { j_task_progress_family } from "@/store/progress";
+import { installPlugin } from "@/modules/plugin";
+import { downloadPercentageText } from "@/modules/progress";
 
 export default function AvaPluginItem(props: PluginDetail) {
   const { pluginId, pluginName, pluginIcon, pluginDesc } = props;
 
-  const [tasks] = useInstallTasks();
-  const downloading =
-    tasks.find((task) => task.plugin.pluginId === pluginId) !== void 0;
+  const { size, targetSize } = useAtomValue(j_task_progress_family(pluginId));
+  const downloading = targetSize > 0;
 
-  const installPlugin = useInstallPlugin();
   const install = () => {
     // if already downloading, dont't install again
     if (downloading) return;
-    installPlugin(props);
+    installPlugin({
+      pluginId,
+      pluginName,
+      pluginIcon,
+    });
   };
 
   return (
@@ -35,13 +39,17 @@ export default function AvaPluginItem(props: PluginDetail) {
           {pluginDesc}
         </Text>
       </View>
-      {downloading ? (
-        <Text style={styles.text}>下载中</Text>
-      ) : (
-        <TouchableOpacity onPress={install}>
-          <MaterialCommunityIcons name={"cloud-download"} size={32} />
-        </TouchableOpacity>
-      )}
+      <View style={styles.box}>
+        {downloading ? (
+          <Text style={styles.text}>
+            {downloadPercentageText(size, targetSize)}
+          </Text>
+        ) : (
+          <TouchableOpacity onPress={install}>
+            <MaterialCommunityIcons name={"cloud-download"} size={32} />
+          </TouchableOpacity>
+        )}
+      </View>
       <View style={styles.hr}></View>
     </View>
   );
@@ -67,12 +75,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLOR_FONT_SECONDARY,
   },
+  box: {
+    width: 40,
+    display: "flex",
+    alignItems: "center",
+  },
   icon: {
     height: "100%",
     aspectRatio: 1,
     borderRadius: 4,
   },
-  text: { width: 32, fontSize: 12, textAlign: "center" },
+  text: { width: "100%", fontSize: 12, textAlign: "center" },
   hr: {
     position: "absolute",
     bottom: 0,
