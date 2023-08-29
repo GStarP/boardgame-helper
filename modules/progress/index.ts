@@ -48,7 +48,11 @@ export function setupInstallTaskProgress(task: InstallTask): () => void {
     task.removeListener("state:change", onStateChange);
     task.removeListener("download:progress", onProgress);
 
-    j_task_progress_family.remove(pluginId);
+    setTaskProgress(pluginId, {
+      state: InstallTaskState.WAITING,
+      size: 0,
+      targetSize: 0,
+    });
     removeTask(pluginId);
   };
 
