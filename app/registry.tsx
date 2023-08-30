@@ -21,6 +21,7 @@ export default function Registry() {
     });
   }, [nav]);
 
+  // @TODO useRequest
   const plugins = useAtomValue(j_ava_plugins);
 
   return (

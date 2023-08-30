@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import PluginItem from "@/components/home/PluginItem";
 import { j_plugins, setAvaPlugins, setPlugins } from "@/store/plugin/index";
 import { useEffect } from "react";
@@ -9,6 +9,8 @@ import { useAtomValue } from "jotai";
 import { getAllPlugins } from "@/api/plugin/db";
 import { fetchAvailablePlugins } from "@/api/plugin";
 import ProgressPageIcon from "@/components/common/ProgressPageIcon";
+import { ATOM_STYLE, COLOR_FONT_THIRD } from "@/modules/common/style";
+import { TEXT_NO_PLUGIN_1, TEXT_NO_PLUGIN_2 } from "@/i18n";
 
 export default function HomeScreen() {
   // plugins
@@ -41,9 +43,25 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.pluginList}>
-      {plugins.map((plugin) => (
-        <PluginItem key={"plugin@" + plugin.pluginId} {...plugin}></PluginItem>
-      ))}
+      {plugins.length > 0 ? (
+        plugins.map((plugin) => (
+          <PluginItem
+            key={"plugin@" + plugin.pluginId}
+            {...plugin}
+          ></PluginItem>
+        ))
+      ) : (
+        <View
+          style={[
+            ATOM_STYLE.wFull,
+            ATOM_STYLE.flex,
+            ATOM_STYLE.itemsCenter,
+          ]}
+        >
+          <Text style={styles.none}>{TEXT_NO_PLUGIN_1}</Text>
+          <Text style={styles.none}>{TEXT_NO_PLUGIN_2}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -63,5 +81,9 @@ const styles = StyleSheet.create({
   },
   progressBtn: {
     marginRight: 12,
+  },
+  none: {
+    fontSize: 16,
+    color: COLOR_FONT_THIRD,
   },
 });
