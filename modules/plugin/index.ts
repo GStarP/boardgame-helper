@@ -2,7 +2,7 @@ import { ToastAndroid } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { logger } from "@/modules/logger";
 import { InstallTask } from "./task";
-import { setupInstallTaskProgress } from "@/modules/progress";
+import { setupInstallTaskProgress } from "@/modules/plugin/progress";
 import { PluginInfo } from "@/store/plugin/types";
 import { getPluginDir } from "./util";
 import { deletePlugin, getAllPlugins } from "@/api/plugin/db";

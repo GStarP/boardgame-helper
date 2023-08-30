@@ -21,7 +21,7 @@ export function setupInstallTaskProgress(task: InstallTask): () => void {
     return EMPTY_FUNC;
   }
 
-  // @FIX tell AvaPluginItem install start
+  // @FIX tell AvaPluginItem to hide download button
   // dont need to wait until first progress
   setTaskProgress(pluginId, {
     targetSize: 1,

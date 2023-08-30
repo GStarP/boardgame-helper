@@ -6,6 +6,7 @@ import {
   PLUGIN_ROOT,
   getPluginArchiveUri,
   getPluginDir,
+  getPluginUnzipUri,
 } from "./util";
 import { EventEmitter } from "@/modules/common/event";
 import { InstallTaskState, LoadPluginTaskEventMap } from "./types";
@@ -35,16 +36,21 @@ function initDownloadResumable(
 
 async function unzipPlugin(pluginId: string): Promise<void> {
   const pluginArchiveUri = getPluginArchiveUri(pluginId);
+  const pluginUnzipDir = getPluginUnzipUri(pluginId);
   const pluginDir = getPluginDir(pluginId);
 
-  logger.info(`unzipPlugin: from=${pluginArchiveUri}, to=${pluginDir}`);
+  logger.info(`unzipPlugin: from=${pluginArchiveUri}, to=${pluginUnzipDir}`);
+  await unzip(pluginArchiveUri, pluginUnzipDir);
 
-  // @FIX should delete when new assets ready to replace
   if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
     await FileSystem.deleteAsync(pluginDir);
   }
 
-  await unzip(pluginArchiveUri, pluginDir);
+  logger.info(`movePluginDir: from=${pluginUnzipDir}, to=${pluginDir}`);
+  await FileSystem.moveAsync({
+    from: pluginUnzipDir,
+    to: pluginDir,
+  });
 }
 
 async function registerPlugin(pluginId: string): Promise<void> {
