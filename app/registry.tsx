@@ -4,7 +4,9 @@ import { StyleSheet, View } from "react-native";
 import { useAtomValue } from "jotai";
 import { useNavigation } from "expo-router";
 import ProgressPageIcon from "@/components/common/ProgressPageIcon";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+
+const MemoAvaPluginItem = React.memo(AvaPluginItem);
 
 export default function Registry() {
   // header button
@@ -24,7 +26,7 @@ export default function Registry() {
   return (
     <View>
       {plugins.map((plugin) => (
-        <AvaPluginItem key={"avaPlugin@" + plugin.pluginId} {...plugin} />
+        <MemoAvaPluginItem key={"avaPlugin@" + plugin.pluginId} {...plugin} />
       ))}
     </View>
   );

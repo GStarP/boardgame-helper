@@ -11,35 +11,13 @@ import React from "react";
 import { InstallTaskState } from "@/modules/plugin/types";
 import { useAtomValue } from "jotai";
 import { j_task_progress_family, taskMap } from "@/store/progress";
+import { TEXT_MISSING_PLUGIN_NAME } from "@/i18n";
 
 interface Props {
   pluginId: string;
 }
 
-function stateText(
-  state: InstallTaskState,
-  size: number,
-  totalSize: number
-): string {
-  if (state === InstallTaskState.WAITING) return "等待中";
-  else if (state === InstallTaskState.UNZIPPING) return "解压中";
-  else if (state === InstallTaskState.REGISTERING) return "安装中";
-  else if (state === InstallTaskState.DOWNLOADING)
-    return `${size} / ${totalSize}`;
-  else if (state === InstallTaskState.PAUSED) return "已暂停";
-  else if (state === InstallTaskState.ERROR) return "发生错误";
-  return "";
-}
-
-function stateBtnIcon(state: InstallTaskState) {
-  if (state === InstallTaskState.PAUSED || state === InstallTaskState.WAITING)
-    return "play-circle-outline";
-  else if (state === InstallTaskState.DOWNLOADING)
-    return "pause-circle-outline";
-  return "blank";
-}
-
-function InstallTaskItem(props: Props) {
+export default function InstallTaskItem(props: Props) {
   const { pluginId } = props;
 
   const { state, size, targetSize } = useAtomValue(
@@ -71,7 +49,8 @@ function InstallTaskItem(props: Props) {
       <View style={styles.info}>
         <View style={styles.line1}>
           <Text style={styles.name}>
-            {taskMap.get(pluginId)?.plugin.pluginName ?? "未知插件"}
+            {taskMap.get(pluginId)?.plugin.pluginName ??
+              TEXT_MISSING_PLUGIN_NAME}
           </Text>
           <TouchableOpacity style={styles.close} onPress={cancel}>
             <MaterialCommunityIcons
@@ -92,7 +71,28 @@ function InstallTaskItem(props: Props) {
   );
 }
 
-export default React.memo(InstallTaskItem);
+function stateText(
+  state: InstallTaskState,
+  size: number,
+  totalSize: number
+): string {
+  if (state === InstallTaskState.WAITING) return "等待中";
+  else if (state === InstallTaskState.UNZIPPING) return "解压中";
+  else if (state === InstallTaskState.REGISTERING) return "安装中";
+  else if (state === InstallTaskState.DOWNLOADING)
+    return `${size} / ${totalSize}`;
+  else if (state === InstallTaskState.PAUSED) return "已暂停";
+  else if (state === InstallTaskState.ERROR) return "发生错误";
+  return "";
+}
+
+function stateBtnIcon(state: InstallTaskState) {
+  if (state === InstallTaskState.PAUSED || state === InstallTaskState.WAITING)
+    return "play-circle-outline";
+  else if (state === InstallTaskState.DOWNLOADING)
+    return "pause-circle-outline";
+  return "blank";
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -10,3 +10,8 @@ export const TITLE_PROGRESS = "下载进度";
  */
 export const TOAST_INSTALL_START = "开始下载";
 export const TOAST_INSTALL_SUCCESS = "安装成功";
+
+/**
+ * TEXT
+ */
+export const TEXT_MISSING_PLUGIN_NAME = "未知插件";
