@@ -1,6 +1,5 @@
 import {
   addTask,
-  j_task_progress_family,
   removeTask,
   setTaskProgress,
   taskMap,
@@ -9,12 +8,12 @@ import { InstallTask } from "@/modules/plugin/task";
 import { logger } from "@/modules/logger";
 import { EMPTY_FUNC } from "@/modules/common/const";
 import { InstallTaskState } from "@/modules/plugin/types";
-import { DownloadProgressData } from "expo-file-system";
+import type { DownloadProgressData } from "expo-file-system";
 
 /**
  * @returns func cleanTask
  */
-export function setupInstallTaskProgress(task: InstallTask): () => void {
+export function TaskProgressDecorator(task: InstallTask): () => void {
   const pluginId = task.plugin.pluginId;
   if (taskMap.has(pluginId)) {
     logger.warn("task already in progress");
@@ -58,6 +57,10 @@ export function setupInstallTaskProgress(task: InstallTask): () => void {
 
   return cleanTask;
 }
+
+/**
+ * utils
+ */
 
 export function downloadPercentageText(
   size: number,

@@ -1,4 +1,4 @@
-import { PluginDetail } from "@/store/plugin/types";
+import type { PluginDetail } from "@/store/plugin/types";
 
 // @TODO mock
 export async function fetchAvailablePlugins(): Promise<PluginDetail[]> {

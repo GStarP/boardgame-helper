@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAtomValue } from "jotai";
 import { j_task_progress_family } from "@/store/progress";
 import { installPlugin } from "@/modules/plugin";
-import { downloadPercentageText } from "@/modules/plugin/progress";
+import { downloadPercentageText } from "@/modules/plugin/task/progress";
 import { TOAST_INSTALL_START } from "@/i18n";
 
 export default function AvaPluginItem(props: PluginDetail) {

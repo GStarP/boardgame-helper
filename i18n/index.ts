@@ -10,6 +10,8 @@ export const TITLE_PROGRESS = "下载进度";
  */
 export const TOAST_INSTALL_START = "开始下载";
 export const TOAST_INSTALL_SUCCESS = "安装成功";
+export const TOAST_TOO_MANY_SAVABLE = "当前下载任务较多，无法保证稳定";
+export const TOAST_RECOVER_TASK = "项下载任务已恢复";
 
 /**
  * TEXT

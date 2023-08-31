@@ -8,18 +8,23 @@ export class EventEmitter<Events extends Record<EventType, unknown>> {
     this.bus = mitt();
   }
 
-  on<Key extends keyof Events>(event: Key, callback: Handler<Events[Key]>) {
-    this.bus.on(event, callback);
+  on<Key extends keyof Events>(
+    event: Key | Key[],
+    callback: Handler<Events[Key]>
+  ) {
+    const keys = Array.isArray(event) ? event : [event];
+    keys.forEach((k) => this.bus.on(k, callback));
   }
 
   /**
    * if callback not assign, remove all
    */
   removeListener<Key extends keyof Events>(
-    event: Key,
+    event: Key | Key[],
     callback?: Handler<Events[Key]>
   ) {
-    this.bus.off(event, callback);
+    const keys = Array.isArray(event) ? event : [event];
+    keys.forEach((k) => this.bus.off(k, callback));
   }
 
   emit<Key extends keyof Events>(event: Key, payload?: Events[Key]) {

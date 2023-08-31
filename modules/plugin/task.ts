@@ -11,7 +11,7 @@ import {
 import { EventEmitter } from "@/modules/common/event";
 import { InstallTaskState, LoadPluginTaskEventMap } from "./types";
 import { createDirIfNeed } from "@/modules/common/fs";
-import { PluginInfo } from "@/store/plugin/types";
+import type { PluginInfo } from "@/store/plugin/types";
 import { insertPlugin } from "@/api/plugin/db";
 
 function initDownloadResumable(
@@ -129,7 +129,10 @@ export class InstallTask extends EventEmitter<LoadPluginTaskEventMap> {
         await createDirIfNeed(PLUGIN_DOWNLOAD_ROOT);
         this.emit("download:start", this.donwloadResumable.savable());
         downloadPromise = this.donwloadResumable.downloadAsync();
-      } else if (this.state === InstallTaskState.PAUSED) {
+      } else if (
+        this.state === InstallTaskState.PAUSED ||
+        this.state === InstallTaskState.ERROR
+      ) {
         this.emit("download:resume", this.donwloadResumable.savable());
         downloadPromise = this.donwloadResumable.resumeAsync();
       } else {

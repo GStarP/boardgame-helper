@@ -11,6 +11,8 @@ import { fetchAvailablePlugins } from "@/api/plugin";
 import ProgressPageIcon from "@/components/common/ProgressPageIcon";
 import { ATOM_STYLE, COLOR_FONT_THIRD } from "@/modules/common/style";
 import { TEXT_NO_PLUGIN_1, TEXT_NO_PLUGIN_2 } from "@/i18n";
+import { recoverSavedTask } from "@/modules/plugin/task/savable";
+import { installPlugin } from "@/modules/plugin";
 
 export default function HomeScreen() {
   // plugins
@@ -41,6 +43,13 @@ export default function HomeScreen() {
     });
   }, [nav]);
 
+  // recover saved task
+  useEffect(() => {
+    recoverSavedTask().then((tasks) =>
+      tasks.forEach((savable) => installPlugin(savable.p, savable.o))
+    );
+  }, []);
+
   return (
     <View style={styles.pluginList}>
       {plugins.length > 0 ? (
@@ -52,11 +61,7 @@ export default function HomeScreen() {
         ))
       ) : (
         <View
-          style={[
-            ATOM_STYLE.wFull,
-            ATOM_STYLE.flex,
-            ATOM_STYLE.itemsCenter,
-          ]}
+          style={[ATOM_STYLE.wFull, ATOM_STYLE.flex, ATOM_STYLE.itemsCenter]}
         >
           <Text style={styles.none}>{TEXT_NO_PLUGIN_1}</Text>
           <Text style={styles.none}>{TEXT_NO_PLUGIN_2}</Text>

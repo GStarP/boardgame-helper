@@ -25,10 +25,7 @@ export default function InstallTaskItem(props: Props) {
   );
 
   const togglePause = () => {
-    if (
-      state === InstallTaskState.WAITING ||
-      state === InstallTaskState.PAUSED
-    ) {
+    if (canTaskResume(state)) {
       taskMap.get(pluginId)?.run();
     } else if (state === InstallTaskState.DOWNLOADING) {
       taskMap.get(pluginId)?.pause();
@@ -87,11 +84,23 @@ function stateText(
 }
 
 function stateBtnIcon(state: InstallTaskState) {
-  if (state === InstallTaskState.PAUSED || state === InstallTaskState.WAITING)
-    return "play-circle-outline";
+  if (canTaskResume(state)) return "play-circle-outline";
   else if (state === InstallTaskState.DOWNLOADING)
     return "pause-circle-outline";
   return "blank";
+}
+
+/**
+ * utils
+ */
+function canTaskResume(state: InstallTaskState): boolean {
+  return (
+    [
+      InstallTaskState.WAITING,
+      InstallTaskState.PAUSED,
+      InstallTaskState.ERROR,
+    ].indexOf(state) !== -1
+  );
 }
 
 const styles = StyleSheet.create({
