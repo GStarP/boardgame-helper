@@ -1,20 +1,20 @@
-import InstallTaskItem from "@/components/progress/InstallTaskItem";
-import { TEXT_NO_INSTALL_TASK } from "@/i18n";
-import { COLOR_FONT_THIRD, ATOM_STYLE } from "@/modules/common/style";
-import { j_tasks } from "@/store/progress";
-import { useAtomValue } from "jotai";
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import InstallTaskItem from '@/components/progress/InstallTaskItem'
+import { TEXT_NO_INSTALL_TASK } from '@/i18n'
+import { COLOR_FONT_THIRD, ATOM_STYLE } from '@/modules/common/style'
+import { j_tasks } from '@/store/progress'
+import { useAtomValue } from 'jotai'
+import React from 'react'
+import { View, Text, StyleSheet } from 'react-native'
 
-const MemoInstallTaskItem = React.memo(InstallTaskItem);
+const MemoInstallTaskItem = React.memo(InstallTaskItem)
 
 export default function ProgressScreen() {
-  const pluginIds = useAtomValue(j_tasks);
+  const pluginIds = useAtomValue(j_tasks)
   return (
     <View>
       {pluginIds.length > 0 ? (
         pluginIds.map((pluginId) => (
-          <MemoInstallTaskItem key={"task@" + pluginId} pluginId={pluginId} />
+          <MemoInstallTaskItem key={'task@' + pluginId} pluginId={pluginId} />
         ))
       ) : (
         <View
@@ -24,13 +24,13 @@ export default function ProgressScreen() {
         </View>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: COLOR_FONT_THIRD,
-    marginTop: "8%",
+    marginTop: '8%',
   },
-});
+})

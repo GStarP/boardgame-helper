@@ -1,4 +1,4 @@
-import type { PluginDetail } from "@/store/plugin/types";
+import type { PluginDetail } from '@/store/plugin/types'
 
 // @TODO mock
 export async function fetchAvailablePlugins(): Promise<PluginDetail[]> {
@@ -6,12 +6,12 @@ export async function fetchAvailablePlugins(): Promise<PluginDetail[]> {
     setTimeout(() => {
       resolve([
         {
-          pluginId: "chwazi",
-          pluginName: "Chwazi",
-          pluginIcon: "",
-          pluginDesc: "a random startup chosing plugin",
+          pluginId: 'chwazi',
+          pluginName: 'Chwazi',
+          pluginIcon: '',
+          pluginDesc: 'a random startup chosing plugin',
         },
-      ]);
-    }, 1000);
-  });
+      ])
+    }, 1000)
+  })
 }

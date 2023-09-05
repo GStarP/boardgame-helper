@@ -1,4 +1,4 @@
-package com.gstarp.boardgamehelper;
+package com.gstarp.boardgametoolbox;
 
 import android.os.Build;
 import android.os.Bundle;

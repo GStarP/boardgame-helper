@@ -1,16 +1,16 @@
-import { atom, getDefaultStore } from "jotai";
-import type { PluginInfo, PluginDetail } from "./types";
+import { atom, getDefaultStore } from 'jotai'
+import type { PluginInfo, PluginDetail } from './types'
 
-const store = getDefaultStore();
+const store = getDefaultStore()
 
 // installed plugins
-export const j_plugins = atom<PluginInfo[]>([]);
+export const j_plugins = atom<PluginInfo[]>([])
 export function setPlugins(plugins: PluginInfo[]) {
-  store.set(j_plugins, plugins);
+  store.set(j_plugins, plugins)
 }
 
 // plugins from registry
-export const j_ava_plugins = atom<PluginDetail[]>([]);
+export const j_ava_plugins = atom<PluginDetail[]>([])
 export function setAvaPlugins(avaPlugins: PluginDetail[]) {
-  store.set(j_ava_plugins, avaPlugins);
+  store.set(j_ava_plugins, avaPlugins)
 }

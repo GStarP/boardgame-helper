@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "boardgame-helper",
-    "slug": "boardgame-helper",
+    "name": "board-game-toolbox",
+    "slug": "board-game-toolbox",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -12,19 +12,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.gstarp.boardgamehelper"
+      "package": "com.gstarp.boardgametoolbox"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     }

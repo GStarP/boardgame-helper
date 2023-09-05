@@ -1,4 +1,4 @@
-package com.gstarp.boardgamehelper;
+package com.gstarp.boardgametoolbox;
 
 import android.app.Application;
 import android.content.res.Configuration;

@@ -1,45 +1,42 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
-import { Image } from "expo-image";
-import { IMG_BLUR_HASH } from "@/modules/common/const";
-import {
-  COLOR_FONT_FOURTH,
-  COLOR_FONT_SECONDARY,
-} from "@/modules/common/style";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import React from "react";
-import { InstallTaskState } from "@/modules/plugin/types";
-import { useAtomValue } from "jotai";
-import { j_task_progress_family, taskMap } from "@/store/progress";
-import { TEXT_MISSING_PLUGIN_NAME } from "@/i18n";
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { StyleSheet, Text, View } from 'react-native'
+import { Image } from 'expo-image'
+import { IMG_BLUR_HASH } from '@/modules/common/const'
+import { COLOR_FONT_FOURTH, COLOR_FONT_SECONDARY } from '@/modules/common/style'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import React from 'react'
+import { InstallTaskState } from '@/modules/plugin/types'
+import { useAtomValue } from 'jotai'
+import { j_task_progress_family, taskMap } from '@/store/progress'
+import { TEXT_MISSING_PLUGIN_NAME } from '@/i18n'
 
 interface Props {
-  pluginId: string;
+  pluginId: string
 }
 
 export default function InstallTaskItem(props: Props) {
-  const { pluginId } = props;
+  const { pluginId } = props
 
   const { state, size, targetSize } = useAtomValue(
     j_task_progress_family(pluginId)
-  );
+  )
 
   const togglePause = () => {
     if (canTaskResume(state)) {
-      taskMap.get(pluginId)?.run();
+      taskMap.get(pluginId)?.run()
     } else if (state === InstallTaskState.DOWNLOADING) {
-      taskMap.get(pluginId)?.pause();
+      taskMap.get(pluginId)?.pause()
     }
-  };
+  }
 
   const cancel = () => {
-    taskMap.get(pluginId)?.cancel();
-  };
+    taskMap.get(pluginId)?.cancel()
+  }
 
   return (
     <View style={styles.container}>
       <Image
-        source={taskMap.get(pluginId)?.plugin.pluginIcon ?? ""}
+        source={taskMap.get(pluginId)?.plugin.pluginIcon ?? ''}
         style={styles.icon}
         placeholder={IMG_BLUR_HASH}
       />
@@ -58,14 +55,14 @@ export default function InstallTaskItem(props: Props) {
           </TouchableOpacity>
         </View>
         <Text style={styles.state}>{stateText(state, size, targetSize)}</Text>
-        <View style={styles.progressContainer}></View>
+        <View style={styles.progressContainer} />
       </View>
       <TouchableOpacity style={styles.pause} onPress={togglePause}>
         <MaterialCommunityIcons name={stateBtnIcon(state)} size={32} />
       </TouchableOpacity>
-      <View style={styles.hr}></View>
+      <View style={styles.hr} />
     </View>
-  );
+  )
 }
 
 function stateText(
@@ -73,21 +70,20 @@ function stateText(
   size: number,
   totalSize: number
 ): string {
-  if (state === InstallTaskState.WAITING) return "等待中";
-  else if (state === InstallTaskState.UNZIPPING) return "解压中";
-  else if (state === InstallTaskState.REGISTERING) return "安装中";
+  if (state === InstallTaskState.WAITING) return '等待中'
+  else if (state === InstallTaskState.UNZIPPING) return '解压中'
+  else if (state === InstallTaskState.REGISTERING) return '安装中'
   else if (state === InstallTaskState.DOWNLOADING)
-    return `${size} / ${totalSize}`;
-  else if (state === InstallTaskState.PAUSED) return "已暂停";
-  else if (state === InstallTaskState.ERROR) return "发生错误";
-  return "";
+    return `${size} / ${totalSize}`
+  else if (state === InstallTaskState.PAUSED) return '已暂停'
+  else if (state === InstallTaskState.ERROR) return '发生错误'
+  return ''
 }
 
 function stateBtnIcon(state: InstallTaskState) {
-  if (canTaskResume(state)) return "play-circle-outline";
-  else if (state === InstallTaskState.DOWNLOADING)
-    return "pause-circle-outline";
-  return "blank";
+  if (canTaskResume(state)) return 'play-circle-outline'
+  else if (state === InstallTaskState.DOWNLOADING) return 'pause-circle-outline'
+  return 'blank'
 }
 
 /**
@@ -100,42 +96,42 @@ function canTaskResume(state: InstallTaskState): boolean {
       InstallTaskState.PAUSED,
       InstallTaskState.ERROR,
     ].indexOf(state) !== -1
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
     height: 96,
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
   icon: {
-    height: "100%",
+    height: '100%',
     aspectRatio: 1,
     borderRadius: 4,
   },
   line1: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   close: {
     marginRight: 12,
   },
-  info: { display: "flex", marginLeft: 8, flex: 1, height: "100%" },
+  info: { display: 'flex', marginLeft: 8, flex: 1, height: '100%' },
   name: {
     fontSize: 16,
     marginBottom: 4,
   },
   state: { color: COLOR_FONT_SECONDARY, fontSize: 12, marginBottom: 4 },
   progressContainer: {
-    width: "100%",
+    width: '100%',
     height: 4,
     borderRadius: 4,
     backgroundColor: COLOR_FONT_FOURTH,
@@ -146,11 +142,11 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   hr: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 20,
     height: 0.5,
-    width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
-});
+})

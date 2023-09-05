@@ -1,5 +1,5 @@
 import * as FileSystem from 'expo-file-system'
-import { logger } from "@/modules/logger"
+import { logger } from '@/modules/logger'
 
 export async function createDirIfNeed(path: string): Promise<void> {
   const info = await FileSystem.getInfoAsync(path)

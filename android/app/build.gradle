@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.gstarp.boardgamehelper'
+    namespace 'com.gstarp.boardgametoolbox'
     defaultConfig {
-        applicationId 'com.gstarp.boardgamehelper'
+        applicationId 'com.gstarp.boardgametoolbox'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
