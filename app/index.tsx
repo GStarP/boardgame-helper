@@ -10,9 +10,11 @@ import { getAllPlugins } from '@/api/plugin/db'
 import { fetchAvailablePlugins } from '@/api/plugin'
 import ProgressPageIcon from '@/components/common/ProgressPageIcon'
 import { ATOM_STYLE, COLOR_FONT_THIRD } from '@/modules/common/style'
-import { TEXT_NO_PLUGIN_1, TEXT_NO_PLUGIN_2 } from '@/i18n'
 import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import { installPlugin } from '@/modules/plugin'
+import { useTranslation } from 'react-i18next'
+import { i18nKeys } from '@/i18n/keys'
+import { changeLanguage } from '@/i18n'
 
 function HeaderButtons() {
   const router = useRouter()
@@ -27,12 +29,16 @@ function HeaderButtons() {
       <TouchableOpacity onPress={toRegistryPage}>
         <MaterialCommunityIcons name="toolbox" size={28} />
       </TouchableOpacity>
-      <ProgressPageIcon style={styles.progressBtn} />
+      <ProgressPageIcon style={styles.btn} />
+      <TouchableOpacity onPress={changeLanguage} style={styles.btn}>
+        <MaterialCommunityIcons name="translate" size={28} />
+      </TouchableOpacity>
     </View>
   )
 }
 
 export default function HomeScreen() {
+  const { t } = useTranslation()
   // plugins
   const plugins = useAtomValue(j_plugins)
   useEffect(() => {
@@ -49,9 +55,9 @@ export default function HomeScreen() {
 
   // recover saved task
   useEffect(() => {
-    recoverSavedTask().then((tasks) =>
+    recoverSavedTask().then((tasks) => {
       tasks.forEach((savable) => installPlugin(savable.p, savable.o))
-    )
+    })
   }, [])
 
   return (
@@ -64,8 +70,8 @@ export default function HomeScreen() {
         <View
           style={[ATOM_STYLE.wFull, ATOM_STYLE.flex, ATOM_STYLE.itemsCenter]}
         >
-          <Text style={styles.none}>{TEXT_NO_PLUGIN_1}</Text>
-          <Text style={styles.none}>{TEXT_NO_PLUGIN_2}</Text>
+          <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_1)}</Text>
+          <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_2)}</Text>
         </View>
       )}
     </View>
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },
-  progressBtn: {
+  btn: {
     marginRight: 12,
   },
   none: {

@@ -9,16 +9,19 @@ import { useAtomValue } from 'jotai'
 import { j_task_progress_family } from '@/store/progress'
 import { installPlugin } from '@/modules/plugin'
 import { downloadPercentageText } from '@/modules/plugin/task/progress'
-import { TOAST_INSTALL_START } from '@/i18n'
+import { useTranslation } from 'react-i18next'
+import { i18nKeys } from '@/i18n/keys'
 
 export default function AvaPluginItem(props: PluginDetail) {
   const { pluginId, pluginName, pluginIcon, pluginDesc } = props
+
+  const { t } = useTranslation()
 
   const { size, targetSize } = useAtomValue(j_task_progress_family(pluginId))
   const downloading = targetSize > 0
 
   const install = () => {
-    // if already downloading, dont't install again
+    // if already downloading, don't install again
     if (downloading) return
     installPlugin({
       pluginId,
@@ -26,7 +29,7 @@ export default function AvaPluginItem(props: PluginDetail) {
       pluginIcon,
     })
     ToastAndroid.show(
-      `${pluginName} ${TOAST_INSTALL_START}`,
+      `${pluginName} ${t(i18nKeys.TOAST_INSTALL_START)}`,
       ToastAndroid.SHORT
     )
   }

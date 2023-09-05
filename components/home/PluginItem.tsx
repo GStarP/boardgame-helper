@@ -5,11 +5,14 @@ import { Image } from 'expo-image'
 import type { PluginInfo } from '@/store/plugin/types'
 import { uninstallPlugin } from '@/modules/plugin'
 import { showBottomMenu } from '@/components/common/BottomMenu'
-import { TEXT_UNINSTALL } from '@/i18n'
 import { COLOR_RED } from '@/modules/common/style'
+import { useTranslation } from 'react-i18next'
+import { i18nKeys } from '@/i18n/keys'
 
 export default function PluginItem(props: PluginInfo) {
   const { pluginId, pluginName, pluginIcon } = props
+
+  const { t } = useTranslation()
 
   const router = useRouter()
   const toPluginPage = () => {
@@ -25,7 +28,7 @@ export default function PluginItem(props: PluginInfo) {
   const uninstall = () => {
     showBottomMenu([
       {
-        label: TEXT_UNINSTALL,
+        label: t(i18nKeys.TEXT_UNINSTALL),
         icon: 'delete',
         color: COLOR_RED,
         onPress: () => {

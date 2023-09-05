@@ -8,9 +8,10 @@ import type { PluginInfo } from '@/store/plugin/types'
 import { getPluginDir } from './util'
 import { deletePlugin, getAllPlugins } from '@/api/plugin/db'
 import { setPlugins } from '@/store/plugin'
-import { TOAST_INSTALL_SUCCESS } from '@/i18n'
 import { TaskSavableDecorator } from './task/savable'
 import { taskMap } from '@/store/progress'
+import i18n from '@/i18n'
+import { i18nKeys } from '@/i18n/keys'
 
 export async function updatePlugins() {
   const plugins = await getAllPlugins()
@@ -34,7 +35,7 @@ export function installPlugin(
   task.on('success', async () => {
     await updatePlugins()
     ToastAndroid.show(
-      `${plugin.pluginName} ${TOAST_INSTALL_SUCCESS}`,
+      `${plugin.pluginName} ${i18n.t(i18nKeys.TOAST_INSTALL_SUCCESS)}`,
       ToastAndroid.SHORT
     )
   })

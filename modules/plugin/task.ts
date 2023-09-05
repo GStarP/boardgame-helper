@@ -83,9 +83,9 @@ export class InstallTask extends EventEmitter<LoadPluginTaskEventMap> {
     const debugLog = (...args: any) =>
       logger.debug(`[${this.plugin.pluginId}]`, ...args)
     this.on('download:start', (data) => debugLog('download:start', data))
-    this.on('download:pause', (data) => debugLog('downalod:pause', data))
+    this.on('download:pause', (data) => debugLog('download:pause', data))
     this.on('download:resume', (data) => debugLog('download:resume', data))
-    this.on('download:finish', (data) => debugLog('downalod:finish', data))
+    this.on('download:finish', (data) => debugLog('download:finish', data))
     this.on('unzip:start', () => debugLog('unzip:start'))
     this.on('unzip:finish', () => debugLog('unzip:finish'))
     this.on('success', () => debugLog('success'))

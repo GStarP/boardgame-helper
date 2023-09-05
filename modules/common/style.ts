@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 /**
- * consts
+ * const
  */
 export const COLOR_FONT_SECONDARY = 'rgba(0, 0, 0, 0.6)'
 export const COLOR_FONT_THIRD = 'rgba(0, 0, 0, 0.4)'

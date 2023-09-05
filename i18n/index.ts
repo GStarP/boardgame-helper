@@ -1,23 +1,30 @@
-/**
- * TITLE
- */
-export const TITLE_HOME = '主页'
-export const TITLE_REGISTRY = '可用插件'
-export const TITLE_PROGRESS = '下载进度'
+import { resources as zhr } from './zh'
+import { resources as enr } from './en'
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
-/**
- * TOAST
- */
-export const TOAST_INSTALL_START = '开始下载'
-export const TOAST_INSTALL_SUCCESS = '安装成功'
-export const TOAST_TOO_MANY_SAVABLE = '当前下载任务较多，无法保证稳定'
-export const TOAST_RECOVER_TASK = '项下载任务已恢复'
+export type i18nLng = 'zh' | 'en'
 
-/**
- * TEXT
- */
-export const TEXT_NO_PLUGIN_1 = '暂无插件'
-export const TEXT_NO_PLUGIN_2 = '点击右上角去下载'
-export const TEXT_NO_INSTALL_TASK = '暂无下载任务'
-export const TEXT_MISSING_PLUGIN_NAME = '未知插件'
-export const TEXT_UNINSTALL = '卸载'
+i18n.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
+  resources: {
+    zh: {
+      translation: zhr,
+    },
+    en: {
+      translation: enr,
+    },
+  },
+  lng: 'zh',
+  interpolation: {
+    escapeValue: false,
+  },
+})
+
+export function changeLanguage(): i18nLng {
+  const nextLng: i18nLng = i18n.language === 'zh' ? 'en' : 'zh'
+  i18n.changeLanguage(nextLng)
+  return nextLng
+}
+
+export default i18n

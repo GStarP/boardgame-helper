@@ -1,14 +1,15 @@
+import i18n from '@/i18n'
 import type { PluginInfo } from '@/store/plugin/types'
 import { InstallTask } from '../task'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import type { DownloadPauseState } from 'expo-file-system'
 import { logger } from '@/modules/logger'
 import { ToastAndroid } from 'react-native'
-import { TOAST_RECOVER_TASK, TOAST_TOO_MANY_SAVABLE } from '@/i18n'
 import { InstallTaskState } from '../types'
+import { i18nKeys } from '@/i18n/keys'
 
 /**
- * consts
+ * const
  */
 const MAX_SAVABLE_NUM = 5
 
@@ -79,7 +80,10 @@ export async function recoverSavedTask(): Promise<TaskSavable[]> {
   }
 
   if (ret.length > 0) {
-    ToastAndroid.show(`${ret.length} ${TOAST_RECOVER_TASK}`, ToastAndroid.SHORT)
+    ToastAndroid.show(
+      `${ret.length} ${i18n.t(i18nKeys.TOAST_RECOVER_TASK)}`,
+      ToastAndroid.SHORT
+    )
   }
 
   return ret
@@ -90,7 +94,10 @@ export async function checkCanSaveTask(): Promise<boolean> {
     isTaskSavableKey(key)
   ).length
   if (savedTaskNum >= MAX_SAVABLE_NUM) {
-    ToastAndroid.show(TOAST_TOO_MANY_SAVABLE, ToastAndroid.SHORT)
+    ToastAndroid.show(
+      i18n.t(i18nKeys.TOAST_TOO_MANY_SAVABLE),
+      ToastAndroid.SHORT
+    )
     return false
   }
   return true

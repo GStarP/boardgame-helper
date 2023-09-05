@@ -1,7 +1,7 @@
 import * as FileSystem from 'expo-file-system'
 
 /**
- * consts
+ * const
  */
 export const PLUGIN_ROOT = FileSystem.documentDirectory + 'plugins'
 export const PLUGIN_DOWNLOAD_ROOT = FileSystem.cacheDirectory + 'plugins'

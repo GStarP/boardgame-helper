@@ -8,7 +8,8 @@ import React from 'react'
 import { InstallTaskState } from '@/modules/plugin/types'
 import { useAtomValue } from 'jotai'
 import { j_task_progress_family, taskMap } from '@/store/progress'
-import { TEXT_MISSING_PLUGIN_NAME } from '@/i18n'
+import { useTranslation } from 'react-i18next'
+import { i18nKeys } from '@/i18n/keys'
 
 interface Props {
   pluginId: string
@@ -16,6 +17,8 @@ interface Props {
 
 export default function InstallTaskItem(props: Props) {
   const { pluginId } = props
+
+  const { t } = useTranslation()
 
   const { state, size, targetSize } = useAtomValue(
     j_task_progress_family(pluginId)
@@ -44,7 +47,7 @@ export default function InstallTaskItem(props: Props) {
         <View style={styles.line1}>
           <Text style={styles.name}>
             {taskMap.get(pluginId)?.plugin.pluginName ??
-              TEXT_MISSING_PLUGIN_NAME}
+              t(i18nKeys.TEXT_MISSING_PLUGIN_NAME)}
           </Text>
           <TouchableOpacity style={styles.close} onPress={cancel}>
             <MaterialCommunityIcons
