@@ -1,13 +1,12 @@
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { hideBottomModal, showBottomModal } from './BottomSheet'
 import { View, Text } from 'react-native'
 import { ATOM_STYLE } from '@/modules/common/style'
 import { EMPTY_FUNC } from '@/modules/common/const'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { TouchableRipple } from 'react-native-paper'
 
 export interface BottomMenuItemProps {
   label: string
-  icon: 'delete'
   onPress?: () => void
   color?: string
   closeMenuAfterPress?: boolean
@@ -16,7 +15,6 @@ export interface BottomMenuItemProps {
 function BottomMenuItem(props: BottomMenuItemProps) {
   const {
     label,
-    icon,
     onPress = EMPTY_FUNC,
     color = '#000',
     closeMenuAfterPress = true,
@@ -30,21 +28,16 @@ function BottomMenuItem(props: BottomMenuItemProps) {
   }
 
   return (
-    <TouchableOpacity
+    <TouchableRipple
       style={[
         styles.item,
         ATOM_STYLE.flex,
         ATOM_STYLE.flexRow,
         ATOM_STYLE.itemsCenter,
+        ATOM_STYLE.justifyCenter,
       ]}
       onPress={pressHandler}
     >
-      <MaterialCommunityIcons
-        style={styles.icon}
-        name={icon}
-        color={color}
-        size={32}
-      />
       <Text
         style={[
           {
@@ -55,14 +48,14 @@ function BottomMenuItem(props: BottomMenuItemProps) {
       >
         {label}
       </Text>
-    </TouchableOpacity>
+    </TouchableRipple>
   )
 }
 
 export function showBottomMenu(items: BottomMenuItemProps[]) {
   if (items.length === 0) return
   showBottomModal(
-    <View style={[ATOM_STYLE.flex]}>
+    <View style={[ATOM_STYLE.flex, styles.menu]}>
       {items.map((item) => (
         <BottomMenuItem key={`btm-menu:${item.label}`} {...item} />
       ))}
@@ -70,17 +63,16 @@ export function showBottomMenu(items: BottomMenuItemProps[]) {
   )
 }
 
-const ITEM_HEIGHT = 100
+const MD_SCALE = 1
 const styles = StyleSheet.create({
-  item: {
-    height: ITEM_HEIGHT,
-    paddingHorizontal: 24,
+  menu: {
+    paddingBottom: 8,
   },
-  icon: {
-    marginRight: 24,
+  item: {
+    height: 56 * MD_SCALE,
+    paddingHorizontal: 16 * MD_SCALE,
   },
   label: {
     fontSize: 18,
-    lineHeight: ITEM_HEIGHT,
   },
 })

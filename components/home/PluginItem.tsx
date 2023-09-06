@@ -29,7 +29,6 @@ export default function PluginItem(props: PluginInfo) {
     showBottomMenu([
       {
         label: t(i18nKeys.TEXT_UNINSTALL),
-        icon: 'delete',
         color: COLOR_RED,
         onPress: () => {
           uninstallPlugin(pluginId)
