@@ -12,7 +12,7 @@ function HeaderButtons() {
   return (
     <View style={[ATOM_STYLE.flexRow]}>
       <IconButton
-        icon="download"
+        icon="progress-download"
         size={28}
         onPress={() => {
           router.push('/progress')

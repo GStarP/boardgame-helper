@@ -4,6 +4,7 @@ export const resources: i18nTranslation = {
   TITLE_HOME: 'Plugins',
   TITLE_REGISTRY: 'Registry',
   TITLE_PROGRESS: 'Download',
+  TITLE_SETTINGS: 'Settings',
 
   TOAST_INSTALL_START: 'begin downloading',
   TOAST_INSTALL_SUCCESS: 'successfully installed',
@@ -15,4 +16,5 @@ export const resources: i18nTranslation = {
   TEXT_NO_INSTALL_TASK: 'nothing installing',
   TEXT_MISSING_PLUGIN_NAME: 'Unknown Plugin',
   TEXT_UNINSTALL: 'Uninstall',
+  TEXT_LANGUAGE: 'Switch Language',
 }

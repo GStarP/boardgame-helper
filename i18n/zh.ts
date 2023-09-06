@@ -4,6 +4,7 @@ export const resources: i18nTranslation = {
   TITLE_HOME: '本地插件',
   TITLE_REGISTRY: '插件仓库',
   TITLE_PROGRESS: '下载进度',
+  TITLE_SETTINGS: '设置',
 
   TOAST_INSTALL_START: '开始下载',
   TOAST_INSTALL_SUCCESS: '安装成功',
@@ -15,4 +16,5 @@ export const resources: i18nTranslation = {
   TEXT_NO_INSTALL_TASK: '暂无下载任务',
   TEXT_MISSING_PLUGIN_NAME: '未知插件',
   TEXT_UNINSTALL: '卸载',
+  TEXT_LANGUAGE: '切换语言',
 }

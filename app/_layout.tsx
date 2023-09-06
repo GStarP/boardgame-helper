@@ -1,4 +1,5 @@
 import '@/i18n'
+import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
@@ -19,16 +20,18 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })
+  // recover lng before render to avoid text flash
+  const [lngLoaded] = useLng()
 
   useEffect(() => {
     if (error) throw error
   }, [error])
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && lngLoaded) {
       SplashScreen.hideAsync()
     }
-  }, [loaded])
+  }, [loaded, lngLoaded])
 
   if (!loaded) {
     return null
@@ -56,6 +59,13 @@ function RootLayoutView() {
         name="progress"
         options={{
           title: t(i18nKeys.TITLE_PROGRESS),
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          title: t(i18nKeys.TITLE_SETTINGS),
           headerShown: true,
         }}
       />
