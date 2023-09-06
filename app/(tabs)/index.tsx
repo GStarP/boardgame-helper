@@ -1,41 +1,14 @@
 import { StyleSheet, View, Text } from 'react-native'
 import PluginItem from '@/components/home/PluginItem'
-import { j_plugins, setAvaPlugins, setPlugins } from '@/store/plugin/index'
+import { j_plugins, setPlugins } from '@/store/plugin/index'
 import { useEffect } from 'react'
-import { useNavigation, useRouter } from 'expo-router'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAtomValue } from 'jotai'
 import { getAllPlugins } from '@/api/plugin/db'
-import { fetchAvailablePlugins } from '@/api/plugin'
-import ProgressPageIcon from '@/components/common/ProgressPageIcon'
 import { ATOM_STYLE, COLOR_FONT_THIRD } from '@/modules/common/style'
 import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import { installPlugin } from '@/modules/plugin'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
-import { changeLanguage } from '@/i18n'
-
-function HeaderButtons() {
-  const router = useRouter()
-  const toRegistryPage = () => {
-    fetchAvailablePlugins().then((res) => setAvaPlugins(res))
-    router.push({
-      pathname: '/registry',
-    })
-  }
-  return (
-    <View style={styles.buttons}>
-      <TouchableOpacity onPress={toRegistryPage}>
-        <MaterialCommunityIcons name="toolbox" size={28} />
-      </TouchableOpacity>
-      <ProgressPageIcon style={styles.btn} />
-      <TouchableOpacity onPress={changeLanguage} style={styles.btn}>
-        <MaterialCommunityIcons name="translate" size={28} />
-      </TouchableOpacity>
-    </View>
-  )
-}
 
 export default function HomeScreen() {
   const { t } = useTranslation()
@@ -44,14 +17,6 @@ export default function HomeScreen() {
   useEffect(() => {
     getAllPlugins().then((res) => setPlugins(res))
   }, [])
-
-  // header button
-  const nav = useNavigation()
-  useEffect(() => {
-    nav.setOptions({
-      headerRight: () => <HeaderButtons />,
-    })
-  }, [nav])
 
   // recover saved task
   useEffect(() => {

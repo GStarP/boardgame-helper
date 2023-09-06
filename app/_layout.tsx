@@ -48,25 +48,15 @@ function RootLayoutView() {
       screenOptions={{
         animation: 'fade',
         animationDuration: 200,
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: t(i18nKeys.TITLE_HOME),
-        }}
-      />
-      <Stack.Screen name="plugin" />
-      <Stack.Screen
-        name="registry"
-        options={{
-          title: t(i18nKeys.TITLE_REGISTRY),
-        }}
-      />
+      <Stack.Screen name="plugin" options={{ headerShown: true }} />
       <Stack.Screen
         name="progress"
         options={{
           title: t(i18nKeys.TITLE_PROGRESS),
+          headerShown: true,
         }}
       />
     </Stack>

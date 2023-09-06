@@ -1,8 +1,8 @@
 import { i18nTranslation } from './keys'
 
 export const resources: i18nTranslation = {
-  TITLE_HOME: 'Toolbox',
-  TITLE_REGISTRY: 'Plugins',
+  TITLE_HOME: 'Plugins',
+  TITLE_REGISTRY: 'Registry',
   TITLE_PROGRESS: 'Download',
 
   TOAST_INSTALL_START: 'begin downloading',
