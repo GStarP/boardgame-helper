@@ -17,4 +17,6 @@ export const resources: i18nTranslation = {
   TEXT_MISSING_PLUGIN_NAME: '未知插件',
   TEXT_UNINSTALL: '卸载',
   TEXT_LANGUAGE: '切换语言',
+  TEXT_LOADING: '加载中...',
+  TEXT_NO_DATA: '暂无数据',
 }

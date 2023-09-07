@@ -18,9 +18,9 @@ export const ATOM_STYLE = StyleSheet.create({
   hFull: {
     height: '100%',
   },
-  flex: { display: 'flex' },
   flexRow: { flexDirection: 'row' },
   flexFull: { flex: 1 },
   justifyCenter: { justifyContent: 'center' },
   itemsCenter: { alignItems: 'center' },
+  textCenter: { textAlign: 'center' },
 })

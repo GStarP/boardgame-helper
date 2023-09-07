@@ -1,17 +1,9 @@
 import type { PluginDetail } from '@/store/plugin/types'
+import axios, { Res } from '@/api'
 
-// @TODO mock
 export async function fetchAvailablePlugins(): Promise<PluginDetail[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          pluginId: 'chwazi',
-          pluginName: 'Chwazi',
-          pluginIcon: '',
-          pluginDesc: 'a random startup chosing plugin',
-        },
-      ])
-    }, 1000)
-  })
+  const { data: res } = await axios.get<Res<PluginDetail[]>>('/plugin/all')
+  // @TODO axios interceptor
+  if (res.data !== undefined) return res.data
+  else throw Error(res.msg)
 }

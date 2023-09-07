@@ -1,9 +1,8 @@
 import { StyleSheet, View, Text } from 'react-native'
 import PluginItem from '@/components/home/PluginItem'
-import { j_plugins, setPlugins } from '@/store/plugin/index'
+import { j_plugins } from '@/store/plugin/index'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
-import { getAllPlugins } from '@/api/plugin/db'
 import { ATOM_STYLE, COLOR_FONT_THIRD } from '@/modules/common/style'
 import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import { installPlugin } from '@/modules/plugin'
@@ -14,9 +13,6 @@ export default function HomeScreen() {
   const { t } = useTranslation()
   // plugins
   const plugins = useAtomValue(j_plugins)
-  useEffect(() => {
-    getAllPlugins().then((res) => setPlugins(res))
-  }, [])
 
   // recover saved task
   useEffect(() => {
@@ -32,9 +28,7 @@ export default function HomeScreen() {
           <PluginItem key={'plugin@' + plugin.pluginId} {...plugin} />
         ))
       ) : (
-        <View
-          style={[ATOM_STYLE.wFull, ATOM_STYLE.flex, ATOM_STYLE.itemsCenter]}
-        >
+        <View style={[ATOM_STYLE.wFull, ATOM_STYLE.itemsCenter]}>
           <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_1)}</Text>
           <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_2)}</Text>
         </View>

@@ -19,9 +19,7 @@ export default function ProgressScreen() {
           <MemoInstallTaskItem key={'task@' + pluginId} pluginId={pluginId} />
         ))
       ) : (
-        <View
-          style={[ATOM_STYLE.wFull, ATOM_STYLE.flex, ATOM_STYLE.itemsCenter]}
-        >
+        <View style={[ATOM_STYLE.wFull, ATOM_STYLE.itemsCenter]}>
           <Text style={styles.text}>{t(i18nKeys.TEXT_NO_INSTALL_TASK)}</Text>
         </View>
       )}

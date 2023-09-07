@@ -6,4 +6,5 @@ export interface PluginInfo {
 
 export interface PluginDetail extends PluginInfo {
   pluginDesc: string
+  pluginSrc: string
 }

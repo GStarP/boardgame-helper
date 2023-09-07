@@ -54,11 +54,10 @@ export default function AvaPluginItem(props: PluginDetail) {
           </Text>
         ) : (
           <TouchableOpacity onPress={install}>
-            <MaterialCommunityIcons name={'cloud-download'} size={32} />
+            <MaterialCommunityIcons name="download" size={32} />
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.hr} />
     </View>
   )
 }
@@ -72,9 +71,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 96,
     paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    borderBottomColor: 'rgba(0, 0, 0, 0.3)',
+    borderBottomWidth: 0.5,
   },
-  info: { display: 'flex', marginLeft: 8, flex: 1, height: '100%' },
+  info: { display: 'flex', marginLeft: 16, flex: 1, height: '100%' },
   name: {
     fontSize: 16,
     marginBottom: 4,
@@ -94,12 +95,4 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   text: { width: '100%', fontSize: 12, textAlign: 'center' },
-  hr: {
-    position: 'absolute',
-    bottom: 0,
-    left: 20,
-    height: 0.5,
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
 })

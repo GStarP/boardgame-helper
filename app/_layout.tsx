@@ -1,10 +1,12 @@
+import { getAllPlugins } from '@/api/plugin/db'
 import '@/i18n'
 import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
+import { setPlugins } from '@/store/plugin'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
 
@@ -15,23 +17,34 @@ export { ErrorBoundary } from 'expo-router'
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  /**
+   * These async tasks should finish before splash hide
+   */
   // splash screen (in-app loading animation)
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })
-  // recover lng before render to avoid text flash
+  // recover lng
   const [lngLoaded] = useLng()
+  // read local plugins
+  const [pluginsLoaded, setPluginsLoaded] = useState(false)
+  useEffect(() => {
+    getAllPlugins().then((res) => {
+      setPlugins(res)
+      setPluginsLoaded(true)
+    })
+  }, [])
 
   useEffect(() => {
     if (error) throw error
   }, [error])
 
   useEffect(() => {
-    if (loaded && lngLoaded) {
+    if (loaded && lngLoaded && pluginsLoaded) {
       SplashScreen.hideAsync()
     }
-  }, [loaded, lngLoaded])
+  }, [loaded, lngLoaded, pluginsLoaded])
 
   if (!loaded) {
     return null

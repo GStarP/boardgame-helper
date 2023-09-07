@@ -31,7 +31,6 @@ function BottomMenuItem(props: BottomMenuItemProps) {
     <TouchableRipple
       style={[
         styles.item,
-        ATOM_STYLE.flex,
         ATOM_STYLE.flexRow,
         ATOM_STYLE.itemsCenter,
         ATOM_STYLE.justifyCenter,
@@ -55,7 +54,7 @@ function BottomMenuItem(props: BottomMenuItemProps) {
 export function showBottomMenu(items: BottomMenuItemProps[]) {
   if (items.length === 0) return
   showBottomModal(
-    <View style={[ATOM_STYLE.flex, styles.menu]}>
+    <View style={[styles.menu]}>
       {items.map((item) => (
         <BottomMenuItem key={`btm-menu:${item.label}`} {...item} />
       ))}
