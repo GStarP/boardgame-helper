@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     paddingVertical: '8%',
   },
   buttons: {
-    display: 'flex',
     flexDirection: 'row-reverse',
     alignItems: 'center',
   },

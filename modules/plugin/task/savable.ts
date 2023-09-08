@@ -38,12 +38,12 @@ export function TaskSavableDecorator(
   const timer = setInterval(async () => {
     // only need to save when downloading
     if (task.state === InstallTaskState.DOWNLOADING) {
-      // user dont know
-      await task.donwloadResumable.pauseAsync()
+      // user don't know
+      await task.downloadResumable.pauseAsync()
       // must pause before save
       saveTask(task)
       // after save, silently resume
-      await task.donwloadResumable.resumeAsync()
+      await task.downloadResumable.resumeAsync()
     }
   }, interval)
   const clean = async () => {
@@ -51,7 +51,7 @@ export function TaskSavableDecorator(
     task.removeListener(['success', 'cancel'], clean)
     await AsyncStorage.removeItem(taskSavableKey(task.plugin.pluginId))
   }
-  // dont clean when "error", because we dont remove task
+  // don't clean when "error", because we don't remove task
   // user can still resume task
   task.on(['success', 'cancel'], clean)
 
@@ -106,7 +106,6 @@ export async function checkCanSaveTask(): Promise<boolean> {
 /**
  * utils
  */
-
 export function taskSavableKey(pluginId: string): string {
   return `task:${pluginId}`
 }
@@ -118,7 +117,7 @@ async function saveTask(task: InstallTask) {
   try {
     const savable: TaskSavable = {
       p: task.plugin,
-      o: task.donwloadResumable.savable(),
+      o: task.downloadResumable.savable(),
     }
     await AsyncStorage.setItem(
       taskSavableKey(task.plugin.pluginId),

@@ -4,7 +4,7 @@ import type { DownloadPauseState } from 'expo-file-system'
 import { logger } from '@/modules/logger'
 import { InstallTask } from './task'
 import { TaskProgressDecorator } from '@/modules/plugin/task/progress'
-import type { PluginInfo } from '@/store/plugin/types'
+import type { PluginDetail } from '@/store/plugin/types'
 import { getPluginDir } from './util'
 import { deletePlugin, getAllPlugins } from '@/api/plugin/db'
 import { setPlugins } from '@/store/plugin'
@@ -19,7 +19,7 @@ export async function updatePlugins() {
 }
 
 export function installPlugin(
-  plugin: PluginInfo,
+  plugin: PluginDetail,
   savable?: DownloadPauseState
 ) {
   // if task already exists, return
@@ -27,9 +27,7 @@ export function installPlugin(
     return
   }
   let task = new InstallTask(plugin, savable)
-  // @TODO use dynamic settings to control
   task = TaskSavableDecorator(task)
-
   const cleanTask = TaskProgressDecorator(task)
 
   task.on('success', async () => {

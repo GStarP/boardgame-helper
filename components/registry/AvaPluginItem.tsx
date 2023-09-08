@@ -23,11 +23,7 @@ export default function AvaPluginItem(props: PluginDetail) {
   const install = () => {
     // if already downloading, don't install again
     if (downloading) return
-    installPlugin({
-      pluginId,
-      pluginName,
-      pluginIcon,
-    })
+    installPlugin(props)
     ToastAndroid.show(
       `${pluginName} ${t(i18nKeys.TOAST_INSTALL_START)}`,
       ToastAndroid.SHORT
@@ -65,7 +61,6 @@ export default function AvaPluginItem(props: PluginDetail) {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(0, 0, 0, 0.3)',
     borderBottomWidth: 0.5,
   },
-  info: { display: 'flex', marginLeft: 16, flex: 1, height: '100%' },
+  info: { marginLeft: 16, flex: 1, height: '100%' },
   name: {
     fontSize: 16,
     marginBottom: 4,
@@ -86,7 +81,6 @@ const styles = StyleSheet.create({
   },
   box: {
     width: 40,
-    display: 'flex',
     alignItems: 'center',
   },
   icon: {

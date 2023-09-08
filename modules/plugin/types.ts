@@ -4,7 +4,7 @@ import type {
   FileSystemDownloadResult,
 } from 'expo-file-system'
 
-export type LoadPluginTaskEventMap = {
+export type InstallTaskEventMap = {
   'download:progress': DownloadProgressData
   'download:start': DownloadPauseState
   'download:pause': DownloadPauseState
@@ -26,6 +26,6 @@ export enum InstallTaskState {
   PAUSED,
   UNZIPPING,
   REGISTERING,
-  FINISH,
+  SUCCESS,
   ERROR,
 }

@@ -19,4 +19,9 @@ export const resources: i18nTranslation = {
   TEXT_LANGUAGE: '切换语言',
   TEXT_LOADING: '加载中...',
   TEXT_NO_DATA: '暂无数据',
+  TEXT_WAITING: '等待中',
+  TEXT_UNZIPPING: '正在解压',
+  TEXT_REGISTERING: '正在安装',
+  TEXT_PAUSED: '已暂停',
+  TEXT_ERROR: '发生错误',
 }

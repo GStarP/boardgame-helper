@@ -19,4 +19,9 @@ export const resources: i18nTranslation = {
   TEXT_LANGUAGE: 'Switch Language',
   TEXT_LOADING: 'loading...',
   TEXT_NO_DATA: 'no data',
+  TEXT_WAITING: 'waiting',
+  TEXT_UNZIPPING: 'unzipping',
+  TEXT_REGISTERING: 'installing',
+  TEXT_PAUSED: 'paused',
+  TEXT_ERROR: 'error',
 }

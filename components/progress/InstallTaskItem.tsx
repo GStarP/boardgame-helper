@@ -10,6 +10,7 @@ import { useAtomValue } from 'jotai'
 import { j_task_progress_family, taskMap } from '@/store/progress'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
+import i18n from '@/i18n'
 
 interface Props {
   pluginId: string
@@ -63,7 +64,6 @@ export default function InstallTaskItem(props: Props) {
       <TouchableOpacity style={styles.pause} onPress={togglePause}>
         <MaterialCommunityIcons name={stateBtnIcon(state)} size={32} />
       </TouchableOpacity>
-      <View style={styles.hr} />
     </View>
   )
 }
@@ -73,13 +73,16 @@ function stateText(
   size: number,
   totalSize: number
 ): string {
-  if (state === InstallTaskState.WAITING) return '等待中'
-  else if (state === InstallTaskState.UNZIPPING) return '解压中'
-  else if (state === InstallTaskState.REGISTERING) return '安装中'
+  if (state === InstallTaskState.WAITING) return i18n.t(i18nKeys.TEXT_WAITING)
+  else if (state === InstallTaskState.UNZIPPING)
+    return i18n.t(i18nKeys.TEXT_UNZIPPING)
+  else if (state === InstallTaskState.REGISTERING)
+    return i18n.t(i18nKeys.TEXT_REGISTERING)
   else if (state === InstallTaskState.DOWNLOADING)
     return `${size} / ${totalSize}`
-  else if (state === InstallTaskState.PAUSED) return '已暂停'
-  else if (state === InstallTaskState.ERROR) return '发生错误'
+  else if (state === InstallTaskState.PAUSED)
+    return i18n.t(i18nKeys.TEXT_PAUSED)
+  else if (state === InstallTaskState.ERROR) return i18n.t(i18nKeys.TEXT_ERROR)
   return ''
 }
 
@@ -105,13 +108,14 @@ function canTaskResume(state: InstallTaskState): boolean {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
     height: 96,
     paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    borderBottomColor: 'rgba(0, 0, 0, 0.3)',
+    borderBottomWidth: 0.5,
   },
   icon: {
     height: '100%',
@@ -119,7 +123,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   line1: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
   close: {
     marginRight: 12,
   },
-  info: { display: 'flex', marginLeft: 8, flex: 1, height: '100%' },
+  info: { marginLeft: 16, flex: 1, height: '100%' },
   name: {
     fontSize: 16,
     marginBottom: 4,
@@ -143,13 +146,5 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     marginLeft: 8,
-  },
-  hr: {
-    position: 'absolute',
-    bottom: 0,
-    left: 20,
-    height: 0.5,
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
 })
