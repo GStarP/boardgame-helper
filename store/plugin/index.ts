@@ -14,3 +14,4 @@ export const j_ava_plugins = atom<PluginDetail[]>([])
 export function setAvaPlugins(avaPlugins: PluginDetail[]) {
   store.set(j_ava_plugins, avaPlugins)
 }
+export const j_ava_loading = atom(false)

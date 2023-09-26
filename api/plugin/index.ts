@@ -1,9 +1,11 @@
-import type { PluginDetail } from '@/store/plugin/types'
-import axios, { Res } from '@/api'
+import axios from '..'
+import { NPMPackageMetadata } from './types'
 
-export async function fetchAvailablePlugins(): Promise<PluginDetail[]> {
-  const { data: res } = await axios.get<Res<PluginDetail[]>>('/plugin/all')
-  // @TODO axios interceptor
-  if (res.data !== undefined) return res.data
-  else throw Error(res.msg)
+export async function fetchPluginMetadata(
+  pluginId: string
+): Promise<NPMPackageMetadata> {
+  const { data } = await axios.get(
+    `https://registry.npmjs.org/${pluginId}/latest`
+  )
+  return data
 }

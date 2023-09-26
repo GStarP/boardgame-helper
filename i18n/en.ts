@@ -2,7 +2,7 @@ import { i18nTranslation } from './keys'
 
 export const resources: i18nTranslation = {
   TITLE_HOME: 'Plugins',
-  TITLE_REGISTRY: 'Registry',
+  TITLE_REGISTRY: 'More Plugins',
   TITLE_PROGRESS: 'Download',
   TITLE_SETTINGS: 'Settings',
 

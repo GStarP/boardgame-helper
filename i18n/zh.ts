@@ -2,7 +2,7 @@ import { i18nTranslation } from './keys'
 
 export const resources: i18nTranslation = {
   TITLE_HOME: '本地插件',
-  TITLE_REGISTRY: '插件仓库',
+  TITLE_REGISTRY: '可用插件',
   TITLE_PROGRESS: '下载进度',
   TITLE_SETTINGS: '设置',
 
