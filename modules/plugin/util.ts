@@ -14,13 +14,22 @@ export function getPluginDir(pluginId: string): string {
 }
 
 export function getPluginEntry(pluginId: string): string {
-  return PLUGIN_ROOT + `/${pluginId}/index.html`
+  return PLUGIN_ROOT + `/${pluginId}/dist/index.html`
 }
 
 export function getPluginArchiveUri(pluginId: string): string {
-  return `${PLUGIN_DOWNLOAD_ROOT}/${pluginId}.zip`
+  return `${PLUGIN_DOWNLOAD_ROOT}/${pluginId}.tgz`
 }
 
 export function getPluginUnzipUri(pluginId: string): string {
   return `${PLUGIN_DOWNLOAD_ROOT}/${pluginId}`
 }
+
+/**
+ * pluginId will be used in path
+ * so '/' is not allowed
+ */
+export function formatPluginId(rawPluginId: string): string {
+  return rawPluginId.replaceAll(/\//g, SCOPE_SPLITTER)
+}
+export const SCOPE_SPLITTER = '+'

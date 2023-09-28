@@ -1,5 +1,5 @@
 import i18n from '@/i18n'
-import type { PluginInfo } from '@/store/plugin/types'
+import type { PluginDetail } from '@/store/plugin/types'
 import { InstallTask } from '../task'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import type { DownloadPauseState } from 'expo-file-system'
@@ -21,7 +21,7 @@ const DEFAULT_OPTIONS: Options = {
 }
 
 interface TaskSavable {
-  p: PluginInfo
+  p: PluginDetail
   o: DownloadPauseState
 }
 

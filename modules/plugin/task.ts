@@ -1,6 +1,6 @@
 import * as FileSystem from 'expo-file-system'
 import { logger } from '@/modules/logger'
-import { unzip } from 'react-native-zip-archive'
+import { decompress } from '@gstarp/react-native-tgz'
 import {
   PLUGIN_DOWNLOAD_ROOT,
   PLUGIN_ROOT,
@@ -97,6 +97,12 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
       const res = await downloadPromise
       this.emit('download:finish', res)
 
+      console.warn(
+        await FileSystem.readDirectoryAsync(
+          FileSystem.cacheDirectory + 'plugins'
+        )
+      )
+
       // ensure plugin_root exists before unzip
       await createDirIfNeed(PLUGIN_ROOT)
       this.emit('unzip:start')
@@ -151,7 +157,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     const pluginDir = getPluginDir(pluginId)
 
     logger.info(`unzipPlugin: from=${pluginArchiveUri}, to=${pluginUnzipDir}`)
-    await unzip(pluginArchiveUri, pluginUnzipDir)
+    await decompress(pluginArchiveUri, pluginUnzipDir)
 
     if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
       await FileSystem.deleteAsync(pluginDir)
@@ -159,9 +165,11 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
 
     logger.info(`movePluginDir: from=${pluginUnzipDir}, to=${pluginDir}`)
     await FileSystem.moveAsync({
-      from: pluginUnzipDir,
+      // @ATTENTION .tgz from npm registry includes an extra package dir
+      from: pluginUnzipDir + '/package',
       to: pluginDir,
     })
+    await FileSystem.deleteAsync(pluginUnzipDir)
   }
 
   async registerPlugin(): Promise<void> {

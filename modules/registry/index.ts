@@ -3,6 +3,7 @@ import { getDefaultStore } from 'jotai'
 import { fetchPluginMetadata } from '@/api/plugin'
 import { PluginDetail } from '@/store/plugin/types'
 import { logger } from '@/modules/logger'
+import { formatPluginId } from '@/modules/plugin/util'
 
 export const BUILT_IN_PLUGIN_LIST = ['@board-game-toolbox/plugin-template']
 
@@ -14,7 +15,7 @@ export async function batchUpdateAvaPlugins(pluginIds: string[]) {
       pluginIds.map((id) => fetchPluginMetadata(id))
     )
     const plugins: PluginDetail[] = infos.map((info) => ({
-      pluginId: info.name,
+      pluginId: formatPluginId(info.name),
       // @TODO need extra field
       pluginName: info.name.replace(/^@\S+\//, ''),
       // @TODO need extra field

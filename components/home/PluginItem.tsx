@@ -38,32 +38,41 @@ export default function PluginItem(props: PluginInfo) {
   }
 
   return (
-    // TODO change to Pressable
     <View style={styles.pluginItem}>
-      <TouchableOpacity onPress={toPluginPage} onLongPress={uninstall}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={toPluginPage}
+        onLongPress={uninstall}
+      >
         <Image source={pluginIcon} style={styles.pluginIcon} />
-        <Text style={styles.pluginName}>{pluginName}</Text>
+        <Text style={styles.pluginName} numberOfLines={2}>
+          {pluginName}
+        </Text>
       </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  // 2.5*2*4 + 20*4 = 100
   pluginItem: {
-    width: '20%',
-    marginHorizontal: '2.5%',
+    width: '16%',
+    marginLeft: '7.2%',
+  },
+  container: {
+    alignItems: 'center',
   },
   pluginIcon: {
     borderRadius: 4,
     overflow: 'hidden',
-    width: '100%',
+    width: '90%',
     aspectRatio: 1,
+    backgroundColor: '#FFF',
   },
   pluginName: {
     width: '100%',
     textAlign: 'center',
+    lineHeight: 20,
+    height: 56,
     marginTop: 8,
-    fontSize: 16,
   },
 })

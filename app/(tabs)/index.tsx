@@ -42,15 +42,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: '6%',
-    paddingVertical: '8%',
-  },
-  buttons: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-  },
-  btn: {
-    marginRight: 12,
+    paddingVertical: 24,
   },
   none: {
     fontSize: 16,
