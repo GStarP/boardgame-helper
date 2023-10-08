@@ -24,8 +24,9 @@ function createDownloadResumable(
   return FileSystem.createDownloadResumable(
     downloadUrl,
     localUri,
+    // cache => plugin archive not the latest
     {
-      cache: true,
+      cache: false,
     },
     handler
   )
@@ -96,12 +97,6 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
       this.setState(InstallTaskState.DOWNLOADING)
       const res = await downloadPromise
       this.emit('download:finish', res)
-
-      console.warn(
-        await FileSystem.readDirectoryAsync(
-          FileSystem.cacheDirectory + 'plugins'
-        )
-      )
 
       // ensure plugin_root exists before unzip
       await createDirIfNeed(PLUGIN_ROOT)

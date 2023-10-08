@@ -80,7 +80,7 @@ export default function PluginScreen() {
   }
   // proxy Webview's console
   const preloadJS = `const J_LOG=(level,msg)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:'Console',data:{level,msg}}));
-    console={log:(log)=>J_LOG('log', log),debug:(log) =>J_LOG('debug', log),info:(log) =>J_LOG('info', log),warn:(log) =>J_LOG('warn', log),error:(log) =>J_LOG('error', log),};`
+    window.console={log:(log)=>J_LOG('info', log),debug:(log) =>J_LOG('debug', log),info:(log) =>J_LOG('info', log),warn:(log) =>J_LOG('warn', log),error:(log) =>J_LOG('error', log),};`
   const onMessage = (event: WebViewMessageEvent) => {
     try {
       const dataPayload = JSON.parse(event.nativeEvent.data)
@@ -89,12 +89,14 @@ export default function PluginScreen() {
           level,
           msg,
         }: {
-          level: 'debug' | 'log' | 'warn' | 'error'
+          level: 'debug' | 'info' | 'warn' | 'error'
           msg: string
         } = dataPayload.data
         logger[level](`[Webview] ${msg}`)
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
@@ -116,13 +118,16 @@ export default function PluginScreen() {
         style={ATOM_STYLE.flexFull}
         source={{ uri }}
         originWhitelist={['*']}
+        // false => cannot load <script>
+        allowUniversalAccessFromFileURLs={true}
+        // false => cannot load index.html
         allowFileAccess={true}
+        injectedJavaScript={preloadJS}
         // @ts-ignore @FIX weird type error
         onError={onError}
         onLoadStart={pluginLoadStart}
         onLoad={pluginLoadEnd}
         onLoadProgress={pluginLoadProgress}
-        injectedJavaScript={preloadJS}
         onMessage={onMessage}
       />
     </View>
