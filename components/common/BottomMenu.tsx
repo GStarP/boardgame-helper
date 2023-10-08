@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { hideBottomModal, showBottomModal } from './BottomSheet'
 import { View, Text } from 'react-native'
-import { ATOM_STYLE } from '@/modules/common/style'
 import { EMPTY_FUNC } from '@/modules/common/const'
 import { TouchableRipple } from 'react-native-paper'
 
@@ -29,12 +28,8 @@ function BottomMenuItem(props: BottomMenuItemProps) {
 
   return (
     <TouchableRipple
-      style={[
-        styles.item,
-        ATOM_STYLE.flexRow,
-        ATOM_STYLE.itemsCenter,
-        ATOM_STYLE.justifyCenter,
-      ]}
+      className="items-center justify-center"
+      style={[styles.item]}
       onPress={pressHandler}
     >
       <Text

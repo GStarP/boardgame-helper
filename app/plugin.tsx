@@ -14,7 +14,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { ATOM_STYLE } from '@/modules/common/style'
 
 export default function PluginScreen() {
   const searchParams = useLocalSearchParams()
@@ -100,7 +99,7 @@ export default function PluginScreen() {
   }
 
   return (
-    <View style={ATOM_STYLE.flexFull}>
+    <View className="flex-1">
       {
         /* loading progress */
         ready ? null : (
@@ -115,7 +114,7 @@ export default function PluginScreen() {
         )
       }
       <WebView
-        style={ATOM_STYLE.flexFull}
+        className="flex-1"
         source={{ uri }}
         originWhitelist={['*']}
         // false => cannot load <script>

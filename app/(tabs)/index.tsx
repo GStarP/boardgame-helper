@@ -3,7 +3,7 @@ import PluginItem from '@/components/home/PluginItem'
 import { j_plugins } from '@/store/plugin/index'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
-import { ATOM_STYLE, COLOR_FONT_THIRD } from '@/modules/common/style'
+import { COLOR_FONT_THIRD } from '@/modules/common/style'
 import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import { installPlugin } from '@/modules/plugin'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +28,7 @@ export default function HomeScreen() {
           <PluginItem key={'plugin@' + plugin.pluginId} {...plugin} />
         ))
       ) : (
-        <View style={[ATOM_STYLE.wFull, ATOM_STYLE.itemsCenter]}>
+        <View className="w-full items-center">
           <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_1)}</Text>
           <Text style={styles.none}>{t(i18nKeys.TEXT_NO_PLUGIN_2)}</Text>
         </View>

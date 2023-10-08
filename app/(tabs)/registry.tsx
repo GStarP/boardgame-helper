@@ -1,7 +1,7 @@
 import AvaPluginItem from '@/components/registry/AvaPluginItem'
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { ATOM_STYLE, COLOR_FONT_THIRD } from '@/modules/common/style'
+import { COLOR_FONT_THIRD } from '@/modules/common/style'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
 import { useAtomValue } from 'jotai'
@@ -20,13 +20,13 @@ export default function Registry() {
 
   if (loading)
     return (
-      <Text style={[ATOM_STYLE.wFull, ATOM_STYLE.textCenter, styles.hint]}>
+      <Text className="w-full text-center" style={[styles.hint]}>
         {t(i18nKeys.TEXT_LOADING)}
       </Text>
     )
   if (plugins === undefined || plugins.length === 0)
     return (
-      <Text style={[ATOM_STYLE.wFull, ATOM_STYLE.textCenter, styles.hint]}>
+      <Text className="w-full text-center" style={[styles.hint]}>
         {t(i18nKeys.TEXT_NO_DATA)}
       </Text>
     )

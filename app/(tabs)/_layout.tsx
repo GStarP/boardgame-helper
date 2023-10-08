@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { View, StyleSheet } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import React from 'react'
-import { ATOM_STYLE } from '@/modules/common/style'
 
 function HeaderButtons() {
   const router = useRouter()
   return (
-    <View style={[ATOM_STYLE.flexRow]}>
+    <View className="flex-row">
       <IconButton
         icon="progress-download"
         size={28}

@@ -1,6 +1,6 @@
 import InstallTaskItem from '@/components/progress/InstallTaskItem'
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_FONT_THIRD, ATOM_STYLE } from '@/modules/common/style'
+import { COLOR_FONT_THIRD } from '@/modules/common/style'
 import { j_tasks } from '@/store/progress'
 import { useAtomValue } from 'jotai'
 import React from 'react'
@@ -19,7 +19,7 @@ export default function ProgressScreen() {
           <MemoInstallTaskItem key={'task@' + pluginId} pluginId={pluginId} />
         ))
       ) : (
-        <View style={[ATOM_STYLE.wFull, ATOM_STYLE.itemsCenter]}>
+        <View className="w-full items-center">
           <Text style={styles.text}>{t(i18nKeys.TEXT_NO_INSTALL_TASK)}</Text>
         </View>
       )}

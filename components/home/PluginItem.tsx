@@ -40,6 +40,7 @@ export default function PluginItem(props: PluginInfo) {
   return (
     <View style={styles.pluginItem}>
       <TouchableOpacity
+        delayLongPress={300}
         style={styles.container}
         onPress={toPluginPage}
         onLongPress={uninstall}

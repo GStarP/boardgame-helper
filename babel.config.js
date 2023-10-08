@@ -15,6 +15,7 @@ module.exports = function (api) {
           },
         },
       ],
+      'nativewind/babel',
       'react-native-reanimated/plugin',
     ],
     // react-native-paper tree shaking
