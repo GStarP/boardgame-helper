@@ -9,6 +9,10 @@ export interface NPMPackageMetadata {
     unpackedSize: number
     signatures: NPMPackageSignature[]
   }
+  bgt: {
+    name: string
+    desc: string
+  }
 }
 
 export interface NPMPackageSignature {

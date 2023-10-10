@@ -16,11 +16,10 @@ export async function batchUpdateAvaPlugins(pluginIds: string[]) {
     )
     const plugins: PluginDetail[] = infos.map((info) => ({
       pluginId: formatPluginId(info.name),
-      // @TODO need extra field
-      pluginName: info.name.replace(/^@\S+\//, ''),
-      // @TODO need extra field
+      pluginName: info.bgt.name,
+      // @FIX may not be able
       pluginIcon: '',
-      pluginDesc: info.description,
+      pluginDesc: info.bgt.desc,
       pluginSrc: info.dist.tarball,
     }))
     store.set(j_ava_plugins, plugins)
