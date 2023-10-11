@@ -1,7 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StyleSheet, Text, View } from 'react-native'
-import { Image } from 'expo-image'
-import { IMG_BLUR_HASH } from '@/modules/common/const'
 import { COLOR_FONT_FOURTH, COLOR_FONT_SECONDARY } from '@/modules/common/style'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React from 'react'
@@ -11,6 +9,7 @@ import { j_task_progress_family, taskMap } from '@/store/progress'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
 import i18n from '@/i18n'
+import PluginIcon from '@/components/common/PluginIcon'
 
 interface Props {
   pluginId: string
@@ -39,10 +38,9 @@ export default function InstallTaskItem(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Image
+      <PluginIcon
+        className="h-full"
         source={taskMap.get(pluginId)?.plugin.pluginIcon ?? ''}
-        style={styles.icon}
-        placeholder={IMG_BLUR_HASH}
       />
       <View style={styles.info}>
         <View style={styles.line1}>

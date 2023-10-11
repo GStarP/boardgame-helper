@@ -71,9 +71,10 @@ const styles = StyleSheet.create({
   },
   pluginName: {
     width: '100%',
+    fontSize: 12,
     textAlign: 'center',
-    lineHeight: 20,
-    height: 56,
+    lineHeight: 16,
+    height: 48,
     marginTop: 8,
   },
 })

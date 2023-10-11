@@ -4,6 +4,7 @@ import { fetchPluginMetadata } from '@/api/plugin'
 import { PluginDetail } from '@/store/plugin/types'
 import { logger } from '@/modules/logger'
 import { formatPluginId } from '@/modules/plugin/util'
+import { IMG_BASE64_HEADER } from '@/modules/common/const'
 
 export const BUILT_IN_PLUGIN_LIST = ['@board-game-toolbox/plugin-template']
 
@@ -16,10 +17,9 @@ export async function batchUpdateAvaPlugins(pluginIds: string[]) {
     )
     const plugins: PluginDetail[] = infos.map((info) => ({
       pluginId: formatPluginId(info.name),
-      pluginName: info.bgt.name,
-      // @FIX may not be able
-      pluginIcon: '',
-      pluginDesc: info.bgt.desc,
+      pluginName: info?.bgt?.name ?? 'Unknown',
+      pluginIcon: info?.bgt?.icon ? IMG_BASE64_HEADER + info.bgt.icon : '',
+      pluginDesc: info?.bgt?.desc ?? '',
       pluginSrc: info.dist.tarball,
     }))
     store.set(j_ava_plugins, plugins)

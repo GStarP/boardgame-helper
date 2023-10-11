@@ -37,7 +37,7 @@ export async function getAllPlugins(): Promise<PluginInfo[]> {
 
 // @FIX concurrent issue
 export async function insertPlugin(plugin: PluginInfo): Promise<void> {
-  logger.debug('insertPlugin:', plugin)
+  logger.debug('[insertPlugin]', plugin)
   const info = await FileSystem.getInfoAsync(DB_FILE)
   let rawContent = ''
   if (info.exists && !info.isDirectory) {
@@ -49,6 +49,7 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
     pluginLines.find((line) => line.startsWith(plugin.pluginId + ID_BREAK)) !==
     undefined
   ) {
+    logger.info('[insertPlugin] already exists', plugin.pluginId)
     return
   }
   const content =

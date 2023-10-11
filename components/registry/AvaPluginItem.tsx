@@ -1,8 +1,6 @@
 import type { PluginDetail } from '@/store/plugin/types'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
-import { Image } from 'expo-image'
-import { IMG_BLUR_HASH } from '@/modules/common/const'
 import { COLOR_FONT_SECONDARY } from '@/modules/common/style'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAtomValue } from 'jotai'
@@ -11,6 +9,7 @@ import { installPlugin } from '@/modules/plugin'
 import { downloadPercentageText } from '@/modules/plugin/task/progress'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
+import PluginIcon from '@/components/common/PluginIcon'
 
 export default function AvaPluginItem(props: PluginDetail) {
   const { pluginId, pluginName, pluginIcon, pluginDesc } = props
@@ -32,11 +31,7 @@ export default function AvaPluginItem(props: PluginDetail) {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={pluginIcon}
-        style={styles.icon}
-        placeholder={IMG_BLUR_HASH}
-      />
+      <PluginIcon className="h-full" source={pluginIcon} />
       <View style={styles.info}>
         <Text style={styles.name}>{pluginName}</Text>
         <Text style={styles.desc} numberOfLines={2}>
@@ -86,7 +81,9 @@ const styles = StyleSheet.create({
   icon: {
     height: '100%',
     aspectRatio: 1,
+    padding: 8,
     borderRadius: 4,
+    backgroundColor: '#FFF',
   },
   text: { width: '100%', fontSize: 12, textAlign: 'center' },
 })

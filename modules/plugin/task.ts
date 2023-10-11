@@ -169,17 +169,9 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
 
   async registerPlugin(): Promise<void> {
     const pluginDir = getPluginDir(this.plugin.pluginId)
-    // get name from package.json
-    const packageJsonStr = await FileSystem.readAsStringAsync(
-      `${pluginDir}/package.json`
-    )
-    let pluginName = 'Unknown'
-    try {
-      pluginName = JSON.parse(packageJsonStr).bgt.name
-    } catch (e) {
-      logger.error('[registerPlugin] read pluginName', e)
-    }
-    // ge icon uri from icon.png
+    const pluginName = this.plugin.pluginName
+
+    // get icon uri from icon.png
     const pluginIcon = (await FileSystem.getInfoAsync(`${pluginDir}/icon.png`))
       .uri
 
