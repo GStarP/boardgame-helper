@@ -56,6 +56,9 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     // create DownloadResumable
     const onProgress = (data: InstallTaskEventMap['download:progress']) => {
       this.emit('download:progress', data)
+      if (data.totalBytesWritten >= data.totalBytesExpectedToWrite) {
+        this.emit('download:finish')
+      }
     }
     if (state) {
       this.downloadResumable = FileSystem.createDownloadResumable(
@@ -77,41 +80,48 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
    */
   async run(): Promise<void> {
     try {
-      let downloadPromise: Promise<
-        FileSystem.FileSystemDownloadResult | undefined
-      >
+      // @ATT pause will also cause downloadPromise to resolve
+      // so we must do pro-process when download is real finished
+      const installAfterDownload = async () => {
+        this.removeListener('download:finish', installAfterDownload)
+        try {
+          // ensure plugin_root exists before unzip
+          await createDirIfNeed(PLUGIN_ROOT)
+
+          this.emit('unzip:start')
+          this.setState(InstallTaskState.UNZIPPING)
+          await this.unzipPlugin()
+          this.emit('unzip:finish')
+
+          this.emit('register:start')
+          this.setState(InstallTaskState.REGISTERING)
+          await this.registerPlugin()
+          this.emit('register:finish')
+
+          this.emit('success')
+          this.setState(InstallTaskState.SUCCESS)
+        } catch (e) {
+          this.emit('error', e)
+          this.setState(InstallTaskState.ERROR)
+        }
+      }
+      this.on('download:finish', installAfterDownload)
+
       if (this.state === InstallTaskState.WAITING) {
         // ensure plugin_download_root exists before downloading
         await createDirIfNeed(PLUGIN_DOWNLOAD_ROOT)
         this.emit('download:start', this.downloadResumable.savable())
-        downloadPromise = this.downloadResumable.downloadAsync()
+        this.downloadResumable.downloadAsync()
       } else if (
         this.state === InstallTaskState.PAUSED ||
         this.state === InstallTaskState.ERROR
       ) {
         this.emit('download:resume', this.downloadResumable.savable())
-        downloadPromise = this.downloadResumable.resumeAsync()
+        this.downloadResumable.resumeAsync()
       } else {
         throw new Error(`invalid state to run: ${this.toString()}`)
       }
       this.setState(InstallTaskState.DOWNLOADING)
-      const res = await downloadPromise
-      this.emit('download:finish', res)
-
-      // ensure plugin_root exists before unzip
-      await createDirIfNeed(PLUGIN_ROOT)
-      this.emit('unzip:start')
-      this.setState(InstallTaskState.UNZIPPING)
-      await this.unzipPlugin()
-      this.emit('unzip:finish')
-
-      this.emit('register:start')
-      this.setState(InstallTaskState.REGISTERING)
-      await this.registerPlugin()
-      this.emit('register:finish')
-
-      this.emit('success')
-      this.setState(InstallTaskState.SUCCESS)
     } catch (e) {
       this.emit('error', e)
       this.setState(InstallTaskState.ERROR)
@@ -154,20 +164,24 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     logger.info(`unzipPlugin: from=${pluginArchiveUri}, to=${pluginUnzipDir}`)
     await decompress(pluginArchiveUri, pluginUnzipDir)
 
-    if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
-      await FileSystem.deleteAsync(pluginDir)
+    try {
+      if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
+        await FileSystem.deleteAsync(pluginDir)
+      }
+    } catch (e) {
+      logger.warn(e)
     }
 
     logger.info(`movePluginDir: from=${pluginUnzipDir}, to=${pluginDir}`)
     await FileSystem.moveAsync({
-      // @ATTENTION .tgz from npm registry includes an extra package dir
+      // @ATT .tgz from npm registry includes an extra package dir
       from: pluginUnzipDir + '/package',
       to: pluginDir,
     })
     await FileSystem.deleteAsync(pluginUnzipDir)
   }
 
-  async registerPlugin(): Promise<void> {
+  private async registerPlugin(): Promise<void> {
     const pluginDir = getPluginDir(this.plugin.pluginId)
     const pluginName = this.plugin.pluginName
 

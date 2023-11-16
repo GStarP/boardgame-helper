@@ -48,12 +48,12 @@ export function TaskSavableDecorator(
   }, interval)
   const clean = async () => {
     clearInterval(timer)
-    task.removeListener(['success', 'cancel'], clean)
+    task.removeListener(['download:finish', 'cancel'], clean)
     await AsyncStorage.removeItem(taskSavableKey(task.plugin.pluginId))
   }
   // don't clean when "error", because we don't remove task
   // user can still resume task
-  task.on(['success', 'cancel'], clean)
+  task.on(['download:finish', 'cancel'], clean)
 
   // save once immediately
   saveTask(task)
