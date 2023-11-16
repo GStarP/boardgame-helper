@@ -1,13 +1,13 @@
 import { useRouter } from 'expo-router'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { View, Text, StyleSheet } from 'react-native'
-import { Image } from 'expo-image'
 import type { PluginInfo } from '@/store/plugin/types'
 import { uninstallPlugin } from '@/modules/plugin'
 import { showBottomMenu } from '@/components/common/BottomMenu'
 import { COLOR_RED } from '@/modules/common/style'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
+import PluginIcon from '@/components/common/PluginIcon'
 
 export default function PluginItem(props: PluginInfo) {
   const { pluginId, pluginName, pluginIcon } = props
@@ -45,7 +45,7 @@ export default function PluginItem(props: PluginInfo) {
         onPress={toPluginPage}
         onLongPress={uninstall}
       >
-        <Image source={pluginIcon} style={styles.pluginIcon} />
+        <PluginIcon style={styles.pluginIcon} source={pluginIcon} />
         <Text style={styles.pluginName} numberOfLines={2}>
           {pluginName}
         </Text>
@@ -63,11 +63,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pluginIcon: {
-    borderRadius: 4,
-    overflow: 'hidden',
     width: '90%',
     aspectRatio: 1,
-    backgroundColor: '#FFF',
   },
   pluginName: {
     width: '100%',

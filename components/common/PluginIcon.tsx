@@ -10,11 +10,12 @@ interface Props extends ViewProps {
 export default function PluginIcon(props: Props) {
   const { source, ...otherProps } = props
   return (
-    <View className="p-2 rounded bg-white aspect-square" {...otherProps}>
+    <View className="rounded aspect-square overflow-hidden" {...otherProps}>
       <Image
         className="w-full h-full"
         source={source}
         placeholder={IMG_BLUR_HASH}
+        cachePolicy="none"
       />
     </View>
   )

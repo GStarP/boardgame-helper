@@ -121,6 +121,7 @@ export default function PluginScreen() {
         allowUniversalAccessFromFileURLs={true}
         // false => cannot load index.html
         allowFileAccess={true}
+        cacheEnabled={false}
         injectedJavaScript={preloadJS}
         // @ts-ignore @FIX weird type error
         onError={onError}
