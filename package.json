@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "lint": "eslint **/*.ts{,x} --fix",
-    "ios": "expo run:ios"
+    "ios": "expo run:ios",
+    "build": "eas build --platform android --profile production"
   },
   "jest": {
     "preset": "jest-expo"
