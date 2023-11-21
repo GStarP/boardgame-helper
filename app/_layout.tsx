@@ -2,6 +2,7 @@ import { getAllPlugins } from '@/api/plugin/db'
 import '@/i18n'
 import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
+import { initBuiltinPlugins } from '@/modules/plugin'
 import { setPlugins } from '@/store/plugin'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
@@ -16,6 +17,11 @@ export { ErrorBoundary } from 'expo-router'
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
+/**
+ * These async tasks won't block splash hide
+ */
+initBuiltinPlugins()
+
 export default function RootLayout() {
   /**
    * These async tasks should finish before splash hide
@@ -25,6 +31,9 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })
+  useEffect(() => {
+    if (error) throw error
+  }, [error])
   // recover lng
   const [lngLoaded] = useLng()
   // read local plugins
@@ -35,10 +44,6 @@ export default function RootLayout() {
       setPluginsLoaded(true)
     })
   }, [])
-
-  useEffect(() => {
-    if (error) throw error
-  }, [error])
 
   useEffect(() => {
     if (loaded && lngLoaded && pluginsLoaded) {

@@ -1,6 +1,11 @@
 // @TODO need to be more elegant
 export const i18nKeys = {
   /**
+   * COMMON
+   */
+  COMMON_ALREADY_EXISTS: 'COMMON_ALREADY_EXISTS',
+
+  /**
    * TITLE
    */
   TITLE_HOME: 'TITLE_HOME',
@@ -15,6 +20,8 @@ export const i18nKeys = {
   TOAST_INSTALL_SUCCESS: 'TOAST_INSTALL_SUCCESS',
   TOAST_TOO_MANY_SAVABLE: 'TOAST_TOO_MANY_SAVABLE',
   TOAST_RECOVER_TASK: 'TOAST_RECOVER_TASK',
+  TOAST_INVALID_PLUGIN: 'TOAST_INVALID_PLUGIN',
+
   /**
    * TEXT
    */
@@ -31,6 +38,7 @@ export const i18nKeys = {
   TEXT_REGISTERING: 'TEXT_REGISTERING',
   TEXT_PAUSED: 'TEXT_PAUSED',
   TEXT_ERROR: 'TEXT_ERROR',
+  TEXT_ADD_BUILTIN_PLUGIN: 'TEXT_ADD_BUILTIN_PLUGIN',
 }
 
 export type i18nTranslation = {

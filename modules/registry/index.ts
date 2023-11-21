@@ -6,11 +6,6 @@ import { logger } from '@/modules/logger'
 import { formatPluginId } from '@/modules/plugin/util'
 import { IMG_BASE64_HEADER } from '@/modules/common/const'
 
-export const BUILT_IN_PLUGIN_LIST = [
-  '@board-game-toolbox/plugin-template',
-  '@board-game-toolbox/plugin-chwazi',
-]
-
 export async function batchUpdateAvaPlugins(pluginIds: string[]) {
   const store = getDefaultStore()
   try {

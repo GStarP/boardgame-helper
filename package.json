@@ -6,7 +6,6 @@
     "start": "expo start",
     "android": "expo run:android",
     "lint": "eslint **/*.ts{,x} --fix",
-    "ios": "expo run:ios",
     "build": "eas build --platform android --profile production"
   },
   "jest": {
@@ -22,9 +21,9 @@
     "axios": "^1.5.0",
     "expo": "~49.0.7",
     "expo-asset": "~8.10.1",
-    "expo-file-system": "~15.4.4",
+    "expo-file-system": "~15.4.5",
     "expo-font": "~11.4.0",
-    "expo-image": "~1.3.4",
+    "expo-image": "~1.3.5",
     "expo-linking": "~5.0.2",
     "expo-router": "2.0.0",
     "expo-splash-screen": "~0.20.5",
@@ -38,7 +37,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "^13.2.2",
-    "react-native": "0.72.5",
+    "react-native": "0.72.6",
     "react-native-actions-sheet": "^0.9.0-alpha.21",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-logs": "^5.0.1",

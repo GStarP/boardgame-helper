@@ -6,12 +6,19 @@ import { InstallTask } from './task'
 import { TaskProgressDecorator } from '@/modules/plugin/task/progress'
 import type { PluginDetail } from '@/store/plugin/types'
 import { getPluginDir } from './util'
-import { deletePlugin, getAllPlugins } from '@/api/plugin/db'
-import { setPlugins } from '@/store/plugin'
+import {
+  deletePlugin,
+  getAllPlugins,
+  getBuiltinPlugins,
+  insertBuiltinPlugins,
+} from '@/api/plugin/db'
+import { j_builtin_plugins, setPlugins } from '@/store/plugin'
 import { TaskSavableDecorator } from './task/savable'
 import { taskMap } from '@/store/progress'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
+import { getDefaultStore } from 'jotai'
+import { fetchPluginMetadata } from '@/api/plugin'
 
 export async function updatePlugins() {
   const plugins = await getAllPlugins()
@@ -52,4 +59,39 @@ export async function uninstallPlugin(pluginId: string): Promise<void> {
   const p2 = FileSystem.deleteAsync(getPluginDir(pluginId))
   await Promise.all([p1, p2])
   await updatePlugins()
+}
+
+export function initBuiltinPlugins() {
+  getBuiltinPlugins().then((plugins) => {
+    getDefaultStore().set(j_builtin_plugins, plugins)
+  })
+}
+
+export async function addBuiltinPlugins(pluginPackageName: string) {
+  try {
+    const metadata = await fetchPluginMetadata(pluginPackageName)
+    if (!metadata.bgt) {
+      ToastAndroid.show(
+        i18n.t(i18nKeys.TOAST_INVALID_PLUGIN),
+        ToastAndroid.SHORT
+      )
+      return
+    }
+
+    const plugins = await insertBuiltinPlugins(pluginPackageName)
+    getDefaultStore().set(j_builtin_plugins, plugins)
+  } catch (e) {
+    if (e instanceof Error && e.message === i18nKeys.COMMON_ALREADY_EXISTS) {
+      ToastAndroid.show(
+        `${pluginPackageName} ${i18n.t(i18nKeys.COMMON_ALREADY_EXISTS)}`,
+        ToastAndroid.SHORT
+      )
+    } else {
+      ToastAndroid.show(
+        i18n.t(i18nKeys.TOAST_INVALID_PLUGIN),
+        ToastAndroid.SHORT
+      )
+      logger.error(e)
+    }
+  }
 }

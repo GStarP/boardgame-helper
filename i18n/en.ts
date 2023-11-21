@@ -1,6 +1,8 @@
 import { i18nTranslation } from './keys'
 
 export const resources: i18nTranslation = {
+  COMMON_ALREADY_EXISTS: 'already exist',
+
   TITLE_HOME: 'Plugins',
   TITLE_REGISTRY: 'More Plugins',
   TITLE_PROGRESS: 'Download',
@@ -10,6 +12,7 @@ export const resources: i18nTranslation = {
   TOAST_INSTALL_SUCCESS: 'successfully installed',
   TOAST_TOO_MANY_SAVABLE: 'too many download task, may lose progress',
   TOAST_RECOVER_TASK: 'tasks recovered',
+  TOAST_INVALID_PLUGIN: 'invalid plugin package',
 
   TEXT_NO_PLUGIN_1: 'oops! nothing!',
   TEXT_NO_PLUGIN_2: 'press top-right to install',
@@ -24,4 +27,5 @@ export const resources: i18nTranslation = {
   TEXT_REGISTERING: 'installing',
   TEXT_PAUSED: 'paused',
   TEXT_ERROR: 'error',
+  TEXT_ADD_BUILTIN_PLUGIN: 'input npm package name (with scope)',
 }

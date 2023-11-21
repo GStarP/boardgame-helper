@@ -28,7 +28,6 @@ function HeaderButtons() {
     </View>
   )
 }
-const MemoHeaderButtons = React.memo(HeaderButtons)
 
 export default function TabsLayoutView() {
   const { t } = useTranslation()
@@ -42,7 +41,7 @@ export default function TabsLayoutView() {
         tabBarLabelStyle: {
           marginBottom: 4,
         },
-        headerRight: () => <MemoHeaderButtons />,
+        headerRight: () => <HeaderButtons />,
       }}
     >
       <Tabs.Screen
