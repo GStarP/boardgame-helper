@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "board-game-toolbox",
+    "name": "BGT",
     "slug": "board-game-toolbox",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -22,9 +20,7 @@
       },
       "package": "com.gstarp.boardgametoolbox"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     },

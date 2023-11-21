@@ -1,13 +1,14 @@
 {
   "name": "board-game-toolbox",
   "main": "expo-router/entry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
     "lint": "eslint **/*.ts{,x} --fix",
     "prebuild": "expo prebuild",
-    "build": "eas build --platform android --profile production"
+    "build": "eas build --platform android --profile production",
+    "ios": "expo run:ios"
   },
   "jest": {
     "preset": "jest-expo"
