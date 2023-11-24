@@ -94,7 +94,10 @@ export async function getBuiltinPlugins(): Promise<string[]> {
   if (!(await FileSystem.getInfoAsync(BUILTIN_PLUGINS_FILE)).exists) {
     FileSystem.writeAsStringAsync(
       BUILTIN_PLUGINS_FILE,
-      JSON.stringify(['@board-game-toolbox/plugin-chwazi'])
+      JSON.stringify([
+        '@board-game-toolbox/plugin-chwazi',
+        '@board-game-toolbox/plugin-scorer',
+      ])
     )
   }
   try {

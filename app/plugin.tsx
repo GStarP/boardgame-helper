@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
 import { useState, useEffect } from 'react'
 import { getPluginEntry } from '@/modules/plugin/util'
 import WebView from 'react-native-webview'
@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { PostMessage } from '@/modules/webview'
 
 export default function PluginScreen() {
   const searchParams = useLocalSearchParams()
@@ -78,20 +79,30 @@ export default function PluginScreen() {
     )
   }
   // proxy Webview's console
-  const preloadJS = `const J_LOG=(level,msg)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:'Console',data:{level,msg}}));
-    window.console={log:(log)=>J_LOG('info', log),debug:(log) =>J_LOG('debug', log),info:(log) =>J_LOG('info', log),warn:(log) =>J_LOG('warn', log),error:(log) =>J_LOG('error', log),};`
+  const logJS = `const J_LOG=(l,m)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:0,data:{l,m}}));window.console={log:(m)=>J_LOG('info',m),debug:(m) =>J_LOG('debug',m),info:(m) =>J_LOG('info',m),warn:(m)=>J_LOG('warn',m),error:(m)=>J_LOG('error',m)};`
+  const apiJS = 'window.bgt={};'
+  const toastJS = `window.bgt.toast=(v,d=0,p=1)=>window.ReactNativeWebView.postMessage(JSON.stringify({type:1,data:{v,d,p}}));`
+
+  const preloadJS = logJS + apiJS + toastJS
+
   const onMessage = (event: WebViewMessageEvent) => {
     try {
-      const dataPayload = JSON.parse(event.nativeEvent.data)
-      if (dataPayload?.type === 'Console') {
-        const {
-          level,
-          msg,
-        }: {
-          level: 'debug' | 'info' | 'warn' | 'error'
-          msg: string
-        } = dataPayload.data
-        logger[level](`[Webview] ${msg}`)
+      const pm: PostMessage = JSON.parse(event.nativeEvent.data)
+      // console.debug(pm)
+      if (pm.type === 0) {
+        const { l, m } = pm.data
+        logger[l](`[Webview] ${m}`)
+      } else if (pm.type === 1) {
+        const { v, d, p } = pm.data
+        ToastAndroid.showWithGravity(
+          v,
+          d === 0 ? ToastAndroid.SHORT : ToastAndroid.LONG,
+          p === 0
+            ? ToastAndroid.TOP
+            : p === 1
+            ? ToastAndroid.BOTTOM
+            : ToastAndroid.CENTER
+        )
       }
     } catch (e) {
       console.error(e)
@@ -122,6 +133,8 @@ export default function PluginScreen() {
         // false => cannot load index.html
         allowFileAccess={true}
         cacheEnabled={false}
+        // ban stretch animation when access scroll end
+        overScrollMode="never"
         injectedJavaScript={preloadJS}
         // @ts-ignore @FIX weird type error
         onError={onError}

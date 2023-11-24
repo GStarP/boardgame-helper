@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     color: COLOR_FONT_SECONDARY,
   },
   box: {
-    width: 40,
+    width: 48,
     alignItems: 'center',
   },
   icon: {

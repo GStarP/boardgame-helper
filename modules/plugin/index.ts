@@ -48,8 +48,7 @@ export function installPlugin(
   task.on(['success', 'cancel'], () => {
     cleanTask()
   })
-  // @DEV
-  // task.run();
+  task.run()
   return task
 }
 
