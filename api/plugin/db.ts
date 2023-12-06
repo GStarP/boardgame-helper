@@ -2,88 +2,55 @@ import type { PluginInfo } from '@/store/plugin/types'
 import * as FileSystem from 'expo-file-system'
 import { logger } from '@/modules/logger'
 import { i18nKeys } from '@/i18n/keys'
+import { getDB } from '@/api/db'
+import type { SQLiteDatabase } from 'expo-sqlite'
 
-// @FIX not allow info includes `|` and `,`
-// ${id}|${name},${icon}
-// chwazi|Chwazi,file://user/i.png\n
-const DB_FILE = FileSystem.documentDirectory + 'plugins.txt'
+const TABLE_PLUGIN = 'plugins'
 
-const ID_BREAK = '|'
-const INFO_BREAK = ','
-const LINE_BREAK = '\n'
-
-export async function getAllPlugins(): Promise<PluginInfo[]> {
-  const info = await FileSystem.getInfoAsync(DB_FILE)
-  if (info.exists && !info.isDirectory) {
-    const content = await FileSystem.readAsStringAsync(DB_FILE)
-    const plugins: PluginInfo[] = []
-
-    const pluginLines = content.split(LINE_BREAK)
-    for (const pluginLine of pluginLines) {
-      if (pluginLine === '') continue
-      const [pluginId, pluginInfoLine] = pluginLine.split(ID_BREAK)
-      const [pluginName, pluginIcon] = pluginInfoLine.split(INFO_BREAK)
-      plugins.push({
-        pluginId,
-        pluginName,
-        pluginIcon,
-      })
-    }
-
-    return plugins
-  } else {
-    return []
-  }
+export async function createPluginTableIfNotExist(db: SQLiteDatabase) {
+  await db.transactionAsync(async (tx) => {
+    await tx.executeSqlAsync(
+      `CREATE TABLE IF NOT EXISTS ${TABLE_PLUGIN} (version TEXT, pluginId TEXT, pluginName TEXT, pluginIcon TEXT);`
+    )
+  })
 }
 
-// @FIX concurrent issue
+export async function getAllPlugins(): Promise<PluginInfo[]> {
+  const db = getDB()
+  return new Promise((resolve) => {
+    db.transactionAsync(async (tx) => {
+      const res = await tx.executeSqlAsync(`SELECT * FROM ${TABLE_PLUGIN};`)
+      const plugins = res.rows as PluginInfo[]
+      resolve(plugins)
+    })
+  })
+}
+
 export async function insertPlugin(plugin: PluginInfo): Promise<void> {
   logger.debug('[insertPlugin]', plugin)
-  const info = await FileSystem.getInfoAsync(DB_FILE)
-  let rawContent = ''
-  if (info.exists && !info.isDirectory) {
-    rawContent = await FileSystem.readAsStringAsync(DB_FILE)
-  }
-  // if same id exists, return
-  const pluginLines = rawContent.split(LINE_BREAK)
-  if (
-    pluginLines.find((line) => line.startsWith(plugin.pluginId + ID_BREAK)) !==
-    undefined
-  ) {
-    logger.info('[insertPlugin] already exists', plugin.pluginId)
-    return
-  }
-  const content =
-    rawContent +
-    plugin.pluginId +
-    ID_BREAK +
-    plugin.pluginName +
-    INFO_BREAK +
-    plugin.pluginIcon +
-    LINE_BREAK
-  FileSystem.writeAsStringAsync(DB_FILE, content)
+  const { version, pluginId, pluginName, pluginIcon } = plugin
+  const db = getDB()
+  return new Promise((resolve) => {
+    db.transactionAsync(async (tx) => {
+      const sql = `INSERT INTO ${TABLE_PLUGIN} (version, pluginId, pluginName, pluginIcon) VALUES ("${version}", "${pluginId}", "${pluginName}", "${pluginIcon}");`
+      logger.debug('[SQL]', sql)
+      await tx.executeSqlAsync(sql)
+      resolve()
+    })
+  })
 }
 
 export async function deletePlugin(pluginId: string): Promise<void> {
   logger.debug(`deletePlugin: ${pluginId}`)
-  const content = await FileSystem.readAsStringAsync(DB_FILE)
-
-  const pluginLines = content.split(LINE_BREAK)
-  let index = -1
-  for (let i = 0; i < pluginLines.length; i++) {
-    if (pluginLines[i].startsWith(pluginId + ID_BREAK)) {
-      index = i
-      break
-    }
-  }
-
-  if (index !== -1) {
-    pluginLines.splice(index, 1)
-    FileSystem.writeAsStringAsync(
-      DB_FILE,
-      pluginLines.join(LINE_BREAK) + LINE_BREAK
-    )
-  }
+  const db = getDB()
+  return new Promise((resolve) => {
+    db.transactionAsync(async (tx) => {
+      const sql = `DELETE FROM ${TABLE_PLUGIN} WHERE pluginId = "${pluginId}";`
+      logger.debug('[SQL]', sql)
+      await tx.executeSqlAsync(sql)
+      resolve()
+    })
+  })
 }
 
 const BUILTIN_PLUGINS_FILE =

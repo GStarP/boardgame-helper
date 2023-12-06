@@ -4,6 +4,7 @@ export const i18nKeys = {
    * COMMON
    */
   COMMON_ALREADY_EXISTS: 'COMMON_ALREADY_EXISTS',
+  COMMON_VERSION: 'COMMON_VERSION',
 
   /**
    * TITLE

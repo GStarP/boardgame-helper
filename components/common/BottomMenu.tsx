@@ -1,36 +1,49 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { hideBottomModal, showBottomModal } from './BottomSheet'
 import { View, Text } from 'react-native'
-import { EMPTY_FUNC } from '@/modules/common/const'
 import { TouchableRipple } from 'react-native-paper'
+import { COLOR_FONT_FOURTH } from '@/modules/common/style'
 
 export interface BottomMenuItemProps {
   label: string
   onPress?: () => void
   color?: string
   closeMenuAfterPress?: boolean
+
+  showDivider?: boolean
 }
 
 function BottomMenuItem(props: BottomMenuItemProps) {
   const {
     label,
-    onPress = EMPTY_FUNC,
+    onPress,
     color = '#000',
     closeMenuAfterPress = true,
+    showDivider,
   } = props
 
-  const pressHandler = () => {
-    onPress()
-    if (closeMenuAfterPress) {
-      hideBottomModal()
-    }
-  }
+  const dividerStyle: ViewStyle | undefined = showDivider
+    ? {
+        borderBottomWidth: 1,
+        borderBottomColor: COLOR_FONT_FOURTH,
+      }
+    : undefined
+
+  const pressHandler = onPress
+    ? () => {
+        onPress()
+        if (closeMenuAfterPress) {
+          hideBottomModal()
+        }
+      }
+    : undefined
 
   return (
     <TouchableRipple
       className="items-center justify-center"
-      style={[styles.item]}
+      style={[styles.item, dividerStyle]}
       onPress={pressHandler}
+      disabled={pressHandler === undefined}
     >
       <Text
         style={[
@@ -50,8 +63,12 @@ export function showBottomMenu(items: BottomMenuItemProps[]) {
   if (items.length === 0) return
   showBottomModal(
     <View style={[styles.menu]}>
-      {items.map((item) => (
-        <BottomMenuItem key={`btm-menu:${item.label}`} {...item} />
+      {items.map((item, index) => (
+        <BottomMenuItem
+          key={`btm-menu:${item.label}`}
+          {...item}
+          showDivider={index !== items.length - 1}
+        />
       ))}
     </View>
   )

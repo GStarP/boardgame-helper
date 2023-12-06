@@ -1,4 +1,5 @@
-import { getAllPlugins } from '@/api/plugin/db'
+import { getDB } from '@/api/db'
+import { createPluginTableIfNotExist, getAllPlugins } from '@/api/plugin/db'
 import '@/i18n'
 import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
@@ -38,18 +39,26 @@ export default function RootLayout() {
   const [lngLoaded] = useLng()
   // read local plugins
   const [pluginsLoaded, setPluginsLoaded] = useState(false)
+  // init db
+  const [dbLoaded, setDBLoaded] = useState(false)
+
   useEffect(() => {
-    getAllPlugins().then((res) => {
+    ;(async () => {
+      const db = getDB()
+      // @FIX: if write in `@/api/db`, will report circular dependency
+      await createPluginTableIfNotExist(db)
+      setDBLoaded(true)
+      const res = await getAllPlugins()
       setPlugins(res)
       setPluginsLoaded(true)
-    })
+    })()
   }, [])
 
   useEffect(() => {
-    if (loaded && lngLoaded && pluginsLoaded) {
+    if (loaded && lngLoaded && pluginsLoaded && dbLoaded) {
       SplashScreen.hideAsync()
     }
-  }, [loaded, lngLoaded, pluginsLoaded])
+  }, [loaded, lngLoaded, pluginsLoaded, dbLoaded])
 
   if (!loaded) {
     return null

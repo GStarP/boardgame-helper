@@ -190,6 +190,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
       .uri
 
     await insertPlugin({
+      version: this.plugin.version,
       pluginId: this.plugin.pluginId,
       pluginName,
       pluginIcon,

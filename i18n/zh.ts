@@ -2,6 +2,7 @@ import { i18nTranslation } from './keys'
 
 export const resources: i18nTranslation = {
   COMMON_ALREADY_EXISTS: '已存在',
+  COMMON_VERSION: '版本',
 
   TITLE_HOME: '本地插件',
   TITLE_REGISTRY: '可用插件',

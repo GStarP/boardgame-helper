@@ -10,7 +10,7 @@ import { i18nKeys } from '@/i18n/keys'
 import PluginIcon from '@/components/common/PluginIcon'
 
 export default function PluginItem(props: PluginInfo) {
-  const { pluginId, pluginName, pluginIcon } = props
+  const { version, pluginId, pluginName, pluginIcon } = props
 
   const { t } = useTranslation()
 
@@ -27,6 +27,9 @@ export default function PluginItem(props: PluginInfo) {
 
   const uninstall = () => {
     showBottomMenu([
+      {
+        label: `${t(i18nKeys.COMMON_VERSION)}: ${version}`,
+      },
       {
         label: t(i18nKeys.TEXT_UNINSTALL),
         color: COLOR_RED,

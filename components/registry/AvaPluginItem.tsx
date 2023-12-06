@@ -1,7 +1,7 @@
 import type { PluginDetail } from '@/store/plugin/types'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
-import { COLOR_FONT_SECONDARY } from '@/modules/common/style'
+import { COLOR_FONT_THIRD } from '@/modules/common/style'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAtomValue } from 'jotai'
 import { j_task_progress_family } from '@/store/progress'
@@ -12,7 +12,14 @@ import { i18nKeys } from '@/i18n/keys'
 import PluginIcon from '@/components/common/PluginIcon'
 
 export default function AvaPluginItem(props: PluginDetail) {
-  const { pluginId, pluginName, pluginIcon, pluginDesc } = props
+  const {
+    version,
+    pluginId,
+    pluginName,
+    pluginIcon,
+    pluginDesc,
+    size: pluginSize,
+  } = props
 
   const { t } = useTranslation()
 
@@ -32,15 +39,34 @@ export default function AvaPluginItem(props: PluginDetail) {
   return (
     <View style={styles.container}>
       <PluginIcon className="h-full" source={pluginIcon} />
-      <View style={styles.info}>
-        <Text style={styles.name}>{pluginName}</Text>
-        <Text style={styles.desc} numberOfLines={2}>
+      <View className="ml-4 flex-1 h-full">
+        <Text className="text-[16px] font-bold" numberOfLines={1}>
+          {pluginName}
+        </Text>
+
+        <Text
+          style={styles.font3}
+          className="text-[12px] mb-[2px]"
+          numberOfLines={1}
+        >
           {pluginDesc}
         </Text>
+
+        <View className="flex-row">
+          <Text style={styles.font3} className="text-[10px] tracking-wider">
+            v{version}
+          </Text>
+          <Text style={styles.font3} className="text-[10px] mx-1">
+            |
+          </Text>
+          <Text style={styles.font3} className="text-[10px] ">
+            {pluginSize}
+          </Text>
+        </View>
       </View>
-      <View style={styles.box}>
+      <View className="w-12 items-center">
         {downloading ? (
-          <Text style={styles.text}>
+          <Text className="w-full text-[12px] text-center">
             {downloadPercentageText(size, targetSize)}
           </Text>
         ) : (
@@ -65,18 +91,8 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(0, 0, 0, 0.3)',
     borderBottomWidth: 0.5,
   },
-  info: { marginLeft: 16, flex: 1, height: '100%' },
-  name: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  desc: {
-    fontSize: 12,
-    color: COLOR_FONT_SECONDARY,
-  },
-  box: {
-    width: 48,
-    alignItems: 'center',
+  font3: {
+    color: COLOR_FONT_THIRD,
   },
   icon: {
     height: '100%',
@@ -85,5 +101,4 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#FFF',
   },
-  text: { width: '100%', fontSize: 12, textAlign: 'center' },
 })
