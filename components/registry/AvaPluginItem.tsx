@@ -77,8 +77,8 @@ export default function AvaPluginItem(props: PluginDetail) {
               : isLatest
               ? t(i18nKeys.TEXT_INSTALLED)
               : installedVersion
-              ? t(i18nKeys.TEXT_INSTALL)
-              : t(i18nKeys.TEXT_UPDATE)}
+              ? t(i18nKeys.TEXT_UPDATE)
+              : t(i18nKeys.TEXT_INSTALL)}
           </Button>
         }
       </View>
