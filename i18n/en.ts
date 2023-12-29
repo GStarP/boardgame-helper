@@ -29,4 +29,7 @@ export const resources: i18nTranslation = {
   TEXT_PAUSED: 'paused',
   TEXT_ERROR: 'error',
   TEXT_ADD_BUILTIN_PLUGIN: 'input npm package name (with scope)',
+  TEXT_INSTALL: 'Install',
+  TEXT_INSTALLED: 'Latest',
+  TEXT_UPDATE: 'Update',
 }

@@ -10,7 +10,7 @@ const TABLE_PLUGIN = 'plugins'
 export async function createPluginTableIfNotExist(db: SQLiteDatabase) {
   await db.transactionAsync(async (tx) => {
     await tx.executeSqlAsync(
-      `CREATE TABLE IF NOT EXISTS ${TABLE_PLUGIN} (version TEXT, pluginId TEXT, pluginName TEXT, pluginIcon TEXT);`
+      `CREATE TABLE IF NOT EXISTS ${TABLE_PLUGIN} (version TEXT, pluginId TEXT PRIMARY KEY, pluginName TEXT, pluginIcon TEXT);`
     )
   })
 }
@@ -32,7 +32,7 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
   const db = getDB()
   return new Promise((resolve) => {
     db.transactionAsync(async (tx) => {
-      const sql = `INSERT INTO ${TABLE_PLUGIN} (version, pluginId, pluginName, pluginIcon) VALUES ("${version}", "${pluginId}", "${pluginName}", "${pluginIcon}");`
+      const sql = `INSERT OR REPLACE INTO ${TABLE_PLUGIN} (version, pluginId, pluginName, pluginIcon) VALUES ("${version}", "${pluginId}", "${pluginName}", "${pluginIcon}");`
       logger.debug('[SQL]', sql)
       await tx.executeSqlAsync(sql)
       resolve()

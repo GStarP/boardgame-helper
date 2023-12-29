@@ -29,4 +29,7 @@ export const resources: i18nTranslation = {
   TEXT_PAUSED: '已暂停',
   TEXT_ERROR: '发生错误',
   TEXT_ADD_BUILTIN_PLUGIN: '请输入 NPM 包名（带 Scope）',
+  TEXT_INSTALL: '安装',
+  TEXT_INSTALLED: '最新',
+  TEXT_UPDATE: '更新',
 }

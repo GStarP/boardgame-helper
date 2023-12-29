@@ -48,7 +48,7 @@ export default function PluginItem(props: PluginInfo) {
         onPress={toPluginPage}
         onLongPress={uninstall}
       >
-        <PluginIcon style={styles.pluginIcon} source={pluginIcon} />
+        <PluginIcon className="w-[90%]" source={pluginIcon} />
         <Text style={styles.pluginName} numberOfLines={2}>
           {pluginName}
         </Text>
@@ -64,10 +64,6 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-  },
-  pluginIcon: {
-    width: '90%',
-    aspectRatio: 1,
   },
   pluginName: {
     width: '100%',

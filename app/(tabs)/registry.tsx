@@ -27,24 +27,25 @@ export default function Registry() {
     batchUpdateAvaPlugins(builtinPlugins)
   }, [builtinPlugins])
 
+  if (loading)
+    return (
+      <Text className="w-full text-center mt-4 text-base" style={[styles.hint]}>
+        {t(i18nKeys.TEXT_LOADING)}
+      </Text>
+    )
+
   if (plugins === undefined || plugins.length === 0)
     return (
-      <Text className="w-full text-center" style={[styles.hint]}>
+      <Text className="w-full text-center mt-4 text-base" style={[styles.hint]}>
         {t(i18nKeys.TEXT_NO_DATA)}
       </Text>
     )
 
   return (
     <View className="flex flex-1">
-      {loading ? (
-        <Text className="w-full text-center" style={[styles.hint]}>
-          {t(i18nKeys.TEXT_LOADING)}
-        </Text>
-      ) : (
-        plugins.map((plugin) => (
-          <MemoAvaPluginItem key={'avaPlugin@' + plugin.pluginId} {...plugin} />
-        ))
-      )}
+      {plugins.map((plugin) => (
+        <MemoAvaPluginItem key={'ap@' + plugin.pluginId} {...plugin} />
+      ))}
       <BuiltinPluginInput />
     </View>
   )
@@ -53,7 +54,7 @@ export default function Registry() {
 function BuiltinPluginInput() {
   const { t } = useTranslation()
 
-  // @FIX for convenience, auto input prefix
+  // for convenience, auto input prefix
   const [value, setValue] = useState('@board-game-toolbox/plugin-')
 
   return (
@@ -81,8 +82,6 @@ function BuiltinPluginInput() {
 
 const styles = StyleSheet.create({
   hint: {
-    marginTop: 16,
-    fontSize: 16,
     color: COLOR_FONT_THIRD,
   },
 })

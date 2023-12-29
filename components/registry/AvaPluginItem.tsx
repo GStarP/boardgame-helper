@@ -1,8 +1,6 @@
 import type { PluginDetail } from '@/store/plugin/types'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
-import { COLOR_FONT_THIRD } from '@/modules/common/style'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { COLOR_FONT_THIRD, COLOR_PRIMARY } from '@/modules/common/style'
 import { useAtomValue } from 'jotai'
 import { j_task_progress_family } from '@/store/progress'
 import { installPlugin } from '@/modules/plugin'
@@ -10,16 +8,12 @@ import { downloadPercentageText } from '@/modules/plugin/task/progress'
 import { useTranslation } from 'react-i18next'
 import { i18nKeys } from '@/i18n/keys'
 import PluginIcon from '@/components/common/PluginIcon'
+import { Button } from 'react-native-paper'
+import { j_plugins } from '@/store/plugin'
 
 export default function AvaPluginItem(props: PluginDetail) {
-  const {
-    version,
-    pluginId,
-    pluginName,
-    pluginIcon,
-    pluginDesc,
-    size: pluginSize,
-  } = props
+  const { version, pluginId, pluginName, pluginIcon, pluginDesc, pluginSize } =
+    props
 
   const { t } = useTranslation()
 
@@ -35,6 +29,11 @@ export default function AvaPluginItem(props: PluginDetail) {
       ToastAndroid.SHORT
     )
   }
+
+  const installedPlugins = useAtomValue(j_plugins)
+  const installedVersion = installedPlugins.find((p) => p.pluginId === pluginId)
+    ?.version
+  const isLatest = installedVersion === version
 
   return (
     <View style={styles.container}>
@@ -64,16 +63,24 @@ export default function AvaPluginItem(props: PluginDetail) {
           </Text>
         </View>
       </View>
-      <View className="w-12 items-center">
-        {downloading ? (
-          <Text className="w-full text-[12px] text-center">
-            {downloadPercentageText(size, targetSize)}
-          </Text>
-        ) : (
-          <TouchableOpacity onPress={install}>
-            <MaterialCommunityIcons name="download" size={32} />
-          </TouchableOpacity>
-        )}
+
+      <View className="mr-auto">
+        {
+          <Button
+            className="w-full"
+            onPress={install}
+            textColor={COLOR_PRIMARY}
+            disabled={isLatest || downloading}
+          >
+            {downloading
+              ? downloadPercentageText(size, targetSize)
+              : isLatest
+              ? t(i18nKeys.TEXT_INSTALLED)
+              : installedVersion
+              ? t(i18nKeys.TEXT_INSTALL)
+              : t(i18nKeys.TEXT_UPDATE)}
+          </Button>
+        }
       </View>
     </View>
   )

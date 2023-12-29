@@ -21,7 +21,7 @@ export async function batchUpdateAvaPlugins(pluginIds: string[]) {
       pluginIcon: info?.bgt?.icon ? IMG_BASE64_HEADER + info.bgt.icon : '',
       pluginDesc: info?.bgt?.desc ?? '',
       pluginSrc: info.dist.tarball,
-      size: formatFileSize(info.dist.unpackedSize),
+      pluginSize: formatFileSize(info.dist.unpackedSize),
     }))
     store.set(j_ava_plugins, plugins)
   } catch (e) {
