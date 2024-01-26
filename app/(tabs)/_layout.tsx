@@ -1,10 +1,11 @@
-import { i18nKeys } from '@/i18n/keys'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { Tabs, useRouter } from 'expo-router'
-import { useTranslation } from 'react-i18next'
-import { View, StyleSheet } from 'react-native'
-import { IconButton } from 'react-native-paper'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { StyleSheet, View } from 'react-native'
+import { IconButton } from 'react-native-paper'
+
+import { i18nKeys } from '@/i18n/keys'
 
 function HeaderButtons() {
   const router = useRouter()
@@ -14,7 +15,7 @@ function HeaderButtons() {
         icon="progress-download"
         size={28}
         onPress={() => {
-          router.push('/progress')
+          router.push('/download')
         }}
         style={styles.btn}
       />

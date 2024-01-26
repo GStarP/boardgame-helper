@@ -1,8 +1,10 @@
 import { StyleSheet, ViewStyle } from 'react-native'
-import { hideBottomModal, showBottomModal } from './BottomSheet'
-import { View, Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
-import { COLOR_FONT_FOURTH } from '@/modules/common/style'
+
+import { COLOR_TEXT_4 } from '@/modules/common/style'
+
+import { hideBottomModal, showBottomModal } from './BottomSheet'
 
 export interface BottomMenuItemProps {
   label: string
@@ -25,7 +27,7 @@ function BottomMenuItem(props: BottomMenuItemProps) {
   const dividerStyle: ViewStyle | undefined = showDivider
     ? {
         borderBottomWidth: 1,
-        borderBottomColor: COLOR_FONT_FOURTH,
+        borderBottomColor: COLOR_TEXT_4,
       }
     : undefined
 

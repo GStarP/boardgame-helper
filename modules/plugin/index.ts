@@ -1,24 +1,26 @@
-import { ToastAndroid } from 'react-native'
 import * as FileSystem from 'expo-file-system'
 import type { DownloadPauseState } from 'expo-file-system'
-import { logger } from '@/modules/logger'
-import { InstallTask } from './task'
-import { TaskProgressDecorator } from '@/modules/plugin/task/progress'
-import type { PluginDetail } from '@/store/plugin/types'
-import { getPluginDir } from './util'
+import { getDefaultStore } from 'jotai'
+import { ToastAndroid } from 'react-native'
+
 import {
   deletePlugin,
   getAllPlugins,
   getBuiltinPlugins,
   insertBuiltinPlugins,
-} from '@/api/plugin/db'
-import { j_builtin_plugins, setPlugins } from '@/store/plugin'
-import { TaskSavableDecorator } from './task/savable'
-import { taskMap } from '@/store/progress'
+} from '@/data/database/plugin'
+import { fetchPluginMetadata } from '@/data/network/plugin'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { getDefaultStore } from 'jotai'
-import { fetchPluginMetadata } from '@/api/plugin'
+import { logger } from '@/modules/logger'
+import { j_builtin_plugins, setPlugins } from '@/store/plugin'
+import type { PluginDetail } from '@/store/plugin/types'
+
+import { addTask, removeTask, watchInstallState } from '../download/biz'
+import { j_install_task_map } from '../download/store'
+import { InstallTask } from './task'
+import { TaskSavableDecorator } from './task/savable'
+import { getPluginDir } from './util'
 
 export async function updatePlugins() {
   const plugins = await getAllPlugins()
@@ -30,12 +32,13 @@ export function installPlugin(
   savable?: DownloadPauseState
 ) {
   // if task already exists, return
-  if (taskMap.has(plugin.pluginId)) {
+  if (getDefaultStore().get(j_install_task_map).has(plugin.pluginId)) {
     return
   }
   let task = new InstallTask(plugin, savable)
   task = TaskSavableDecorator(task)
-  const cleanTask = TaskProgressDecorator(task)
+  watchInstallState(task)
+  addTask(task)
 
   task.on('success', async () => {
     await updatePlugins()
@@ -44,9 +47,8 @@ export function installPlugin(
       ToastAndroid.SHORT
     )
   })
-  // stop collecting progress
   task.on(['success', 'cancel'], () => {
-    cleanTask()
+    removeTask(task.plugin.pluginId)
   })
   task.run()
   return task

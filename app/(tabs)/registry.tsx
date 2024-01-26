@@ -1,18 +1,20 @@
-import AvaPluginItem from '@/components/registry/AvaPluginItem'
-import { View, Text, StyleSheet } from 'react-native'
+import { useAtomValue } from 'jotai'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { StyleSheet, Text, View } from 'react-native'
+import { TextInput } from 'react-native-paper'
+
+import AvaPluginItem from '@/components/registry/AvaPluginItem'
+import { i18nKeys } from '@/i18n/keys'
 import {
   COLOR_BG_LIGHT,
-  COLOR_FONT_THIRD,
   COLOR_PRIMARY,
+  COLOR_TEXT_3,
 } from '@/modules/common/style'
-import { useTranslation } from 'react-i18next'
-import { i18nKeys } from '@/i18n/keys'
-import { useAtomValue } from 'jotai'
-import { j_ava_loading, j_ava_plugins, j_builtin_plugins } from '@/store/plugin'
-import { batchUpdateAvaPlugins } from '@/modules/registry'
-import { TextInput } from 'react-native-paper'
+import { j_install_stats_map } from '@/modules/download/store'
 import { addBuiltinPlugins } from '@/modules/plugin'
+import { batchUpdateAvaPlugins } from '@/modules/registry'
+import { j_ava_loading, j_ava_plugins, j_builtin_plugins } from '@/store/plugin'
 
 const MemoAvaPluginItem = React.memo(AvaPluginItem)
 
@@ -21,6 +23,7 @@ export default function Registry() {
 
   const plugins = useAtomValue(j_ava_plugins)
   const loading = useAtomValue(j_ava_loading)
+  const installStatsMap = useAtomValue(j_install_stats_map)
 
   const builtinPlugins = useAtomValue(j_builtin_plugins)
   useEffect(() => {
@@ -44,7 +47,11 @@ export default function Registry() {
   return (
     <View className="flex flex-1">
       {plugins.map((plugin) => (
-        <MemoAvaPluginItem key={'ap@' + plugin.pluginId} {...plugin} />
+        <MemoAvaPluginItem
+          key={'ap@' + plugin.pluginId}
+          plugin={plugin}
+          stats={installStatsMap.get(plugin.pluginId)}
+        />
       ))}
       <BuiltinPluginInput />
     </View>
@@ -82,6 +89,6 @@ function BuiltinPluginInput() {
 
 const styles = StyleSheet.create({
   hint: {
-    color: COLOR_FONT_THIRD,
+    color: COLOR_TEXT_3,
   },
 })

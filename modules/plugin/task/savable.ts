@@ -1,12 +1,14 @@
-import i18n from '@/i18n'
-import type { PluginDetail } from '@/store/plugin/types'
-import { InstallTask } from '../task'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import type { DownloadPauseState } from 'expo-file-system'
-import { logger } from '@/modules/logger'
 import { ToastAndroid } from 'react-native'
-import { InstallTaskState } from '../types'
+
+import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
+import { logger } from '@/modules/logger'
+import type { PluginDetail } from '@/store/plugin/types'
+
+import { InstallTask } from '../task'
+import { InstallTaskState } from '../types'
 
 /**
  * const
@@ -48,7 +50,7 @@ export function TaskSavableDecorator(
   }, interval)
   const clean = async () => {
     clearInterval(timer)
-    task.removeListener(['download:finish', 'cancel'], clean)
+    task.off(['download:finish', 'cancel'], clean)
     await AsyncStorage.removeItem(taskSavableKey(task.plugin.pluginId))
   }
   // don't clean when "error", because we don't remove task

@@ -1,11 +1,12 @@
-import { j_ava_loading, j_ava_plugins } from '@/store/plugin'
 import { getDefaultStore } from 'jotai'
-import { fetchPluginMetadata } from '@/api/plugin'
-import { PluginDetail } from '@/store/plugin/types'
-import { logger } from '@/modules/logger'
-import { formatPluginId } from '@/modules/plugin/util'
+
+import { fetchPluginMetadata } from '@/data/network/plugin'
 import { IMG_BASE64_HEADER } from '@/modules/common/const'
 import { formatFileSize } from '@/modules/common/format'
+import { logger } from '@/modules/logger'
+import { formatPluginId } from '@/modules/plugin/util'
+import { j_ava_loading, j_ava_plugins } from '@/store/plugin'
+import { PluginDetail } from '@/store/plugin/types'
 
 export async function batchUpdateAvaPlugins(pluginIds: string[]) {
   const store = getDefaultStore()

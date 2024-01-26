@@ -1,73 +1,74 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { StyleSheet, Text, View } from 'react-native'
-import { COLOR_FONT_FOURTH, COLOR_FONT_SECONDARY } from '@/modules/common/style'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import React from 'react'
-import { InstallTaskState } from '@/modules/plugin/types'
-import { useAtomValue } from 'jotai'
-import { j_task_progress_family, taskMap } from '@/store/progress'
 import { useTranslation } from 'react-i18next'
-import { i18nKeys } from '@/i18n/keys'
-import i18n from '@/i18n'
+import { StyleSheet, Text, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
 import PluginIcon from '@/components/common/PluginIcon'
+import i18n from '@/i18n'
+import { i18nKeys } from '@/i18n/keys'
+import { COLOR_TEXT_2, COLOR_TEXT_4 } from '@/modules/common/style'
+import { InstallTask } from '@/modules/plugin/task'
+import { InstallTaskState } from '@/modules/plugin/types'
+
+import { InstallStats } from '../store'
 
 interface Props {
-  pluginId: string
+  task: InstallTask
+  stats?: InstallStats
 }
 
-export default function InstallTaskItem(props: Props) {
-  const { pluginId } = props
-
+export default function InstallTaskItem({ task, stats }: Props) {
   const { t } = useTranslation()
 
-  const { state, size, targetSize } = useAtomValue(
-    j_task_progress_family(pluginId)
-  )
+  const { state, size, totalSize } = {
+    state: InstallTaskState.WAITING,
+    size: 0,
+    totalSize: 0,
+    ...stats,
+  }
+  const text = useStateText(state, size, totalSize)
+  const icon = useStateIcon(state)
 
-  const togglePause = () => {
-    if (canTaskResume(state)) {
-      taskMap.get(pluginId)?.run()
-    } else if (state === InstallTaskState.DOWNLOADING) {
-      taskMap.get(pluginId)?.pause()
+  const toggleTaskRun = () => {
+    if (InstallTask.canRun(task.state)) {
+      task.run()
+    } else if (InstallTask.canPause(task.state)) {
+      task.pause()
     }
   }
 
-  const cancel = () => {
-    taskMap.get(pluginId)?.cancel()
+  const cancelTask = () => {
+    task.cancel()
   }
 
   return (
     <View style={styles.container}>
-      <PluginIcon
-        className="h-full"
-        source={taskMap.get(pluginId)?.plugin.pluginIcon ?? ''}
-      />
+      <PluginIcon style={styles.icon} source={task.plugin.pluginIcon ?? ''} />
       <View style={styles.info}>
         <View style={styles.line1}>
           <Text style={styles.name}>
-            {taskMap.get(pluginId)?.plugin.pluginName ??
-              t(i18nKeys.TEXT_MISSING_PLUGIN_NAME)}
+            {task.plugin.pluginName ?? t(i18nKeys.TEXT_MISSING_PLUGIN_NAME)}
           </Text>
-          <TouchableOpacity style={styles.close} onPress={cancel}>
+          <TouchableOpacity style={styles.close} onPress={cancelTask}>
             <MaterialCommunityIcons
               name="close"
               size={16}
-              color={COLOR_FONT_SECONDARY}
+              color={COLOR_TEXT_2}
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.state}>{stateText(state, size, targetSize)}</Text>
+        <Text style={styles.state}>{text}</Text>
         <View style={styles.progressContainer} />
       </View>
-      <TouchableOpacity style={styles.pause} onPress={togglePause}>
-        <MaterialCommunityIcons name={stateBtnIcon(state)} size={32} />
+      <TouchableOpacity style={styles.pause} onPress={toggleTaskRun}>
+        <MaterialCommunityIcons name={icon} size={32} />
       </TouchableOpacity>
     </View>
   )
 }
 
-function stateText(
-  state: InstallTaskState,
+function useStateText(
+  state: InstallTask['state'],
   size: number,
   totalSize: number
 ): string {
@@ -84,23 +85,10 @@ function stateText(
   return ''
 }
 
-function stateBtnIcon(state: InstallTaskState) {
-  if (canTaskResume(state)) return 'play-circle-outline'
-  else if (state === InstallTaskState.DOWNLOADING) return 'pause-circle-outline'
+function useStateIcon(state: InstallTask['state']) {
+  if (InstallTask.canRun(state)) return 'play-circle-outline'
+  else if (InstallTask.canPause(state)) return 'pause-circle-outline'
   return 'blank'
-}
-
-/**
- * utils
- */
-function canTaskResume(state: InstallTaskState): boolean {
-  return (
-    [
-      InstallTaskState.WAITING,
-      InstallTaskState.PAUSED,
-      InstallTaskState.ERROR,
-    ].indexOf(state) !== -1
-  )
 }
 
 const styles = StyleSheet.create({
@@ -117,8 +105,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     height: '100%',
-    aspectRatio: 1,
-    borderRadius: 4,
   },
   line1: {
     flexDirection: 'row',
@@ -133,12 +119,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4,
   },
-  state: { color: COLOR_FONT_SECONDARY, fontSize: 12, marginBottom: 4 },
+  state: { color: COLOR_TEXT_2, fontSize: 12, marginBottom: 4 },
   progressContainer: {
     width: '100%',
     height: 4,
     borderRadius: 4,
-    backgroundColor: COLOR_FONT_FOURTH,
+    backgroundColor: COLOR_TEXT_4,
   },
   pause: {
     width: 32,

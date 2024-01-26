@@ -1,13 +1,14 @@
 import { useRouter } from 'expo-router'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { View, Text, StyleSheet } from 'react-native'
-import type { PluginInfo } from '@/store/plugin/types'
-import { uninstallPlugin } from '@/modules/plugin'
-import { showBottomMenu } from '@/components/common/BottomMenu'
-import { COLOR_RED } from '@/modules/common/style'
 import { useTranslation } from 'react-i18next'
-import { i18nKeys } from '@/i18n/keys'
+import { StyleSheet, Text, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import { showBottomMenu } from '@/components/common/BottomMenu'
 import PluginIcon from '@/components/common/PluginIcon'
+import { i18nKeys } from '@/i18n/keys'
+import { COLOR_RED } from '@/modules/common/style'
+import { uninstallPlugin } from '@/modules/plugin'
+import type { PluginInfo } from '@/store/plugin/types'
 
 export default function PluginItem(props: PluginInfo) {
   const { version, pluginId, pluginName, pluginIcon } = props

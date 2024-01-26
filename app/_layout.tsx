@@ -1,10 +1,3 @@
-import { getDB } from '@/api/db'
-import { createPluginTableIfNotExist, getAllPlugins } from '@/api/plugin/db'
-import '@/i18n'
-import { useLng } from '@/i18n'
-import { i18nKeys } from '@/i18n/keys'
-import { initBuiltinPlugins } from '@/modules/plugin'
-import { setPlugins } from '@/store/plugin'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
@@ -12,22 +5,30 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
 
+import {
+  createPluginTableIfNotExist,
+  getAllPlugins,
+} from '@/data/database/plugin'
+import '@/i18n'
+import { useLng } from '@/i18n'
+import { i18nKeys } from '@/i18n/keys'
+import { initBuiltinPlugins } from '@/modules/plugin'
+import '@/plugins/immer'
+import { setPlugins } from '@/store/plugin'
+
 // auto use error boundary
 export { ErrorBoundary } from 'expo-router'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
-/**
- * These async tasks won't block splash hide
- */
+// * These tasks don't block splash
 initBuiltinPlugins()
 
 export default function RootLayout() {
-  /**
-   * These async tasks should finish before splash hide
-   */
-  // splash screen (in-app loading animation)
+  // * These tasks block splash
+
+  // init fonts
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -35,30 +36,26 @@ export default function RootLayout() {
   useEffect(() => {
     if (error) throw error
   }, [error])
-  // recover lng
+
+  // init lng
   const [lngLoaded] = useLng()
-  // read local plugins
-  const [pluginsLoaded, setPluginsLoaded] = useState(false)
+
   // init db
   const [dbLoaded, setDBLoaded] = useState(false)
-
   useEffect(() => {
-    ;(async () => {
-      const db = getDB()
-      // @FIX: if write in `@/api/db`, will report circular dependency
-      await createPluginTableIfNotExist(db)
-      setDBLoaded(true)
-      const res = await getAllPlugins()
-      setPlugins(res)
-      setPluginsLoaded(true)
-    })()
+    createPluginTableIfNotExist()
+      .then(() => getAllPlugins())
+      .then((plugins) => {
+        setPlugins(plugins)
+        setDBLoaded(true)
+      })
   }, [])
 
   useEffect(() => {
-    if (loaded && lngLoaded && pluginsLoaded && dbLoaded) {
+    if (loaded && lngLoaded && dbLoaded) {
       SplashScreen.hideAsync()
     }
-  }, [loaded, lngLoaded, pluginsLoaded, dbLoaded])
+  }, [loaded, lngLoaded, dbLoaded])
 
   if (!loaded) {
     return null
@@ -83,7 +80,7 @@ function RootLayoutView() {
     >
       <Stack.Screen name="plugin" options={{ headerShown: true }} />
       <Stack.Screen
-        name="progress"
+        name="download"
         options={{
           title: t(i18nKeys.TITLE_PROGRESS),
           headerShown: true,

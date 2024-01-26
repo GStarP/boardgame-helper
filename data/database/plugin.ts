@@ -1,13 +1,19 @@
-import type { PluginInfo } from '@/store/plugin/types'
 import * as FileSystem from 'expo-file-system'
-import { logger } from '@/modules/logger'
+
 import { i18nKeys } from '@/i18n/keys'
-import { getDB } from '@/api/db'
-import type { SQLiteDatabase } from 'expo-sqlite'
+import { logger } from '@/modules/logger'
+import type { PluginInfo } from '@/store/plugin/types'
+
+import { DB } from '.'
 
 const TABLE_PLUGIN = 'plugins'
 
-export async function createPluginTableIfNotExist(db: SQLiteDatabase) {
+// TODO: need reject handling
+
+export async function createPluginTableIfNotExist() {
+  logger.debug('createPluginTableIfNotExist')
+
+  const db = DB()
   await db.transactionAsync(async (tx) => {
     await tx.executeSqlAsync(
       `CREATE TABLE IF NOT EXISTS ${TABLE_PLUGIN} (version TEXT, pluginId TEXT PRIMARY KEY, pluginName TEXT, pluginIcon TEXT);`
@@ -16,7 +22,9 @@ export async function createPluginTableIfNotExist(db: SQLiteDatabase) {
 }
 
 export async function getAllPlugins(): Promise<PluginInfo[]> {
-  const db = getDB()
+  logger.debug('getAllPlugins')
+
+  const db = DB()
   return new Promise((resolve) => {
     db.transactionAsync(async (tx) => {
       const res = await tx.executeSqlAsync(`SELECT * FROM ${TABLE_PLUGIN};`)
@@ -27,13 +35,13 @@ export async function getAllPlugins(): Promise<PluginInfo[]> {
 }
 
 export async function insertPlugin(plugin: PluginInfo): Promise<void> {
-  logger.debug('[insertPlugin]', plugin)
+  logger.debug('insertPlugin', plugin)
+
   const { version, pluginId, pluginName, pluginIcon } = plugin
-  const db = getDB()
+  const db = DB()
   return new Promise((resolve) => {
     db.transactionAsync(async (tx) => {
       const sql = `INSERT OR REPLACE INTO ${TABLE_PLUGIN} (version, pluginId, pluginName, pluginIcon) VALUES ("${version}", "${pluginId}", "${pluginName}", "${pluginIcon}");`
-      logger.debug('[SQL]', sql)
       await tx.executeSqlAsync(sql)
       resolve()
     })
@@ -41,39 +49,36 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
 }
 
 export async function deletePlugin(pluginId: string): Promise<void> {
-  logger.debug(`deletePlugin: ${pluginId}`)
-  const db = getDB()
+  logger.debug('insertPlugin', pluginId)
+
+  const db = DB()
   return new Promise((resolve) => {
     db.transactionAsync(async (tx) => {
       const sql = `DELETE FROM ${TABLE_PLUGIN} WHERE pluginId = "${pluginId}";`
-      logger.debug('[SQL]', sql)
       await tx.executeSqlAsync(sql)
       resolve()
     })
   })
 }
 
-const BUILTIN_PLUGINS_FILE =
-  FileSystem.documentDirectory + 'builtin-plugins.txt'
+const BUILTIN_PLUGINS_FILE = 'builtin-plugins.txt'
+const builtInPlugins = [
+  '@board-game-toolbox/plugin-chwazi',
+  '@board-game-toolbox/plugin-scorer',
+]
 
 export async function getBuiltinPlugins(): Promise<string[]> {
-  // init
-  if (!(await FileSystem.getInfoAsync(BUILTIN_PLUGINS_FILE)).exists) {
-    FileSystem.writeAsStringAsync(
-      BUILTIN_PLUGINS_FILE,
-      JSON.stringify([
-        '@board-game-toolbox/plugin-chwazi',
-        '@board-game-toolbox/plugin-scorer',
-      ])
-    )
-  }
+  const fp = FileSystem.documentDirectory + BUILTIN_PLUGINS_FILE
   try {
-    const plugins: string[] = JSON.parse(
-      await FileSystem.readAsStringAsync(BUILTIN_PLUGINS_FILE)
-    )
+    // if no file, create it
+    if (!(await FileSystem.getInfoAsync(fp)).exists) {
+      FileSystem.writeAsStringAsync(fp, JSON.stringify(builtInPlugins))
+      return builtInPlugins
+    }
+    const plugins: string[] = JSON.parse(await FileSystem.readAsStringAsync(fp))
     return plugins
   } catch (e) {
-    logger.error('[getBuiltinPlugins]', e)
+    logger.error('getBuiltinPlugins', e)
     return []
   }
 }

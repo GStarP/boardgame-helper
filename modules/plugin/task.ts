@@ -1,6 +1,13 @@
-import * as FileSystem from 'expo-file-system'
-import { logger } from '@/modules/logger'
 import { decompress } from '@gstarp/react-native-tgz'
+import * as FileSystem from 'expo-file-system'
+
+import { insertPlugin } from '@/data/database/plugin'
+import { EventEmitter } from '@/modules/common/event'
+import { createDirIfNeed } from '@/modules/common/fs'
+import { logger } from '@/modules/logger'
+import type { PluginDetail } from '@/store/plugin/types'
+
+import { InstallTaskEventMap, InstallTaskState } from './types'
 import {
   PLUGIN_DOWNLOAD_ROOT,
   PLUGIN_ROOT,
@@ -8,11 +15,6 @@ import {
   getPluginDir,
   getPluginUnzipUri,
 } from './util'
-import { EventEmitter } from '@/modules/common/event'
-import { InstallTaskState, InstallTaskEventMap } from './types'
-import { createDirIfNeed } from '@/modules/common/fs'
-import type { PluginDetail } from '@/store/plugin/types'
-import { insertPlugin } from '@/api/plugin/db'
 
 function createDownloadResumable(
   plugin: PluginDetail,
@@ -24,7 +26,7 @@ function createDownloadResumable(
   return FileSystem.createDownloadResumable(
     downloadUrl,
     localUri,
-    // cache => plugin archive not the latest
+    // true => plugin archive not the latest
     {
       cache: false,
     },
@@ -41,7 +43,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     super()
     this.plugin = plugin
     // debug callbacks
-    const debugLog = (...args: any) =>
+    const debugLog = (...args: unknown[]) =>
       logger.debug(`InstallTask[${this.plugin.pluginId}]`, ...args)
     this.on('download:start', (data) => debugLog('download:start', data))
     this.on('download:pause', (data) => debugLog('download:pause', data))
@@ -51,8 +53,9 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     this.on('unzip:finish', () => debugLog('unzip:finish'))
     this.on('success', () => debugLog('success'))
     this.on('cancel', () => debugLog('cancel'))
-    this.on('error', (e) => logger.error(e))
     this.on('state:change', (curState) => debugLog('state:change', curState))
+
+    this.on('error', (e) => logger.error(e))
     // create DownloadResumable
     const onProgress = (data: InstallTaskEventMap['download:progress']) => {
       this.emit('download:progress', data)
@@ -75,6 +78,20 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     this.state = InstallTaskState.WAITING
   }
 
+  static canRun(state: InstallTaskState): boolean {
+    return (
+      [
+        InstallTaskState.WAITING,
+        InstallTaskState.PAUSED,
+        InstallTaskState.ERROR,
+      ].indexOf(state) !== -1
+    )
+  }
+
+  static canPause(state: InstallTaskState): boolean {
+    return state === InstallTaskState.DOWNLOADING
+  }
+
   /**
    * public methods
    */
@@ -83,7 +100,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
       // @ATT pause will also cause downloadPromise to resolve
       // so we must do pro-process when download is real finished
       const installAfterDownload = async () => {
-        this.removeListener('download:finish', installAfterDownload)
+        this.off('download:finish', installAfterDownload)
         try {
           // ensure plugin_root exists before unzip
           await createDirIfNeed(PLUGIN_ROOT)
@@ -99,7 +116,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
           this.emit('register:finish')
 
           this.emit('success')
-          this.setState(InstallTaskState.SUCCESS)
+          this.setState(InstallTaskState.FINISHED)
         } catch (e) {
           this.emit('error', e)
           this.setState(InstallTaskState.ERROR)
@@ -138,7 +155,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
   async cancel(): Promise<void> {
     await this.downloadResumable.cancelAsync()
     this.emit('cancel')
-    this.setState(InstallTaskState.SUCCESS)
+    this.setState(InstallTaskState.FINISHED)
   }
 
   toString(): string {

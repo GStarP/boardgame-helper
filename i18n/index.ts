@@ -1,10 +1,11 @@
-import { atom, getDefaultStore } from 'jotai'
-import { resources as zhr } from './zh'
-import { resources as enr } from './en'
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import i18n from 'i18next'
+import { atom, getDefaultStore } from 'jotai'
 import { useState } from 'react'
+import { initReactI18next } from 'react-i18next'
+
+import { resources as enr } from './en'
+import { resources as zhr } from './zh'
 
 export type i18nLng = 'zh' | 'en'
 

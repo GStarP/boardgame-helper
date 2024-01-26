@@ -1,5 +1,6 @@
 import { atom, getDefaultStore } from 'jotai'
-import type { PluginInfo, PluginDetail } from './types'
+
+import type { PluginDetail, PluginInfo } from './types'
 
 const store = getDefaultStore()
 

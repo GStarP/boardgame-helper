@@ -1,6 +1,7 @@
+import { Image } from 'expo-image'
 import type { ViewProps } from 'react-native'
 import { View } from 'react-native'
-import { Image } from 'expo-image'
+
 import { IMG_BLUR_HASH } from '@/modules/common/const'
 
 interface Props extends ViewProps {

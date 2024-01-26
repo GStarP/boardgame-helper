@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import type { StyleProp, ViewStyle } from 'react-native'
 import { useRouter } from 'expo-router'
+import type { StyleProp, ViewStyle } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface Props {
   size?: number

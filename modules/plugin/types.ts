@@ -26,6 +26,6 @@ export enum InstallTaskState {
   PAUSED,
   UNZIPPING,
   REGISTERING,
-  SUCCESS,
+  FINISHED,
   ERROR,
 }

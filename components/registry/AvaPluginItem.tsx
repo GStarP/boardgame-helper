@@ -1,29 +1,35 @@
-import type { PluginDetail } from '@/store/plugin/types'
-import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
-import { COLOR_FONT_THIRD, COLOR_PRIMARY } from '@/modules/common/style'
 import { useAtomValue } from 'jotai'
-import { j_task_progress_family } from '@/store/progress'
-import { installPlugin } from '@/modules/plugin'
-import { downloadPercentageText } from '@/modules/plugin/task/progress'
 import { useTranslation } from 'react-i18next'
-import { i18nKeys } from '@/i18n/keys'
-import PluginIcon from '@/components/common/PluginIcon'
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { Button } from 'react-native-paper'
+
+import PluginIcon from '@/components/common/PluginIcon'
+import { i18nKeys } from '@/i18n/keys'
+import { COLOR_PRIMARY, COLOR_TEXT_3 } from '@/modules/common/style'
+import { downloadPercentageText } from '@/modules/download/biz'
+import { InstallStats } from '@/modules/download/store'
+import { installPlugin } from '@/modules/plugin'
 import { j_plugins } from '@/store/plugin'
+import type { PluginDetail } from '@/store/plugin/types'
 
-export default function AvaPluginItem(props: PluginDetail) {
-  const { version, pluginId, pluginName, pluginIcon, pluginDesc, pluginSize } =
-    props
+interface Props {
+  plugin: PluginDetail
+  stats?: InstallStats
+}
 
+export default function AvaPluginItem({ plugin, stats }: Props) {
   const { t } = useTranslation()
 
-  const { size, targetSize } = useAtomValue(j_task_progress_family(pluginId))
-  const downloading = targetSize > 0
+  const { version, pluginId, pluginName, pluginIcon, pluginDesc, pluginSize } =
+    plugin
+
+  const downloading = stats !== undefined
+  const { size, totalSize } = { size: 0, totalSize: 0, ...stats }
 
   const install = () => {
     // if already downloading, don't install again
     if (downloading) return
-    installPlugin(props)
+    installPlugin(plugin)
     ToastAndroid.show(
       `${pluginName} ${t(i18nKeys.TOAST_INSTALL_START)}`,
       ToastAndroid.SHORT
@@ -73,7 +79,7 @@ export default function AvaPluginItem(props: PluginDetail) {
             disabled={isLatest || downloading}
           >
             {downloading
-              ? downloadPercentageText(size, targetSize)
+              ? downloadPercentageText(size, totalSize)
               : isLatest
               ? t(i18nKeys.TEXT_INSTALLED)
               : installedVersion
@@ -99,7 +105,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   font3: {
-    color: COLOR_FONT_THIRD,
+    color: COLOR_TEXT_3,
   },
   icon: {
     height: '100%',

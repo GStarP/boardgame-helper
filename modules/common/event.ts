@@ -17,9 +17,9 @@ export class EventEmitter<Events extends Record<EventType, unknown>> {
   }
 
   /**
-   * if callback not assign, remove all
+   * if callback not specify, remove all
    */
-  removeListener<Key extends keyof Events>(
+  off<Key extends keyof Events>(
     event: Key | Key[],
     callback?: Handler<Events[Key]>
   ) {

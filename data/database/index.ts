@@ -1,11 +1,11 @@
 import * as SQLite from 'expo-sqlite'
 
-const DB_NAME = 'bgt'
+const DB_BGT = 'bgt'
 
 let db: SQLite.SQLiteDatabase | null = null
-export function getDB(): SQLite.SQLiteDatabase {
+export function DB(): SQLite.SQLiteDatabase {
   if (db === null) {
-    db = SQLite.openDatabase(DB_NAME)
+    db = SQLite.openDatabase(DB_BGT)
   }
   return db
 }
