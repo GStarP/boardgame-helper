@@ -5,10 +5,10 @@ import { StyleSheet, Text, View } from 'react-native'
 
 import PluginItem from '@/components/home/PluginItem'
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_TEXT_3 } from '@/modules/common/style'
 import { installPlugin } from '@/modules/plugin'
 import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import { j_plugins } from '@/store/plugin/index'
+import { COLOR_TEXT_3 } from '@/utils/style'
 
 export default function HomeScreen() {
   const { t } = useTranslation()

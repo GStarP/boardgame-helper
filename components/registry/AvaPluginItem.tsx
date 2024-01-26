@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { Button } from 'react-native-paper'
 
-import PluginIcon from '@/components/common/PluginIcon'
+import PluginIcon from '@/components/PluginIcon'
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_PRIMARY, COLOR_TEXT_3 } from '@/modules/common/style'
 import { downloadPercentageText } from '@/modules/download/biz'
 import { InstallStats } from '@/modules/download/store'
 import { installPlugin } from '@/modules/plugin'
 import { j_plugins } from '@/store/plugin'
 import type { PluginDetail } from '@/store/plugin/types'
+import { COLOR_PRIMARY, COLOR_TEXT_3 } from '@/utils/style'
 
 interface Props {
   plugin: PluginDetail

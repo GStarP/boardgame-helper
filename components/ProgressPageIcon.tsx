@@ -14,7 +14,7 @@ export default function ProgressPageIcon(props: Props) {
   const router = useRouter()
   const toProgressPage = () => {
     router.push({
-      pathname: '/progress',
+      pathname: '/download',
     })
   }
 

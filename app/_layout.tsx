@@ -78,7 +78,7 @@ function RootLayoutView() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="plugin" options={{ headerShown: true }} />
+      <Stack.Screen name="webview" options={{ headerShown: true }} />
       <Stack.Screen
         name="download"
         options={{

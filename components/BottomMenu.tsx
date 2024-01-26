@@ -2,7 +2,7 @@ import { StyleSheet, ViewStyle } from 'react-native'
 import { Text, View } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 
-import { COLOR_TEXT_4 } from '@/modules/common/style'
+import { COLOR_TEXT_4 } from '@/utils/style'
 
 import { hideBottomModal, showBottomModal } from './BottomSheet'
 

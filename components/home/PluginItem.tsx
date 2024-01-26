@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { showBottomMenu } from '@/components/common/BottomMenu'
-import PluginIcon from '@/components/common/PluginIcon'
+import { showBottomMenu } from '@/components/BottomMenu'
+import PluginIcon from '@/components/PluginIcon'
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_RED } from '@/modules/common/style'
 import { uninstallPlugin } from '@/modules/plugin'
 import type { PluginInfo } from '@/store/plugin/types'
+import { COLOR_RED } from '@/utils/style'
 
 export default function PluginItem(props: PluginInfo) {
   const { version, pluginId, pluginName, pluginIcon } = props
@@ -18,7 +18,7 @@ export default function PluginItem(props: PluginInfo) {
   const router = useRouter()
   const toPluginPage = () => {
     router.push({
-      pathname: '/plugin',
+      pathname: '/webview',
       params: {
         id: pluginId,
         name: pluginName,

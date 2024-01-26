@@ -12,7 +12,7 @@ import {
 import { fetchPluginMetadata } from '@/data/network/plugin'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { logger } from '@/modules/logger'
+import { logger } from '@/plugins/logger'
 import { j_builtin_plugins, setPlugins } from '@/store/plugin'
 import type { PluginDetail } from '@/store/plugin/types'
 

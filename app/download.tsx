@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_TEXT_3 } from '@/modules/common/style'
 import InstallTaskItem from '@/modules/download/components/InstallTaskItem'
 import {
   j_install_stats_map,
   j_install_task_map,
 } from '@/modules/download/store'
+import { COLOR_TEXT_3 } from '@/utils/style'
 
 const MemoInstallTaskItem = React.memo(InstallTaskItem)
 

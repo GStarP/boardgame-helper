@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import PluginIcon from '@/components/common/PluginIcon'
+import PluginIcon from '@/components/PluginIcon'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { COLOR_TEXT_2, COLOR_TEXT_4 } from '@/modules/common/style'
 import { InstallTask } from '@/modules/plugin/task'
 import { InstallTaskState } from '@/modules/plugin/types'
+import { COLOR_TEXT_2, COLOR_TEXT_4 } from '@/utils/style'
 
 import { InstallStats } from '../store'
 

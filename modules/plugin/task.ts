@@ -2,10 +2,10 @@ import { decompress } from '@gstarp/react-native-tgz'
 import * as FileSystem from 'expo-file-system'
 
 import { insertPlugin } from '@/data/database/plugin'
-import { EventEmitter } from '@/modules/common/event'
-import { createDirIfNeed } from '@/modules/common/fs'
-import { logger } from '@/modules/logger'
+import { logger } from '@/plugins/logger'
 import type { PluginDetail } from '@/store/plugin/types'
+import { EventEmitter } from '@/utils/event'
+import { createDirIfNeed } from '@/utils/fs'
 
 import { InstallTaskEventMap, InstallTaskState } from './types'
 import {

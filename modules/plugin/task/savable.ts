@@ -4,7 +4,7 @@ import { ToastAndroid } from 'react-native'
 
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { logger } from '@/modules/logger'
+import { logger } from '@/plugins/logger'
 import type { PluginDetail } from '@/store/plugin/types'
 
 import { InstallTask } from '../task'
