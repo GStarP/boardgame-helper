@@ -5,12 +5,16 @@ import { Text, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 
 import { i18nKeys } from '@/i18n/keys'
+import { addBuiltinPlugins } from '@/modules/common/plugin/biz'
 import { j_install_stats_map } from '@/modules/download/store'
-import { addBuiltinPlugins } from '@/modules/plugin'
-import { batchUpdateAvaPlugins } from '@/modules/registry'
-import AvaPluginItem from '@/modules/registry/components/AvaPluginItem'
-import { j_ava_loading, j_ava_plugins, j_builtin_plugins } from '@/store/plugin'
-import { COLOR_BG_LIGHT, COLOR_PRIMARY } from '@/utils/style'
+import { batchUpdateAvaPlugins } from '@/modules/tabs/registry'
+import AvaPluginItem from '@/modules/tabs/registry/components/AvaPluginItem'
+import {
+  j_ava_loading,
+  j_ava_plugins,
+  j_builtin_plugins,
+} from '@/modules/tabs/registry/store'
+import { COLOR_PRIMARY } from '@/utils/style'
 
 const MemoAvaPluginItem = React.memo(AvaPluginItem)
 
@@ -63,6 +67,7 @@ function BuiltinPluginInput() {
   return (
     <View className="mt-auto">
       <TextInput
+        className="bg-[#EEE]"
         placeholder={t(i18nKeys.TEXT_ADD_BUILTIN_PLUGIN)}
         value={value}
         onChangeText={(text) => setValue(text)}
@@ -75,7 +80,6 @@ function BuiltinPluginInput() {
         }
         selectionColor={COLOR_PRIMARY}
         cursorColor={COLOR_PRIMARY}
-        style={{ backgroundColor: COLOR_BG_LIGHT }}
         underlineColor="transparent"
         activeUnderlineColor="transparent"
       />

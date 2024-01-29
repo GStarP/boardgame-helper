@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 
 import { i18nKeys } from '@/i18n/keys'
-import PluginItem from '@/modules/home/components/PluginItem'
-import { j_plugins } from '@/store/plugin/index'
+import PluginItem from '@/modules/tabs/home/components/PluginItem'
+import { j_plugins } from '@/modules/tabs/home/store'
 
 export default function HomeScreen() {
   const { t } = useTranslation()

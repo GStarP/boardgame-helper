@@ -6,8 +6,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import PluginIcon from '@/components/PluginIcon'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { InstallTask } from '@/modules/plugin/task'
-import { InstallTaskState } from '@/modules/plugin/types'
+import { InstallTask } from '@/modules/common/plugin/install-task'
+import { InstallTaskState } from '@/modules/common/plugin/install-task.type'
 
 import { InstallStats } from '../store'
 

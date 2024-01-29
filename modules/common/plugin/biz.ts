@@ -12,60 +12,70 @@ import {
 import { fetchPluginMetadata } from '@/data/network/plugin'
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { logger } from '@/plugins/logger'
-import { j_builtin_plugins, setPlugins } from '@/store/plugin'
-import type { PluginDetail } from '@/store/plugin/types'
+import { logger } from '@/libs/logger'
+import { watchInstallState } from '@/modules/download/biz'
+import {
+  addInstallTask,
+  j_install_task_map,
+  removeInstallTask,
+} from '@/modules/download/store'
+import { setPlugins } from '@/modules/tabs/home/store'
+import { PluginDetail, j_builtin_plugins } from '@/modules/tabs/registry/store'
 
-import { addTask, removeTask, watchInstallState } from '../download/biz'
-import { j_install_task_map } from '../download/store'
-import { InstallTask } from './task'
-import { TaskSavableDecorator } from './task/savable'
-import { getPluginDir } from './util'
+import { getPluginDir } from './fs-utils'
+import { InstallTask } from './install-task'
+import { TaskSavableDecorator } from './install-task.savable'
 
 export async function updatePlugins() {
-  const plugins = await getAllPlugins()
-  setPlugins(plugins)
+  setPlugins(await getAllPlugins())
 }
 
 export function installPlugin(
   plugin: PluginDetail,
   savable?: DownloadPauseState
-) {
+): InstallTask | undefined {
+  logger.info(
+    'installPlugin',
+    plugin.pluginId,
+    savable ? JSON.stringify(savable) : ''
+  )
   // if task already exists, return
   if (getDefaultStore().get(j_install_task_map).has(plugin.pluginId)) {
     return
   }
+
   let task = new InstallTask(plugin, savable)
+  // TODO: should be toggled in settings
   task = TaskSavableDecorator(task)
   watchInstallState(task)
-  addTask(task)
 
-  task.on('success', async () => {
-    await updatePlugins()
+  addInstallTask(task)
+
+  task.on('success', () => {
     ToastAndroid.show(
       `${plugin.pluginName} ${i18n.t(i18nKeys.TOAST_INSTALL_SUCCESS)}`,
       ToastAndroid.SHORT
     )
+    updatePlugins()
   })
-  task.on(['success', 'cancel'], () => {
-    removeTask(task.plugin.pluginId)
+  task.once(['success', 'cancel'], () => {
+    removeInstallTask(task.plugin.pluginId)
   })
+
   task.run()
+
   return task
 }
 
 export async function uninstallPlugin(pluginId: string): Promise<void> {
-  logger.debug(`uninstallPlugin: ${pluginId}`)
-  const p1 = deletePlugin(pluginId)
-  const p2 = FileSystem.deleteAsync(getPluginDir(pluginId))
-  await Promise.all([p1, p2])
+  logger.info('uninstallPlugin', pluginId)
+  await deletePlugin(pluginId)
+  await FileSystem.deleteAsync(getPluginDir(pluginId))
   await updatePlugins()
 }
 
-export function initBuiltinPlugins() {
-  getBuiltinPlugins().then((plugins) => {
-    getDefaultStore().set(j_builtin_plugins, plugins)
-  })
+export async function initBuiltinPlugins() {
+  getDefaultStore().set(j_builtin_plugins, await getBuiltinPlugins())
 }
 
 export async function addBuiltinPlugins(pluginPackageName: string) {

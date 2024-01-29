@@ -1,8 +1,8 @@
 import * as FileSystem from 'expo-file-system'
 
 import { i18nKeys } from '@/i18n/keys'
-import { logger } from '@/plugins/logger'
-import type { PluginInfo } from '@/store/plugin/types'
+import { logger } from '@/libs/logger'
+import { PluginInfo } from '@/modules/tabs/home/store'
 
 import { DB } from '.'
 

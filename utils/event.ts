@@ -16,6 +16,20 @@ export class EventEmitter<Events extends Record<EventType, unknown>> {
     keys.forEach((k) => this.bus.on(k, callback))
   }
 
+  once<Key extends keyof Events>(
+    event: Key | Key[],
+    callback: Handler<Events[Key]>
+  ) {
+    const keys = Array.isArray(event) ? event : [event]
+    keys.forEach((k) => {
+      const cb = (e: Events[Key]) => {
+        callback(e)
+        this.bus.off(k, cb)
+      }
+      this.bus.on(k, cb)
+    })
+  }
+
   /**
    * if callback not specify, remove all
    */

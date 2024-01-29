@@ -1,34 +1,10 @@
 import produce from 'immer'
 import { getDefaultStore } from 'jotai'
 
-import { InstallTask } from '../plugin/task'
-import { InstallTaskEventMap, InstallTaskState } from '../plugin/types'
-import { j_install_stats_map, j_install_task_map } from './store'
+import { InstallTask } from '@/modules/common/plugin/install-task'
+import { InstallTaskEventMap } from '@/modules/common/plugin/install-task.type'
 
-export function addTask(task: InstallTask) {
-  const store = getDefaultStore()
-
-  if (store.get(j_install_task_map).has(task.plugin.pluginId)) return
-
-  store.set(
-    j_install_task_map,
-    produce((tasks) => {
-      tasks.set(task.plugin.pluginId, task)
-    })
-  )
-}
-export function removeTask(pluginId: string) {
-  const store = getDefaultStore()
-
-  if (!store.get(j_install_task_map).has(pluginId)) return
-
-  store.set(
-    j_install_task_map,
-    produce((tasks) => {
-      tasks.delete(pluginId)
-    })
-  )
-}
+import { j_install_stats_map } from './store'
 
 /**
  * TODO: better design
@@ -81,22 +57,17 @@ export function watchInstallState(task: InstallTask) {
   }
   task.on('state:change', onStateChange)
 
-  const cleanAll = (state: InstallTask['state']) => {
-    if (state === InstallTaskState.FINISHED) {
-      task.off('download:progress', onProgress)
-      task.off('state:change', onStateChange)
-      task.off('state:change', cleanAll)
-
-      getDefaultStore().set(
-        j_install_stats_map,
-        produce((draft) => {
-          draft.delete(task.plugin.pluginId)
-          return draft
-        })
-      )
-    }
-  }
-  task.on('state:change', cleanAll)
+  task.once(['success', 'cancel'], () => {
+    task.off('download:progress', onProgress)
+    task.off('state:change', onStateChange)
+    getDefaultStore().set(
+      j_install_stats_map,
+      produce((draft) => {
+        draft.delete(task.plugin.pluginId)
+        return draft
+      })
+    )
+  })
 }
 
 export function downloadPercentageText(

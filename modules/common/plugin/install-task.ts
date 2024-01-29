@@ -2,19 +2,19 @@ import { decompress } from '@gstarp/react-native-tgz'
 import * as FileSystem from 'expo-file-system'
 
 import { insertPlugin } from '@/data/database/plugin'
-import { logger } from '@/plugins/logger'
-import type { PluginDetail } from '@/store/plugin/types'
+import { logger } from '@/libs/logger'
+import { PluginDetail } from '@/modules/tabs/registry/store'
 import { EventEmitter } from '@/utils/event'
 import { createDirIfNeed } from '@/utils/fs'
 
-import { InstallTaskEventMap, InstallTaskState } from './types'
 import {
   PLUGIN_DOWNLOAD_ROOT,
   PLUGIN_ROOT,
   getPluginArchiveUri,
   getPluginDir,
   getPluginUnzipUri,
-} from './util'
+} from './fs-utils'
+import { InstallTaskEventMap, InstallTaskState } from './install-task.type'
 
 function createDownloadResumable(
   plugin: PluginDetail,
@@ -37,12 +37,13 @@ function createDownloadResumable(
 export class InstallTask extends EventEmitter<InstallTaskEventMap> {
   plugin: PluginDetail
   downloadResumable: FileSystem.DownloadResumable
-  state: InstallTaskState
+  state = InstallTaskState.WAITING
 
   constructor(plugin: PluginDetail, state?: FileSystem.DownloadPauseState) {
     super()
     this.plugin = plugin
-    // debug callbacks
+
+    // attach listeners
     const debugLog = (...args: unknown[]) =>
       logger.debug(`InstallTask[${this.plugin.pluginId}]`, ...args)
     this.on('download:start', (data) => debugLog('download:start', data))
@@ -56,13 +57,15 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     this.on('state:change', (curState) => debugLog('state:change', curState))
 
     this.on('error', (e) => logger.error(e))
-    // create DownloadResumable
+
     const onProgress = (data: InstallTaskEventMap['download:progress']) => {
       this.emit('download:progress', data)
       if (data.totalBytesWritten >= data.totalBytesExpectedToWrite) {
         this.emit('download:finish')
       }
     }
+
+    // recover from savable, or start a new download
     if (state) {
       this.downloadResumable = FileSystem.createDownloadResumable(
         state.url,
@@ -74,8 +77,6 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     } else {
       this.downloadResumable = createDownloadResumable(this.plugin, onProgress)
     }
-
-    this.state = InstallTaskState.WAITING
   }
 
   static canRun(state: InstallTaskState): boolean {
@@ -97,10 +98,9 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
    */
   async run(): Promise<void> {
     try {
-      // @ATT pause will also cause downloadPromise to resolve
-      // so we must do pro-process when download is real finished
-      const installAfterDownload = async () => {
-        this.off('download:finish', installAfterDownload)
+      // * pause will also cause downloadPromise to resolve
+      // * so we should install when download is really finished
+      this.once('download:finish', async () => {
         try {
           // ensure plugin_root exists before unzip
           await createDirIfNeed(PLUGIN_ROOT)
@@ -121,11 +121,10 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
           this.emit('error', e)
           this.setState(InstallTaskState.ERROR)
         }
-      }
-      this.on('download:finish', installAfterDownload)
+      })
 
       if (this.state === InstallTaskState.WAITING) {
-        // ensure plugin_download_root exists before downloading
+        // ensure plugin download dir exists
         await createDirIfNeed(PLUGIN_DOWNLOAD_ROOT)
         this.emit('download:start', this.downloadResumable.savable())
         this.downloadResumable.downloadAsync()
@@ -178,23 +177,22 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     const pluginUnzipDir = getPluginUnzipUri(pluginId)
     const pluginDir = getPluginDir(pluginId)
 
-    logger.info(`unzipPlugin: from=${pluginArchiveUri}, to=${pluginUnzipDir}`)
+    logger.info(`unzip: from=${pluginArchiveUri}, to=${pluginUnzipDir}`)
     await decompress(pluginArchiveUri, pluginUnzipDir)
 
-    try {
-      if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
-        await FileSystem.deleteAsync(pluginDir)
-      }
-    } catch (e) {
-      logger.warn(e)
+    // if already installed, delete
+    if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
+      await FileSystem.deleteAsync(pluginDir)
     }
 
-    logger.info(`movePluginDir: from=${pluginUnzipDir}, to=${pluginDir}`)
+    logger.info(`move: from=${pluginUnzipDir}, to=${pluginDir}`)
     await FileSystem.moveAsync({
       // @ATT .tgz from npm registry includes an extra package dir
       from: pluginUnzipDir + '/package',
       to: pluginDir,
     })
+
+    // delete unzipped temp dir
     await FileSystem.deleteAsync(pluginUnzipDir)
   }
 

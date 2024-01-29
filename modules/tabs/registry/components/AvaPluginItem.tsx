@@ -5,12 +5,13 @@ import { Button } from 'react-native-paper'
 
 import PluginIcon from '@/components/PluginIcon'
 import { i18nKeys } from '@/i18n/keys'
+import { installPlugin } from '@/modules/common/plugin/biz'
 import { downloadPercentageText } from '@/modules/download/biz'
 import { InstallStats } from '@/modules/download/store'
-import { installPlugin } from '@/modules/plugin'
-import { j_plugins } from '@/store/plugin'
-import type { PluginDetail } from '@/store/plugin/types'
+import { j_plugins } from '@/modules/tabs/home/store'
 import { COLOR_PRIMARY } from '@/utils/style'
+
+import { PluginDetail } from '../store'
 
 interface Props {
   plugin: PluginDetail

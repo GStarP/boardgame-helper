@@ -1,12 +1,11 @@
 import { getDefaultStore } from 'jotai'
 
 import { fetchPluginMetadata } from '@/data/network/plugin'
-import { formatPluginId } from '@/modules/plugin/util'
-import { logger } from '@/plugins/logger'
-import { j_ava_loading, j_ava_plugins } from '@/store/plugin'
-import { PluginDetail } from '@/store/plugin/types'
+import { logger } from '@/libs/logger'
 import { IMG_BASE64_HEADER } from '@/utils/const'
 import { formatFileSize } from '@/utils/format'
+
+import { PluginDetail, j_ava_loading, j_ava_plugins } from './store'
 
 export async function batchUpdateAvaPlugins(pluginIds: string[]) {
   const store = getDefaultStore()
@@ -17,7 +16,7 @@ export async function batchUpdateAvaPlugins(pluginIds: string[]) {
     )
     const plugins: PluginDetail[] = infos.map((info) => ({
       version: info.version,
-      pluginId: formatPluginId(info.name),
+      pluginId: info.name,
       pluginName: info?.bgt?.name ?? 'Unknown',
       pluginIcon: info?.bgt?.icon ? IMG_BASE64_HEADER + info.bgt.icon : '',
       pluginDesc: info?.bgt?.desc ?? '',

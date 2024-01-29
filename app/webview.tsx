@@ -13,14 +13,14 @@ import type {
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes'
 
-import { getPluginEntry } from '@/modules/plugin/util'
+import { logger } from '@/libs/logger'
+import { getPluginEntry } from '@/modules/common/plugin/fs-utils'
 import {
   ToastDuration,
   ToastPosition,
   WebviewMessage,
   WebviewMessageType,
 } from '@/modules/webview'
-import { logger } from '@/plugins/logger'
 
 export default function PluginScreen() {
   const searchParams = useLocalSearchParams()

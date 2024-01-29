@@ -4,25 +4,25 @@ import { ToastAndroid } from 'react-native'
 
 import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { logger } from '@/plugins/logger'
-import type { PluginDetail } from '@/store/plugin/types'
+import { logger } from '@/libs/logger'
+import { PluginDetail } from '@/modules/tabs/registry/store'
 
-import { InstallTask } from '../task'
-import { InstallTaskState } from '../types'
+import { InstallTask } from './install-task'
+import { InstallTaskState } from './install-task.type'
 
 /**
  * const
  */
 const MAX_SAVABLE_NUM = 5
 
-interface Options {
+type Options = {
   interval: number
 }
 const DEFAULT_OPTIONS: Options = {
   interval: 3000,
 }
 
-interface TaskSavable {
+type TaskSavable = {
   p: PluginDetail
   o: DownloadPauseState
 }
@@ -48,14 +48,13 @@ export function TaskSavableDecorator(
       await task.downloadResumable.resumeAsync()
     }
   }, interval)
-  const clean = async () => {
-    clearInterval(timer)
-    task.off(['download:finish', 'cancel'], clean)
-    await AsyncStorage.removeItem(taskSavableKey(task.plugin.pluginId))
-  }
+
   // don't clean when "error", because we don't remove task
   // user can still resume task
-  task.on(['download:finish', 'cancel'], clean)
+  task.once(['download:finish', 'cancel'], async () => {
+    clearInterval(timer)
+    await AsyncStorage.removeItem(taskSavableKey(task.plugin.pluginId))
+  })
 
   // save once immediately
   saveTask(task)

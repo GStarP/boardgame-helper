@@ -6,9 +6,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { showBottomMenu } from '@/components/BottomMenu'
 import PluginIcon from '@/components/PluginIcon'
 import { i18nKeys } from '@/i18n/keys'
-import { uninstallPlugin } from '@/modules/plugin'
-import type { PluginInfo } from '@/store/plugin/types'
+import { uninstallPlugin } from '@/modules/common/plugin/biz'
 import { COLOR_RED } from '@/utils/style'
+
+import { PluginInfo } from '../store'
 
 export default function PluginItem(props: PluginInfo) {
   const { version, pluginId, pluginName, pluginIcon } = props

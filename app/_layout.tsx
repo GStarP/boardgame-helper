@@ -6,18 +6,18 @@ import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
 
 import { initBottomSheet } from '@/components/BottomSheet'
-import {
-  createPluginTableIfNotExist,
-  getAllPlugins,
-} from '@/data/database/plugin'
+import { createPluginTableIfNotExist } from '@/data/database/plugin'
 import '@/i18n'
 import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { initBuiltinPlugins, installPlugin } from '@/modules/plugin'
-import { recoverSavedTask } from '@/modules/plugin/task/savable'
-import '@/plugins/immer'
-import '@/plugins/native-wind'
-import { setPlugins } from '@/store/plugin'
+import '@/libs/immer'
+import '@/libs/native-wind'
+import {
+  initBuiltinPlugins,
+  installPlugin,
+  updatePlugins,
+} from '@/modules/common/plugin/biz'
+import { recoverSavedTask } from '@/modules/common/plugin/install-task.savable'
 
 // auto use error boundary
 export { ErrorBoundary } from 'expo-router'
@@ -55,11 +55,8 @@ export default function RootLayout() {
   const [dbLoaded, setDBLoaded] = useState(false)
   useEffect(() => {
     createPluginTableIfNotExist()
-      .then(() => getAllPlugins())
-      .then((plugins) => {
-        setPlugins(plugins)
-        setDBLoaded(true)
-      })
+      .then(() => updatePlugins())
+      .then(() => setDBLoaded(true))
   }, [])
 
   useEffect(() => {
