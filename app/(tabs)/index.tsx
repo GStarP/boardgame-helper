@@ -2,8 +2,8 @@ import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 
-import PluginItem from '@/components/home/PluginItem'
 import { i18nKeys } from '@/i18n/keys'
+import PluginItem from '@/modules/home/components/PluginItem'
 import { j_plugins } from '@/store/plugin/index'
 
 export default function HomeScreen() {

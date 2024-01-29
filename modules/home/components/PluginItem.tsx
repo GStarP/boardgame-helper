@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { showBottomMenu } from '@/components/BottomMenu'
@@ -16,7 +16,7 @@ export default function PluginItem(props: PluginInfo) {
   const { t } = useTranslation()
 
   const router = useRouter()
-  const toPluginPage = () => {
+  const usePlugin = () => {
     router.push({
       pathname: '/webview',
       params: {
@@ -26,7 +26,7 @@ export default function PluginItem(props: PluginInfo) {
     })
   }
 
-  const uninstall = () => {
+  const onLongPress = () => {
     showBottomMenu([
       {
         label: `${t(i18nKeys.COMMON_VERSION)}: ${version}`,
@@ -43,36 +43,18 @@ export default function PluginItem(props: PluginInfo) {
   }
 
   return (
-    <View style={styles.pluginItem}>
+    <View className="w-[16%] ml-[7.2%]">
       <TouchableOpacity
+        className="items-center"
         delayLongPress={300}
-        style={styles.container}
-        onPress={toPluginPage}
-        onLongPress={uninstall}
+        onPress={usePlugin}
+        onLongPress={onLongPress}
       >
         <PluginIcon className="w-[90%]" source={pluginIcon} />
-        <Text style={styles.pluginName} numberOfLines={2}>
+        <Text className="text-xs mt-1" numberOfLines={2}>
           {pluginName}
         </Text>
       </TouchableOpacity>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  pluginItem: {
-    width: '16%',
-    marginLeft: '7.2%',
-  },
-  container: {
-    alignItems: 'center',
-  },
-  pluginName: {
-    width: '100%',
-    fontSize: 12,
-    textAlign: 'center',
-    lineHeight: 16,
-    height: 48,
-    marginTop: 8,
-  },
-})

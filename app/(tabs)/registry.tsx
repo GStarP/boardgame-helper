@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 
-import AvaPluginItem from '@/components/registry/AvaPluginItem'
 import { i18nKeys } from '@/i18n/keys'
 import { j_install_stats_map } from '@/modules/download/store'
 import { addBuiltinPlugins } from '@/modules/plugin'
 import { batchUpdateAvaPlugins } from '@/modules/registry'
+import AvaPluginItem from '@/modules/registry/components/AvaPluginItem'
 import { j_ava_loading, j_ava_plugins, j_builtin_plugins } from '@/store/plugin'
 import { COLOR_BG_LIGHT, COLOR_PRIMARY } from '@/utils/style'
 

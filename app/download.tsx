@@ -40,7 +40,7 @@ export default function DownloadScreen() {
 function EmptyText() {
   const { t } = useTranslation()
   return (
-    <Text className={`text-base text-text3 mt-4`}>
+    <Text className="text-base text-text3 mt-4">
       {t(i18nKeys.TEXT_NO_INSTALL_TASK)}
     </Text>
   )
