@@ -11,7 +11,7 @@ import { InstallTaskState } from '@/modules/common/plugin/install-task.type'
 
 import { InstallStats } from '../store'
 
-interface Props {
+type Props = {
   task: InstallTask
   stats?: InstallStats
 }

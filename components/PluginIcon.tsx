@@ -4,7 +4,7 @@ import { View } from 'react-native'
 
 import { IMG_BLUR_HASH } from '@/utils/const'
 
-interface Props extends ViewProps {
+type Props = ViewProps & {
   source: string
 }
 

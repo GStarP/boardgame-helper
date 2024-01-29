@@ -13,7 +13,7 @@ import { COLOR_PRIMARY } from '@/utils/style'
 
 import { PluginDetail } from '../store'
 
-interface Props {
+type Props = {
   plugin: PluginDetail
   stats?: InstallStats
 }
