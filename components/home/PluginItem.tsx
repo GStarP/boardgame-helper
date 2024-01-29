@@ -34,8 +34,9 @@ export default function PluginItem(props: PluginInfo) {
       {
         label: t(i18nKeys.TEXT_UNINSTALL),
         color: COLOR_RED,
-        onPress: () => {
-          uninstallPlugin(pluginId)
+        onPress: async (actions) => {
+          await uninstallPlugin(pluginId)
+          actions.close()
         },
       },
     ])

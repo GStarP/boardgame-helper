@@ -49,7 +49,7 @@ export async function insertPlugin(plugin: PluginInfo): Promise<void> {
 }
 
 export async function deletePlugin(pluginId: string): Promise<void> {
-  logger.debug('insertPlugin', pluginId)
+  logger.debug('deletePlugin', pluginId)
 
   const db = DB()
   return new Promise((resolve) => {

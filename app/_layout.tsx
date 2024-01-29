@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
 
+import { initBottomSheet } from '@/components/BottomSheet'
 import {
   createPluginTableIfNotExist,
   getAllPlugins,
@@ -19,8 +20,9 @@ import { setPlugins } from '@/store/plugin'
 // auto use error boundary
 export { ErrorBoundary } from 'expo-router'
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// sync init tasks
 SplashScreen.preventAutoHideAsync()
+initBottomSheet()
 
 // * These tasks don't block splash
 initBuiltinPlugins()
