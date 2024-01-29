@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 
 import AvaPluginItem from '@/components/registry/AvaPluginItem'
@@ -10,7 +10,7 @@ import { j_install_stats_map } from '@/modules/download/store'
 import { addBuiltinPlugins } from '@/modules/plugin'
 import { batchUpdateAvaPlugins } from '@/modules/registry'
 import { j_ava_loading, j_ava_plugins, j_builtin_plugins } from '@/store/plugin'
-import { COLOR_BG_LIGHT, COLOR_PRIMARY, COLOR_TEXT_3 } from '@/utils/style'
+import { COLOR_BG_LIGHT, COLOR_PRIMARY } from '@/utils/style'
 
 const MemoAvaPluginItem = React.memo(AvaPluginItem)
 
@@ -28,14 +28,14 @@ export default function Registry() {
 
   if (loading)
     return (
-      <Text className="w-full text-center mt-4 text-base" style={[styles.hint]}>
+      <Text className="w-full text-center mt-4 text-base text-text3">
         {t(i18nKeys.TEXT_LOADING)}
       </Text>
     )
 
   if (plugins === undefined || plugins.length === 0)
     return (
-      <Text className="w-full text-center mt-4 text-base" style={[styles.hint]}>
+      <Text className="w-full text-center mt-4 text-base text-text3">
         {t(i18nKeys.TEXT_NO_DATA)}
       </Text>
     )
@@ -82,9 +82,3 @@ function BuiltinPluginInput() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  hint: {
-    color: COLOR_TEXT_3,
-  },
-})

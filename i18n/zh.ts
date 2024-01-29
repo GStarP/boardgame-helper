@@ -5,7 +5,7 @@ export const resources: i18nTranslation = {
   COMMON_VERSION: '版本',
 
   TITLE_HOME: '本地插件',
-  TITLE_REGISTRY: '可用插件',
+  TITLE_REGISTRY: '更多插件',
   TITLE_PROGRESS: '下载进度',
   TITLE_SETTINGS: '设置',
 

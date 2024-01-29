@@ -10,7 +10,7 @@ import { InstallStats } from '@/modules/download/store'
 import { installPlugin } from '@/modules/plugin'
 import { j_plugins } from '@/store/plugin'
 import type { PluginDetail } from '@/store/plugin/types'
-import { COLOR_PRIMARY, COLOR_TEXT_3 } from '@/utils/style'
+import { COLOR_PRIMARY } from '@/utils/style'
 
 interface Props {
   plugin: PluginDetail
@@ -49,24 +49,16 @@ export default function AvaPluginItem({ plugin, stats }: Props) {
           {pluginName}
         </Text>
 
-        <Text
-          style={styles.font3}
-          className="text-[12px] mb-[2px]"
-          numberOfLines={1}
-        >
+        <Text className="text-[12px] mb-[2px] text-text3" numberOfLines={1}>
           {pluginDesc}
         </Text>
 
         <View className="flex-row">
-          <Text style={styles.font3} className="text-[10px] tracking-wider">
+          <Text className="text-[10px] tracking-wider text-text3">
             v{version}
           </Text>
-          <Text style={styles.font3} className="text-[10px] mx-1">
-            |
-          </Text>
-          <Text style={styles.font3} className="text-[10px] ">
-            {pluginSize}
-          </Text>
+          <Text className="text-[10px] mx-1 text-text3">|</Text>
+          <Text className="text-[10px] text-text3">{pluginSize}</Text>
         </View>
       </View>
 
@@ -103,9 +95,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomColor: 'rgba(0, 0, 0, 0.3)',
     borderBottomWidth: 0.5,
-  },
-  font3: {
-    color: COLOR_TEXT_3,
   },
   icon: {
     height: '100%',

@@ -1,7 +1,5 @@
 import { StyleSheet, View } from 'react-native'
 
-import { COLOR_TEXT_4 } from '@/utils/style'
-
 import BottomMenuItem, { BottomMenuItemProps } from './BottomMenuItem'
 
 type Props = {
@@ -25,6 +23,6 @@ export default function BottomMenuComp({ items }: Props) {
 const styles = StyleSheet.create({
   divider: {
     borderBottomWidth: 0.5,
-    borderBottomColor: COLOR_TEXT_4,
+    borderBottomColor: 'rgba(0, 0, 0, 0.2)',
   },
 })

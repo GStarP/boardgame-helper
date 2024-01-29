@@ -13,14 +13,16 @@ import {
 import '@/i18n'
 import { useLng } from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
-import { initBuiltinPlugins } from '@/modules/plugin'
+import { initBuiltinPlugins, installPlugin } from '@/modules/plugin'
+import { recoverSavedTask } from '@/modules/plugin/task/savable'
 import '@/plugins/immer'
+import '@/plugins/native-wind'
 import { setPlugins } from '@/store/plugin'
 
 // auto use error boundary
 export { ErrorBoundary } from 'expo-router'
 
-// sync init tasks
+// * sync init tasks
 SplashScreen.preventAutoHideAsync()
 initBottomSheet()
 
@@ -28,8 +30,15 @@ initBottomSheet()
 initBuiltinPlugins()
 
 export default function RootLayout() {
-  // * These tasks block splash
+  // * useEffect init tasks
+  // recover saved task
+  useEffect(() => {
+    recoverSavedTask().then((tasks) => {
+      tasks.forEach((savable) => installPlugin(savable.p, savable.o))
+    })
+  }, [])
 
+  // * These tasks block splash
   // init fonts
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),

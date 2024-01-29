@@ -8,7 +8,6 @@ import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
 import { InstallTask } from '@/modules/plugin/task'
 import { InstallTaskState } from '@/modules/plugin/types'
-import { COLOR_TEXT_2, COLOR_TEXT_4 } from '@/utils/style'
 
 import { InstallStats } from '../store'
 
@@ -53,12 +52,14 @@ export default function InstallTaskItem({ task, stats }: Props) {
             <MaterialCommunityIcons
               name="close"
               size={16}
-              color={COLOR_TEXT_2}
+              color={'rgba(0, 0, 0, 0.6)'}
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.state}>{text}</Text>
-        <View style={styles.progressContainer} />
+        <Text className="text-text2" style={styles.state}>
+          {text}
+        </Text>
+        <View style={styles.progressContainer} className="bg-text4" />
       </View>
       <TouchableOpacity style={styles.pause} onPress={toggleTaskRun}>
         <MaterialCommunityIcons name={icon} size={32} />
@@ -119,12 +120,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4,
   },
-  state: { color: COLOR_TEXT_2, fontSize: 12, marginBottom: 4 },
+  state: { fontSize: 12, marginBottom: 4 },
   progressContainer: {
     width: '100%',
     height: 4,
     borderRadius: 4,
-    backgroundColor: COLOR_TEXT_4,
   },
   pause: {
     width: 32,

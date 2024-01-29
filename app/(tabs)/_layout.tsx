@@ -2,7 +2,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { Tabs, useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 
 import { i18nKeys } from '@/i18n/keys'
@@ -10,14 +10,13 @@ import { i18nKeys } from '@/i18n/keys'
 function HeaderButtons() {
   const router = useRouter()
   return (
-    <View className="flex-row">
+    <View className="flex-row space-x-[-4px]">
       <IconButton
         icon="progress-download"
         size={28}
         onPress={() => {
           router.push('/download')
         }}
-        style={styles.btn}
       />
       <IconButton
         icon={(props) => <MaterialIcons {...props} name="settings" />}
@@ -66,9 +65,3 @@ export default function TabsLayoutView() {
     </Tabs>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    marginRight: -2,
-  },
-})
