@@ -1,2 +1,2 @@
-export const COLOR_PRIMARY = '#1E88E5'
+// refer to: https://m1.material.io/style/color.html#color-color-palette
 export const COLOR_RED = '#F44336'

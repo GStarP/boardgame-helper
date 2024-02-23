@@ -120,13 +120,13 @@ export default function PluginScreen() {
       {
         /* loading progress */
         ready ? null : (
-          <View className="absolute w-full h-full z-10 justify-center items-center bg-white">
+          <View className="absolute w-full h-full z-10 justify-center items-center bg-[#FFF]">
             <Text className="text-base mb-1 mt-[-10%]">
               Loading: {(progress * 100).toFixed(2)}%
             </Text>
             <View className="bg-[#CCC] w-[60%] h-6 rounded">
               <Animated.View
-                className="bg-black h-full rounded"
+                className="bg-[#000] h-full rounded"
                 style={a_style}
               />
             </View>

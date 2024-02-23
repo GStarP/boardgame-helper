@@ -14,13 +14,9 @@ import i18n from '@/i18n'
 import { i18nKeys } from '@/i18n/keys'
 import { logger } from '@/libs/logger'
 import { watchInstallState } from '@/modules/download/biz'
-import {
-  addInstallTask,
-  j_install_task_map,
-  removeInstallTask,
-} from '@/modules/download/store'
+import { DownloadStore } from '@/modules/download/store'
 import { setPlugins } from '@/modules/tabs/home/store'
-import { PluginDetail, j_builtin_plugins } from '@/modules/tabs/registry/store'
+import { PluginDetail, RegistryStore } from '@/modules/tabs/registry/store'
 
 import { getPluginDir } from './fs-utils'
 import { InstallTask } from './install-task'
@@ -40,16 +36,19 @@ export function installPlugin(
     savable ? JSON.stringify(savable) : ''
   )
   // if task already exists, return
-  if (getDefaultStore().get(j_install_task_map).has(plugin.pluginId)) {
+  if (
+    getDefaultStore().get(DownloadStore.installTaskMap).has(plugin.pluginId)
+  ) {
     return
   }
 
   let task = new InstallTask(plugin, savable)
+
   // TODO: should be toggled in settings
   task = TaskSavableDecorator(task)
-  watchInstallState(task)
 
-  addInstallTask(task)
+  watchInstallState(task)
+  DownloadStore.addInstallTask(task)
 
   task.on('success', () => {
     ToastAndroid.show(
@@ -58,8 +57,9 @@ export function installPlugin(
     )
     updatePlugins()
   })
+
   task.once(['success', 'cancel'], () => {
-    removeInstallTask(task.plugin.pluginId)
+    DownloadStore.removeInstallTask(task.plugin.pluginId)
   })
 
   task.run()
@@ -69,13 +69,16 @@ export function installPlugin(
 
 export async function uninstallPlugin(pluginId: string): Promise<void> {
   logger.info('uninstallPlugin', pluginId)
+  // delete from database
   await deletePlugin(pluginId)
+  // delete from filesystem
   await FileSystem.deleteAsync(getPluginDir(pluginId))
+  // refresh view
   await updatePlugins()
 }
 
 export async function initBuiltinPlugins() {
-  getDefaultStore().set(j_builtin_plugins, await getBuiltinPlugins())
+  RegistryStore.setBuiltinPlugins(await getBuiltinPlugins())
 }
 
 export async function addBuiltinPlugins(pluginPackageName: string) {
@@ -90,7 +93,7 @@ export async function addBuiltinPlugins(pluginPackageName: string) {
     }
 
     const plugins = await insertBuiltinPlugins(pluginPackageName)
-    getDefaultStore().set(j_builtin_plugins, plugins)
+    RegistryStore.setBuiltinPlugins(plugins)
   } catch (e) {
     if (e instanceof Error && e.message === i18nKeys.COMMON_ALREADY_EXISTS) {
       ToastAndroid.show(

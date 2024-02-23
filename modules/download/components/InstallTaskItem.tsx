@@ -9,21 +9,21 @@ import { i18nKeys } from '@/i18n/keys'
 import { InstallTask } from '@/modules/common/plugin/install-task'
 import { InstallTaskState } from '@/modules/common/plugin/install-task.type'
 
-import { InstallStats } from '../store'
+import { InstallStatus } from '../store'
 
 type Props = {
   task: InstallTask
-  stats?: InstallStats
+  installStatus?: InstallStatus
 }
 
-export default function InstallTaskItem({ task, stats }: Props) {
+export default function InstallTaskItem({ task, installStatus }: Props) {
   const { t } = useTranslation()
 
   const { state, size, totalSize } = {
     state: InstallTaskState.WAITING,
     size: 0,
     totalSize: 0,
-    ...stats,
+    ...installStatus,
   }
   const text = useStateText(state, size, totalSize)
   const icon = useStateIcon(state)

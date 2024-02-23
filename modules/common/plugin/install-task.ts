@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system'
 import { insertPlugin } from '@/data/database/plugin'
 import { logger } from '@/libs/logger'
 import { PluginDetail } from '@/modules/tabs/registry/store'
+import { IS_DEV } from '@/utils/const'
 import { EventEmitter } from '@/utils/event'
 import { createDirIfNeed } from '@/utils/fs'
 
@@ -44,17 +45,19 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     this.plugin = plugin
 
     // attach listeners
-    const debugLog = (...args: unknown[]) =>
-      logger.debug(`InstallTask[${this.plugin.pluginId}]`, ...args)
-    this.on('download:start', (data) => debugLog('download:start', data))
-    this.on('download:pause', (data) => debugLog('download:pause', data))
-    this.on('download:resume', (data) => debugLog('download:resume', data))
-    this.on('download:finish', (data) => debugLog('download:finish', data))
-    this.on('unzip:start', () => debugLog('unzip:start'))
-    this.on('unzip:finish', () => debugLog('unzip:finish'))
-    this.on('success', () => debugLog('success'))
-    this.on('cancel', () => debugLog('cancel'))
-    this.on('state:change', (curState) => debugLog('state:change', curState))
+    if (IS_DEV) {
+      const debugLog = (...args: unknown[]) =>
+        logger.debug(`InstallTask[${this.plugin.pluginId}]`, ...args)
+      this.on('download:start', (data) => debugLog('download:start', data))
+      this.on('download:pause', (data) => debugLog('download:pause', data))
+      this.on('download:resume', (data) => debugLog('download:resume', data))
+      this.on('download:finish', (data) => debugLog('download:finish', data))
+      this.on('unzip:start', () => debugLog('unzip:start'))
+      this.on('unzip:finish', () => debugLog('unzip:finish'))
+      this.on('success', () => debugLog('success'))
+      this.on('cancel', () => debugLog('cancel'))
+      this.on('state:change', (curState) => debugLog('state:change', curState))
+    }
 
     this.on('error', (e) => logger.error(e))
 
@@ -180,14 +183,14 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     logger.info(`unzip: from=${pluginArchiveUri}, to=${pluginUnzipDir}`)
     await decompress(pluginArchiveUri, pluginUnzipDir)
 
-    // if already installed, delete
+    // if already installed, just replace it
     if ((await FileSystem.getInfoAsync(pluginDir)).exists) {
       await FileSystem.deleteAsync(pluginDir)
     }
 
     logger.info(`move: from=${pluginUnzipDir}, to=${pluginDir}`)
     await FileSystem.moveAsync({
-      // @ATT .tgz from npm registry includes an extra package dir
+      // * unzipped `.tgz` from npm registry includes an extra `package` dir
       from: pluginUnzipDir + '/package',
       to: pluginDir,
     })
@@ -197,17 +200,15 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
   }
 
   private async registerPlugin(): Promise<void> {
-    const pluginDir = getPluginDir(this.plugin.pluginId)
-    const pluginName = this.plugin.pluginName
-
     // get icon uri from icon.png
+    const pluginDir = getPluginDir(this.plugin.pluginId)
     const pluginIcon = (await FileSystem.getInfoAsync(`${pluginDir}/icon.png`))
       .uri
 
     await insertPlugin({
       version: this.plugin.version,
       pluginId: this.plugin.pluginId,
-      pluginName,
+      pluginName: this.plugin.pluginName,
       pluginIcon,
     })
   }

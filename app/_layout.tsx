@@ -4,6 +4,7 @@ import { SplashScreen, Stack } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
+import { PaperProvider } from 'react-native-paper'
 
 import { initBottomSheet } from '@/components/BottomSheet'
 import { createPluginTableIfNotExist } from '@/data/database/plugin'
@@ -71,7 +72,9 @@ export default function RootLayout() {
 
   return (
     <SheetProvider>
-      <RootLayoutView />
+      <PaperProvider>
+        <RootLayoutView />
+      </PaperProvider>
     </SheetProvider>
   )
 }
@@ -91,13 +94,6 @@ function RootLayoutView() {
         name="download"
         options={{
           title: t(i18nKeys.TITLE_PROGRESS),
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="settings"
-        options={{
-          title: t(i18nKeys.TITLE_SETTINGS),
           headerShown: true,
         }}
       />

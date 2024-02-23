@@ -26,7 +26,7 @@ export function getPluginUnzipUri(pluginId: string): string {
 }
 
 // * pluginId will be used in path so `/` is not allowed
-export function formatPluginId(rawPluginId: string): string {
+export function fixPluginId(rawPluginId: string): string {
   return rawPluginId.replaceAll(/\//g, SCOPE_SPLITTER)
 }
 const SCOPE_SPLITTER = '+'

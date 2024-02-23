@@ -9,9 +9,12 @@ type Props = ViewProps & {
 }
 
 export default function PluginIcon(props: Props) {
-  const { source, ...otherProps } = props
+  const { source, className, ...otherProps } = props
   return (
-    <View className="rounded aspect-square overflow-hidden" {...otherProps}>
+    <View
+      className={'rounded aspect-square overflow-hidden ' + className}
+      {...otherProps}
+    >
       <Image
         className="w-full h-full"
         source={source}

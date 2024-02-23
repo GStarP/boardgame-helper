@@ -5,18 +5,15 @@ import { Text, View } from 'react-native'
 
 import { i18nKeys } from '@/i18n/keys'
 import InstallTaskItem from '@/modules/download/components/InstallTaskItem'
-import {
-  j_install_stats_map,
-  j_install_task_map,
-} from '@/modules/download/store'
+import { DownloadStore } from '@/modules/download/store'
 
 const MemoInstallTaskItem = React.memo(InstallTaskItem)
 
 export default function DownloadScreen() {
-  const installTaskMap = useAtomValue(j_install_task_map)
+  const installTaskMap = useAtomValue(DownloadStore.installTaskMap)
   const tasks = [...installTaskMap.values()]
 
-  const installStatsMap = useAtomValue(j_install_stats_map)
+  const installTaskStatusMap = useAtomValue(DownloadStore.installTaskStatusMap)
 
   return (
     <View>
@@ -25,7 +22,7 @@ export default function DownloadScreen() {
           <MemoInstallTaskItem
             key={task.plugin.pluginId}
             task={task}
-            stats={installStatsMap.get(task.plugin.pluginId)}
+            installStatus={installTaskStatusMap.get(task.plugin.pluginId)}
           />
         ))
       ) : (

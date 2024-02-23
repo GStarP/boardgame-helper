@@ -4,18 +4,17 @@ import { getDefaultStore } from 'jotai'
 import { InstallTask } from '@/modules/common/plugin/install-task'
 import { InstallTaskEventMap } from '@/modules/common/plugin/install-task.type'
 
-import { j_install_stats_map } from './store'
+import { DownloadStore } from './store'
 
 /**
- * TODO: better design
- * InstallTask in not reactive, so we need to manage state `j_install_stats_map`
- * with task's event listeners, it's not so elegant now
+ * InstallTask is not reactive, so we need to manage state
+ * in `DownloadStore.installTaskStatusMap` with task's event listeners
  */
 export function watchInstallState(task: InstallTask) {
   // set an empty state to represent download will start
-  // for `downloading` in `AvaPluginItem.tsx`
+  // for `downloading` in `RegistryPluginItem.tsx`
   getDefaultStore().set(
-    j_install_stats_map,
+    DownloadStore.installTaskStatusMap,
     produce((draft) => {
       draft.set(task.plugin.pluginId, {
         state: task.state,
@@ -28,7 +27,7 @@ export function watchInstallState(task: InstallTask) {
 
   const onProgress = (progress: InstallTaskEventMap['download:progress']) => {
     getDefaultStore().set(
-      j_install_stats_map,
+      DownloadStore.installTaskStatusMap,
       produce((draft) => {
         draft.set(task.plugin.pluginId, {
           state: task.state,
@@ -43,7 +42,7 @@ export function watchInstallState(task: InstallTask) {
 
   const onStateChange = (newState: InstallTaskEventMap['state:change']) => {
     getDefaultStore().set(
-      j_install_stats_map,
+      DownloadStore.installTaskStatusMap,
       produce((draft) => {
         const preStats = draft.get(task.plugin.pluginId)
         draft.set(task.plugin.pluginId, {
@@ -61,7 +60,7 @@ export function watchInstallState(task: InstallTask) {
     task.off('download:progress', onProgress)
     task.off('state:change', onStateChange)
     getDefaultStore().set(
-      j_install_stats_map,
+      DownloadStore.installTaskStatusMap,
       produce((draft) => {
         draft.delete(task.plugin.pluginId)
         return draft

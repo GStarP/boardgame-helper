@@ -10,19 +10,12 @@ import { i18nKeys } from '@/i18n/keys'
 function HeaderButtons() {
   const router = useRouter()
   return (
-    <View className="flex-row space-x-[-4px]">
+    <View className="flex-row space-x-[-4px] pr-2">
       <IconButton
         icon="progress-download"
         size={28}
         onPress={() => {
           router.push('/download')
-        }}
-      />
-      <IconButton
-        icon={(props) => <MaterialIcons {...props} name="settings" />}
-        size={28}
-        onPress={() => {
-          router.push('/settings')
         }}
       />
     </View>
@@ -49,7 +42,7 @@ export default function TabsLayoutView() {
         options={{
           title: t(i18nKeys.TITLE_HOME),
           tabBarIcon: (props) => (
-            <MaterialCommunityIcons {...props} name="hammer-wrench" />
+            <MaterialCommunityIcons {...props} name="toolbox" />
           ),
         }}
       />
@@ -60,6 +53,13 @@ export default function TabsLayoutView() {
           tabBarIcon: (props) => (
             <MaterialCommunityIcons {...props} name="plus-box" />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: t(i18nKeys.TITLE_SETTINGS),
+          tabBarIcon: (props) => <MaterialIcons {...props} name="settings" />,
         }}
       />
     </Tabs>

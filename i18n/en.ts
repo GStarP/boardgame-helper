@@ -16,7 +16,7 @@ export const resources: i18nTranslation = {
   TOAST_INVALID_PLUGIN: 'invalid plugin package',
 
   TEXT_NO_PLUGIN_1: 'oops! nothing!',
-  TEXT_NO_PLUGIN_2: 'press top-right to install',
+  TEXT_NO_PLUGIN_2: 'press "More Plugins" at bottom to install',
   TEXT_NO_INSTALL_TASK: 'nothing installing',
   TEXT_MISSING_PLUGIN_NAME: 'Unknown Plugin',
   TEXT_UNINSTALL: 'Uninstall',

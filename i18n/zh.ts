@@ -16,7 +16,7 @@ export const resources: i18nTranslation = {
   TOAST_INVALID_PLUGIN: '插件包不合法',
 
   TEXT_NO_PLUGIN_1: '暂无插件',
-  TEXT_NO_PLUGIN_2: '点击右上角去安装',
+  TEXT_NO_PLUGIN_2: '点击下方“更多插件”以安装',
   TEXT_NO_INSTALL_TASK: '暂无下载任务',
   TEXT_MISSING_PLUGIN_NAME: '未知插件',
   TEXT_UNINSTALL: '卸载',

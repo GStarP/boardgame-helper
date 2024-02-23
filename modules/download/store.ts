@@ -4,36 +4,44 @@ import { atom, getDefaultStore } from 'jotai'
 import type { InstallTask } from '@/modules/common/plugin/install-task'
 import { InstallTaskState } from '@/modules/common/plugin/install-task.type'
 
-export const j_install_task_map = atom<Map<string, InstallTask>>(new Map())
-
-export type InstallStats = {
+export type InstallStatus = {
   state: InstallTaskState
   size: number
   totalSize: number
 }
-export const j_install_stats_map = atom<Map<string, InstallStats>>(new Map())
 
-export function addInstallTask(task: InstallTask) {
+const installTaskMap = atom<Map<string, InstallTask>>(new Map())
+
+const installTaskStatusMap = atom<Map<string, InstallStatus>>(new Map())
+
+const addInstallTask = (task: InstallTask) => {
   const store = getDefaultStore()
 
-  if (store.get(j_install_task_map).has(task.plugin.pluginId)) return
+  if (store.get(installTaskMap).has(task.plugin.pluginId)) return
 
   store.set(
-    j_install_task_map,
+    installTaskMap,
     produce((tasks) => {
       tasks.set(task.plugin.pluginId, task)
     })
   )
 }
-export function removeInstallTask(pluginId: string) {
+const removeInstallTask = (pluginId: string) => {
   const store = getDefaultStore()
 
-  if (!store.get(j_install_task_map).has(pluginId)) return
+  if (!store.get(installTaskMap).has(pluginId)) return
 
   store.set(
-    j_install_task_map,
+    installTaskMap,
     produce((tasks) => {
       tasks.delete(pluginId)
     })
   )
+}
+
+export const DownloadStore = {
+  installTaskMap,
+  installTaskStatusMap,
+  addInstallTask,
+  removeInstallTask,
 }

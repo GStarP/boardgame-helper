@@ -5,13 +5,25 @@ import { PluginInfo } from '@/modules/tabs/home/store'
 export type PluginDetail = PluginInfo & {
   pluginDesc: string
   pluginSrc: string
-  pluginSize: string
+  pluginSize: number
 }
 
-export const j_ava_plugins = atom<PluginDetail[]>([])
-export function setAvaPlugins(avaPlugins: PluginDetail[]) {
-  getDefaultStore().set(j_ava_plugins, avaPlugins)
+const plugins = atom<PluginDetail[]>([])
+const setPlugins = (v: PluginDetail[]) => {
+  getDefaultStore().set(plugins, v)
 }
-export const j_ava_loading = atom(false)
 
-export const j_builtin_plugins = atom<string[]>([])
+const loading = atom(false)
+
+const builtinPlugins = atom<string[]>([])
+const setBuiltinPlugins = (v: string[]) => {
+  getDefaultStore().set(builtinPlugins, v)
+}
+
+export const RegistryStore = {
+  plugins,
+  setPlugins,
+  loading,
+  builtinPlugins,
+  setBuiltinPlugins,
+}
