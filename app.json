@@ -1,33 +1,26 @@
 {
   "expo": {
     "name": "BGT",
-    "slug": "board-game-toolbox",
+    "slug": "bgt",
+    "platforms": ["android"],
+    "githubUrl": "https://github.com/board-game-toolbox/board-game-toolbox",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "plugins": ["expo-router"],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
     "android": {
+      "package": "com.gstarp.boardgametoolbox",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.gstarp.boardgametoolbox"
-    },
-    "plugins": ["expo-router"],
-    "experiments": {
-      "typedRoutes": true
+      }
     },
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
         "projectId": "018e369c-55b6-4cd4-8ec0-83fe74dfdabc"
       }

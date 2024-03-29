@@ -6,5 +6,8 @@
     "immer",
     "keyid",
     "nativewind"
+  ],
+  "i18n-ally.localesPaths": [
+    "i18n"
   ]
 }

@@ -4,7 +4,6 @@ import * as FileSystem from 'expo-file-system'
 import { insertPlugin } from '@/data/database/plugin'
 import { logger } from '@/libs/logger'
 import { PluginDetail } from '@/modules/tabs/registry/store'
-import { IS_DEV } from '@/utils/const'
 import { EventEmitter } from '@/utils/event'
 import { createDirIfNeed } from '@/utils/fs'
 
@@ -45,7 +44,7 @@ export class InstallTask extends EventEmitter<InstallTaskEventMap> {
     this.plugin = plugin
 
     // attach listeners
-    if (IS_DEV) {
+    if (__DEV__) {
       const debugLog = (...args: unknown[]) =>
         logger.debug(`InstallTask[${this.plugin.pluginId}]`, ...args)
       this.on('download:start', (data) => debugLog('download:start', data))

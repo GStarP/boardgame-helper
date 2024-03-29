@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native'
 
 import { showBottomMenu } from '@/components/BottomMenu'
 import PluginIcon from '@/components/PluginIcon'

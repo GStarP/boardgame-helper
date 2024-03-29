@@ -9,9 +9,6 @@
         "gradleCommand": ":app:assembleDebug"
       }
     },
-    "preview": {
-      "distribution": "internal"
-    },
     "production": {
       "distribution": "internal",
       "android": {

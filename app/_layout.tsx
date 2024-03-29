@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SheetProvider } from 'react-native-actions-sheet'
 import { PaperProvider } from 'react-native-paper'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { initBottomSheet } from '@/components/BottomSheet'
 import { createPluginTableIfNotExist } from '@/data/database/plugin'
@@ -71,11 +72,13 @@ export default function RootLayout() {
   }
 
   return (
-    <SheetProvider>
-      <PaperProvider>
-        <RootLayoutView />
-      </PaperProvider>
-    </SheetProvider>
+    <SafeAreaProvider>
+      <SheetProvider>
+        <PaperProvider>
+          <RootLayoutView />
+        </PaperProvider>
+      </SheetProvider>
+    </SafeAreaProvider>
   )
 }
 
